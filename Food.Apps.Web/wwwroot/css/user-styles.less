@@ -1,0 +1,53 @@
+﻿@import "../../../Content/Less/variables.less";
+
+.label-default {
+    background-color: @c-brand-primary;
+    font-weight: normal;
+}
+
+#user-companies {
+    padding: 0;
+    list-style: none;
+
+    .label-default {
+        font-size: inherit;
+        border-radius: 0;
+    }
+
+    .user-company {
+        margin-right: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+
+    .user-company-action {
+        padding-left: 0;
+
+        a {
+            color: #FFF;
+
+            &:hover, &:link, &:focus {
+                color: #fFF;
+            }
+        }
+    }
+}
+
+#user-discounts{
+    .user-discount{
+        cursor: pointer;
+    }
+}
+
+table.dataTable.display tbody .selected {
+    background-color:  @c-brand-primary !important;
+    color: white;
+    
+    &:hover {
+        background-color:  @c-brand-primary !important;
+    }
+    
+     > .sorting_1 {
+         background-color:  @c-brand-primary !important;
+     }
+}

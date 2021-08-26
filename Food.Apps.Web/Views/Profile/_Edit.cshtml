@@ -1,0 +1,192 @@
+﻿@model UserInfoModel
+@{
+    List<CompanyModel> companies = ViewBag.Companies ?? new List<CompanyModel>();
+    var error = ViewData.ModelState.FirstOrDefault(c => c.Value.Errors.Count > 0 && !string.IsNullOrEmpty(c.Key));
+}
+<form asp-action="Save" asp-controller="Profile" data-ajax="true" data-ajax-method="POST" data-ajax-update="#form-user-info"
+      data-ajax-mode="replace" data-ajax-loading="#processIcon" asp-antiforgery="true">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <h4>Личные данные</h4>
+    <!--Имя-->
+    <div class="row">
+        <div class="form-group col-xs-12">
+            <label asp-for="UserFullName" class="control-label"></label>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-user"></i>
+                </span>
+                <input asp-for="UserFullName" class="form-control" placeholder="@Model.UserFullName" />
+            </div>
+            <span asp-validation-for="UserFullName" class="text-danger"></span>
+        </div>
+    </div>
+    <!--Email-->
+    <div class="row">
+        <div class="form-group col-xs-12">
+            <label asp-for="Email" class="control-label"></label>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-envelope"></i>
+                </span>
+
+                <input asp-for="Email" class="form-control" placeholder="@Model.Email" />
+
+                @if (Model.EmailConfirmed)
+                {
+                    <span class="input-group-addon">
+                        <i class="fa fa-check text-success" title="Подтвержден"></i>
+                    </span>
+                }
+                else
+                {
+                    <span class="input-group-addon">
+                        <a href="#" title="Подтвердить">
+                            <i class="fa fa-info text-warning" title="Не подтвержден"></i>
+                        </a>
+                    </span>
+                }
+
+            </div>
+            <div><span asp-validation-for="Email" class="text-danger"></span></div>
+        </div>
+    </div>
+    <!--Телефон-->
+    <div class="row">
+        <div class="form-group col-xs-12">
+            <label class="control-label" asp-for="PhoneNumber"></label>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-phone"></i>
+                </span>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="@Model.PhoneNumber" autocomplete="on" />
+                @if (Model.PhoneNumberConfirmed)
+                {
+                    <span class="input-group-addon">
+                        <i class="fa fa-check text-success" title="Подтвержден"></i>
+                    </span>
+                }
+                else
+                {
+                    <span class="input-group-addon">
+                        <a href="#" title="Подтвердить">
+                            <i class="fa fa-info text-warning" title="Не подтвержден"></i>
+                        </a>
+                    </span>
+                }
+            </div>
+            <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+        </div>
+    </div>
+    <input type="hidden" asp-for="HasPassword" />
+    <input type="hidden" asp-for="TwoFactorEnabled" />
+    <input type="hidden" asp-for="PhoneNumberConfirmed" />
+    <input type="hidden" asp-for="EmailConfirmed" />
+    <input type="hidden" asp-for="DefaultAddressId" />
+    <!--Адрес доставки-->
+        <div class="row">
+            <div class="col-xs-6 mr-1">
+                @Html.LabelFor(model => model.City, new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.City,
+                    new SelectList(ViewBag.Cities, "Id", "Name"),
+                    "Выберите город из списка", new { @class = "form-control" })
+            </div>
+            <div class="col-xs-6">
+                @Html.LabelFor(model => model.Street, new { @class = "control-label" })
+                <input asp-for="@Model.Street" class="form-control " placeholder="Улица" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3 mr-1">
+                @Html.LabelFor(model => model.House, new { @class = "control-label" })
+                <input asp-for="@Model.House" class="form-control" placeholder="Номер дома" />
+            </div>
+            <div class="col-xs-3 mr-1">
+                @Html.LabelFor(model => model.Building, new { @class = "control-label" })
+                <input asp-for="@Model.Building" class="form-control" placeholder="Строение" />
+            </div>
+            <div class="col-xs-3 mr-1">
+                @Html.LabelFor(model => model.Flat, new { @class = "control-label" })
+                <input asp-for="@Model.Flat" class="form-control" placeholder="Квартира"/>
+            </div>
+            <div class="col-xs-3">
+                @Html.LabelFor(model => model.Office, new { @class = "control-label" })
+                <input asp-for="@Model.Office" class="form-control" placeholder="Офис" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 mr-1">
+                @Html.LabelFor(model => model.Entrance, new { @class = "control-label" })
+                <input asp-for="@Model.Entrance" class="form-control" placeholder="Подъезд" />
+            </div>
+            <div class="col-xs-4 mr-1">
+                @Html.LabelFor(model => model.Storey, new { @class = "control-label" })
+                <input asp-for="@Model.Storey" class="form-control" placeholder="Этаж" />
+            </div>
+            <div class="col-xs-4">
+                @Html.LabelFor(model => model.Intercom, new { @class = "control-label" })
+                <input asp-for="@Model.Intercom" class="form-control" placeholder="Домофон" style="width: 103.5%"/>
+            </div>
+        </div>
+        <div class="row mb-4">
+            @Html.LabelFor(model => model.AddressComment, new { @class = "control-label" })
+            <textarea asp-for="@Model.AddressComment" class="form-control" placeholder="Комментарий к адресу" style="resize:none"></textarea>
+        </div>
+    @if (companies != null && Model.UserInCompanies != null && Model.UserInCompanies.Count > 0)
+    {
+        <div class="row">
+            <label class="control-label">Компании</label>
+            <table class="table table-bordered table-responsive">
+                <tr>
+                    <th>
+                        Название
+                    </th>
+                    <th>
+                        Адрес доставки
+                    </th>
+                </tr>
+                @for (int i = 0; i < Model.UserInCompanies.Count; i++)
+                {
+                    <tr>
+                        @{
+                            var companyModel = companies.FirstOrDefault(c => c.Id == Model.UserInCompanies[i].CompanyId);
+                            var addressItems = companyModel?.Addresses?.Where(c => c.IsActive).Select(c => new SelectListItem()
+                            {
+                                Text = c.DisplayType == DisplayAddressType.Display ? c.RawAddress : c.GetAddressString(),
+                                Value = c.Id.ToString(),
+                                Selected = Model.UserInCompanies[i].DeliveryAddressId == c.Id
+                            }).OrderBy(c => c.Text);
+                        }
+                        @if (companyModel != null)
+                        {
+                            <input type="hidden" asp-for="@Model.UserInCompanies[i].Id" />
+                            <td>
+                                @companyModel.Name
+                            </td>
+                            <td>
+                                @Html.DropDownListFor(m => m.UserInCompanies[i].DeliveryAddressId,
+                                    new SelectList(addressItems,
+                                        "Value", "Text",
+                                        Model.UserInCompanies[i].DeliveryAddressId),
+                                    new { @class = "form-control" })
+                            </td>
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+    }
+    <div class="row">
+        <button type="submit" class="btn btn-default">Сохранить</button>
+        <a asp-action="Index" class="btn btn-danger">Отмена</a>
+    </div>
+</form>
+@if (!string.IsNullOrEmpty(error.Key))
+{
+    <script>
+        $('#@error.Key').focus()
+    </script>
+}
+
+<script>
+    setPhoneMask('#PhoneNumber', true);
+</script>

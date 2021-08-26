@@ -1,0 +1,55 @@
+﻿@model ITWebNet.Food.Site.Areas.Administrator.Models.CompanyOrderShortModel
+
+<tr id="companyOrder-@Model.Id">
+    @Html.HiddenFor(o => o.Id, new { form = $"edit-{Model.Id}" })
+    @Html.HiddenFor(o => o.CafeName, new { form = $"edit-{Model.Id}" })
+    @Html.HiddenFor(o => o.CompanyName, new { form = $"edit-{Model.Id}" })
+    @Html.HiddenFor(o => o.WorkingTimeFrom, new { form = $"edit-{Model.Id}" })
+    @Html.HiddenFor(o => o.WorkingTimeTo, new { form = $"edit-{Model.Id}" })
+    <td>
+        @Html.DisplayFor(o => o.Id)
+    </td>
+    <td>
+        @Html.DisplayFor(o => o.CompanyName)
+    </td>
+    <td>
+        @Html.DisplayFor(o => o.CafeName)
+    </td>
+    <td>
+        <div class="input-group" id="timepicker">
+            <input asp-for="OrderOpenTime" asp-format="{0:hh\:mm}" type="time" class="form-control timepicker timepicker-@Model.Id open-order" form="edit-@Model.Id" />
+            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+        </div>
+    </td>
+    <td>
+        <div class="input-group" id="timepicker">
+            <input asp-for="OrderAutoCloseTime" asp-format="{0:hh\:mm}" type="time" class="form-control timepicker timepicker-@Model.Id close-order" form="edit-@Model.Id" />
+            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+        </div>
+    </td>
+    <td>
+        <div class="input-group" id="timepicker">
+            <input asp-for="OrderDeliveryTime" asp-format="{0:hh\:mm}" type="time" class="form-control timepicker timepicker-@Model.Id delivery-order" form="edit-@Model.Id" />
+            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+        </div>
+    </td>
+    <td>
+        <button type="submit" class="btn btn-default btn-save" form="edit-@Model.Id">Сохранить</button>
+    </td>
+</tr>
+@if (ViewContext.ModelState.ErrorCount > 0)
+{
+    <tr id="companyOrder-@Model.Id-validation">
+        <td colspan="6">
+            <div>
+                @Html.ValidationMessageFor(model => model.OrderOpenTime, "", new { @class = "text-danger" })
+            </div>
+            <div>
+                @Html.ValidationMessageFor(model => model.OrderAutoCloseTime, "", new { @class = "text-danger" })
+            </div>
+            <div>
+                @Html.ValidationMessageFor(model => model.OrderDeliveryTime, "", new { @class = "text-danger" })
+            </div>
+        </td>
+    </tr>
+}

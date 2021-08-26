@@ -1,0 +1,38 @@
+﻿@model OrderMultiCafeViewModel
+
+@{
+    ViewBag.Title = "Корзина";
+}
+<div id="list" class="main cart peculiar">
+    <div class="container">
+        @await Html.PartialAsync("_List", Model)
+        @*@await Html.PartialAsync("_TotalPoints")*@
+    </div>
+
+</div>
+
+@section scripts
+{
+    @if (ViewBag.NotEnoughMinerals != null && ViewBag.NotEnoughMinerals == true)
+    {
+        // Если минимальная сумма заказа больше суммы заказа, то показываем сообщение
+        <script>
+            $('#notEnoughMinerals').modal();
+        </script>
+    }
+
+    <script>
+        agreeWithTerms();
+        order();
+        setPhoneMask('#PhoneNumber', true);
+    </script>
+}
+
+@section modals{
+    @if (ViewBag.NotEnoughMinerals != null && ViewBag.NotEnoughMinerals == true)
+    {
+        // Если минимальная сумма заказа больше суммы заказа - готовим модальное окно для отображения:
+        @await Html.PartialAsync("_NotEnoughMinerals", Model.CartMulti)
+    }
+    @await Html.PartialAsync("~/Views/Info/_AgreementModal.cshtml")
+}

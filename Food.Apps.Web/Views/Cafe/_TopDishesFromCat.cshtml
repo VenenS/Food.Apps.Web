@@ -1,0 +1,74 @@
+﻿@model Random6DishesViewModel
+
+@{
+    FoodCategoryWithDishes catDishes;
+    int CountOfDishesFilter = 0;
+    string CatIdStr = "0";
+    string DivRestFiltId = "";
+    string CatNameLoc = "";
+    if (Model == null || Model.FoodCategoryWithDishes == null || Model.FoodCategoryWithDishes.Count == 0)
+    {
+        catDishes = new FoodCategoryWithDishes();
+    }
+    else
+    {
+        catDishes = Model.FoodCategoryWithDishes[0];
+        CountOfDishesFilter = Model.CountOfDishesFilter;
+        CatIdStr = catDishes.Category.Id.ToString();
+        DivRestFiltId = $"RestOfCatFilt{CatIdStr}";
+    }
+
+}
+
+@if (catDishes.Dishes == null || catDishes.Dishes.Count == 0)
+{
+<div class="category-content">
+    <div class="card-body">
+        <div class="card-content">
+            <h3>В данной категории нет блюд. Пожалуйста, выберите другую категорию.</h3>
+        </div>
+    </div>
+</div>
+}
+else
+{
+
+    @* Див с первыми N блюдами отфильтрованной категории.*@
+    <div class="category-content">
+        <h4>
+            @(CatNameLoc)
+        </h4>
+        <div class="row">
+            @foreach (var dish in catDishes.Dishes)
+            {
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-xxs-12 dish-container">
+                    @await Html.PartialAsync("~/Views/Cafe/_Dish.cshtml", dish)
+                </div>
+            }
+        </div>
+    </div>
+    <div class="rest-of-category">
+        @* Див с остальными блюдами отфильтрованной категории. При нажатии кнопки "Показать ещё +N" его содержимое будет заменяться загруженными блюдами. А пока блюда грузятся, пользователь будет видеть надпись "Пожалуйста, подождите..." *@
+        <div style="display:none" data-category="catrest-@CatIdStr" class="row rest-content" id="@DivRestFiltId">
+            Пожалуйста, подождите...
+        </div>
+    </div>
+
+
+    <div class="btn-show-rest">
+        @* ViewBag.RestButtonState устанавливается при выводе блюд через фильтр. При этом блюда показываются сразу все и кнопка "Показать ещё +N" не нужна. *@
+        @if (catDishes.CountOfDishes > Model.CountOfDishesFilter && ViewBag.RestButtonState == null)
+        {
+            string buttonText = $"Показать ещё +{(catDishes.CountOfDishes - Model.CountOfDishesFilter).ToString()}";
+            <form action="@Url.Action("ShowTheRest", "Cafe", new { categoryId = catDishes.Category.Id })"
+                  data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace-with" data-ajax-update="@DivRestFiltId">
+                @foreach (var dish in catDishes.Dishes)
+                {
+                    <input type="hidden" name="dishIds" value="@dish.Id.ToString()" />
+                }
+                <input class="btn btn-more" type="submit" data-category="catbtn1-@CatIdStr"
+                       onclick="document.getElementById('@DivRestFiltId').style.display='';this.style.display='none';" value="@buttonText" />
+            </form>
+        }
+    </div>
+}

@@ -1,0 +1,17 @@
+﻿@model CityModel
+@{
+    var city = ViewContext.HttpContext.Session.GetCurrentCity();
+    var cityConfirmed = ViewContext.HttpContext.Session.IsCityConfirmed();
+}
+<div id="nav-city">
+    <div class="btn-group@(cityConfirmed ? string.Empty : " open")" style="width: 350px;">
+        <a class="btn btn-link" onclick="choiceCity()"><i class="fa fa-map-marker text-white" aria-hidden="true"></i> <span id="current-city">@(city.Name)</span></a>
+        @if (!cityConfirmed)
+        {
+            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></button>
+            <ul class="dropdown-menu">
+                <li>@await Html.PartialAsync("_ConfirmCity", Model)</li>
+            </ul>
+        }
+    </div>
+</div>

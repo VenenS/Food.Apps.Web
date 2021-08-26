@@ -1,0 +1,3 @@
+﻿@model Tuple<ITWebNet.Food.Site.Areas.Manager.Models.MenuPatternModel, Dictionary<FoodCategoryModel, List<ITWebNet.Food.Core.DataContracts.Common.FoodDishModel>>>
+@await Html.PartialAsync("_Patterns", Model.Item1)
+@await Html.PartialAsync("_Schedule", Model.Item2)

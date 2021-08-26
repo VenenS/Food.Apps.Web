@@ -1,0 +1,46 @@
+﻿@model OrderItemModel
+
+@{
+    var order = ViewData["order"] as OrderViewModel;
+    var options = new AjaxOptions()
+    {
+        UpdateTargetId = "order-item-" + @Model?.Id,
+        InsertionMode = InsertionMode.ReplaceWith
+    };
+}
+
+
+@if (Model != null)
+{
+    <li class="list-group-item" id="order-item-@Model.Id">
+        @if (order?.Status == OrderStatusEnum.Created)
+        {
+            @Html.AjaxIconRouteLink("fa fa-remove", "", "ManagerCafe",
+                new {controller = "Reports", 
+                    cafeId = order?.CafeId,
+                    action = "DeleteOrderItem", 
+                    orderItemId = Model.Id, 
+                    orderId = order?.Id},
+                options, new
+                {
+                    @class = "pull-right text-danger", style = "margin-left:5px;"
+                })
+        }
+        <span class="badge">@(Model.DishBasePrice*Model.DishCount) руб.</span>
+        <span class="badge">=</span>
+        <span class="badge">@Model.DishBasePrice руб.</span>
+        <span class="badge">x</span>
+        <span class="badge">@Model.DishCount @DeclensionHelper.GetNoun(Model.DishCount, 
+                                                 "порция",
+                                                 "порции", 
+                                                 "порций")</span>
+        <h5 class="list-group-item-heading">@Model.DishName</h5>
+        @if (!string.IsNullOrWhiteSpace(Model.Comment))
+        {
+            <p class="list-group-item-text">
+                <strong>Комментарий к блюду:</strong>
+                @Model.Comment
+            </p>
+        }
+    </li>
+}

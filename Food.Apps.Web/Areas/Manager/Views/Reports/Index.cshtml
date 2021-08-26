@@ -1,0 +1,27 @@
+﻿@model ReportsModel
+@{
+    ViewBag.Title = "Отчеты";
+}
+<div class="main wide-rigth content" id="reports-page">
+  <div class="row">
+    @await Html.PartialAsync("_Filter", Model.Filter)
+  </div>
+  <div class="row">
+    @await Html.PartialAsync("_CompanyReports", Model.CompanyOrders)
+  </div>
+  <div class="row">
+    @await Html.PartialAsync("_UserReports", Model.UserOrders)
+  </div>
+  <div class="row">
+    @await Html.PartialAsync("_BanketReports", Model.BanketOrders)
+  </div>
+</div>
+
+@section scripts {
+  <script>
+    (function() {
+      getDocumentHandler();
+      expandOrderItems(document);
+    }());
+  </script>
+}

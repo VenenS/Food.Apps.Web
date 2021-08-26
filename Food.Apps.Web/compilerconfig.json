@@ -1,0 +1,22 @@
+﻿[
+  {
+    "outputFile": "wwwroot/css/site.css",
+    "inputFile": "Content/Less/site.less"
+  },
+  {
+    "outputFile": "wwwroot/css/site-admin.css",
+    "inputFile": "Content/Less/site-admin.less"
+  },
+  {
+    "outputFile": "wwwroot/css/site-curator.css",
+    "inputFile": "Content/Less/site-curator.less"
+  },
+  {
+    "outputFile": "wwwroot/css/site-manager.css",
+    "inputFile": "Content/Less/site-manager.less"
+  },
+  {
+    "outputFile": "wwwroot/css/datatables.site.css",
+    "inputFile": "Content/Less/datatables.site.less"
+  }
+]

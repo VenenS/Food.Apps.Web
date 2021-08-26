@@ -1,0 +1,119 @@
+﻿@model CartMultiCafeViewModel
+
+@if (Model != null && Model.CafeCarts.Count > 0)
+{
+    <div class="side-cart-panel column">
+        <h4 class="group-title">
+            Ваш заказ
+        </h4>
+        <button onclick="changeDirectionAllArrow($(this), '#cart-cafes', '.toggle-group')" class="btn panel-default btn-toggle-groups"
+                data-target="#cart-cafes" state="1">
+            <i class="fa fa-minus"></i>
+            Свернуть все
+        </button>
+
+        <div id="cart-cafes">
+            @foreach (long NextCafeId in Model.CafeCarts.Keys)
+            {
+                <!--Открывать в банкете только заказ этого кафе из корзины мультикафе-->
+                if (Model.Type != ViewBag.CartType && (Model.CurrentCafeId ?? -1) != NextCafeId) { continue; }
+
+                <!--
+                <div class="sidebar-cart-items">
+                    //if (nextCart.Cafe != null && ((nextCart.Cafe.WeekMenuIsActive && nextCart.IsCompanyEmployee)
+                            || (nextCart.Cafe.DeferredOrder && nextCart.Cafe.CafeType != CafeType.CompanyOnly)
+                            || (nextCart.Cafe.WeekMenuIsActive && nextCart.Cafe.DeferredOrder && nextCart.Cafe.CafeType == CafeType.CompanyOnly))
+                            && Model.Type != CartType.Banket)
+                Восстановление функционала банкетов -->
+                CartViewModel nextCart = Model.CafeCarts[NextCafeId];
+                if (nextCart.Cafe != null)
+                {
+
+                    <div class="panel panel-default" data-category="@nextCart.Cafe.Id">
+                        <div class="panel-heading">
+                            <a onclick="changeDirectionArrow($(this))" role="button" class="toggle-group"
+                               data-toggle="collapse" data-target="#cat-@nextCart.Cafe.Id"
+                               aria-expanded="true" aria-controls="cat-@nextCart.Cafe.Id" style="position:relative; left:10px">
+                                <h4>
+                                    <i class="fa fa-expander"></i>
+                                    @nextCart.Cafe.Name
+                                </h4>
+                            </a>
+                        </div>
+                        <ul id="cat-@nextCart.Cafe.Id" class="list-group collapse in">
+                            <!--<div class="cafe-title"></div>-->
+                            <div class="sidebar-cart-items">
+                                @if (nextCart.Cafe != null && ((nextCart.Cafe.WeekMenuIsActive && nextCart.IsCompanyEmployee)
+                                || (nextCart.Cafe.DeferredOrder && nextCart.Cafe.CafeType != CafeType.CompanyOnly)
+                                || (nextCart.Cafe.WeekMenuIsActive && nextCart.Cafe.DeferredOrder && nextCart.Cafe.CafeType == CafeType.CompanyOnly))
+                                && Model.Type != EnumCartType.Banket)
+                                {
+                                    <div id="accordion">
+                                        @{
+                                            var ordersByDates = nextCart.CartItems
+                                                .OrderBy(c => c.DeliveryDate.Date).GroupBy(c => c.DeliveryDate.Date);
+                                            int countOfDates = ordersByDates.Count();
+                                        }
+                                        @foreach (var item in ordersByDates)
+                                        {
+                                            <div class="card">
+                                                <div class="card-title">
+                                                    <a data-parent="#accordion" href="#collapseMenu-@item.Key.Day">
+                                                        <!--data-toggle="collapse" -->
+                                                        @item.Key.Date.ToString("dddd dd.M")
+                                                    </a>
+                                                </div>
+                                                <!--<div class="collapse in card-content"
+                                                id="collapseMenu-@item.Key.Day">-->
+
+                                                @foreach (var dish in item)
+                                                {
+                                                    await Html.RenderPartialAsync("_ShortCartItem", dish);
+                                                }
+                                                <div id="delivery-@NextCafeId.ToString()-date-@item.Key.ToString("yyyy-MM-dd")">
+                                                    @* Вывод стоимости доставки для даты очередного заказа. *@
+                                                    @if (nextCart.DeliveryPriceInfoByDates
+                                                    .ContainsKey(item.Key))
+                                                    {
+                                                        @await Html.PartialAsync("_SideBarDeliveryCost",
+                                                            nextCart.DeliveryPriceInfoByDates[item.Key])
+                                                    }
+                                                </div>
+                                                <!--</div>-->
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    foreach (var item in nextCart.CartItems)
+                                    {
+                                        @await Html.PartialAsync("_ShortCartItem", item)
+                                    }
+                                }
+                            </div>
+                        </ul>
+                    </div>
+                }
+            }
+        </div>
+        @await Html.PartialAsync("_SideBarTotals", Model)
+        <div class="cart-order-actions">
+            @await Html.PartialAsync("_CartActions", Model)
+        </div>
+    </div>
+}
+else
+{
+    if (Model != null && Model.CafeCarts.Count == 0 && Model.Type == EnumCartType.Banket)
+    {
+        <div class="side-cart-panel column">
+            <h4 class="group-title">
+                Ваш заказ
+            </h4>
+            <div class="cart-order-actions">
+                @await Html.PartialAsync("_CartActions", Model)
+            </div>
+        </div>
+    }
+}

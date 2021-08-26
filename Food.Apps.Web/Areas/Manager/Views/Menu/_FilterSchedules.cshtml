@@ -1,0 +1,18 @@
+﻿@model string
+
+@{
+    var cafeId = ViewContext.RouteData.Values["cafeId"] ?? ViewContext.RouteData.Values["id"];
+}
+
+
+<div class="form-group card">
+    <form ajax-url="@Url.RouteUrl("ManagerCafe", new { cafeId = cafeId, controller = "Menu", action = "FilterSchedules" })"
+          ajax-method="POST" ajax-update="#schedule-details" ajax-loading="#processIcon" ajax-mode="replace">
+        <div class="input-group">
+            <input type="search" class="form-control" name="searchString" value="@Model" />
+            <span class="input-group-addon btn btn-reset">
+                <i class="fa fa-times"></i>
+            </span>
+        </div>
+    </form>
+</div>

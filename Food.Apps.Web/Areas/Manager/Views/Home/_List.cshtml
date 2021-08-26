@@ -1,0 +1,19 @@
+﻿@model IEnumerable<CafeModel>
+
+@if (Model == null || Model.Count() == 0)
+{
+
+    <h4>По вашему запросу не найдено ни одного кафе. Уточните критерии запроса.</h4>
+}
+else
+{
+  foreach (var item in Model)
+  {
+        <div>
+          @await Html.PartialAsync("_Cafe", item)
+        </div>
+  }
+}
+
+
+

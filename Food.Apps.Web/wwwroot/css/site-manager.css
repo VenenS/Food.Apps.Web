@@ -1,0 +1,141 @@
+﻿.food-checkbox input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+  margin: 10px 0 0 20px;
+}
+.food-checkbox-text {
+  /*position: relative;*/
+  padding: 0 0 0 10px;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.food-checkbox-text:before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 25px;
+  height: 13px;
+  border-radius: 13px;
+  background: #CDD1DA;
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.2);
+  transition: 0.2s;
+}
+.food-checkbox-text:after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 1px;
+  width: 13px;
+  height: 13px;
+  border-radius: 10px;
+  background: #FFF;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: 0.2s;
+}
+.food-checkbox input:checked + .food-checkbox-text:before {
+  background: #9FD468;
+}
+.food-checkbox input:checked + .food-checkbox-text:after {
+  left: 12px;
+}
+.food-checkbox input:focus + .food-checkbox-text:before {
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.2), 0 0 0 3px rgba(255, 255, 0, 0.7);
+}
+.food-radio input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+  margin: 5px 0 0 3px;
+}
+.food-radio-text {
+  /*position: relative;
+    padding: 0 0 0 35px;*/
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.food-radio-text:before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  border: 1px solid #CDD1DA;
+  border-radius: 50%;
+  background: #FFF;
+}
+.food-radio-text:after {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #9FD468;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: 0.2s;
+}
+.food-radio input:checked + .food-radio-text:after {
+  opacity: 1;
+}
+.food-radio input:focus + .food-radio-text:before {
+  box-shadow: 0 0 0 3px rgba(255, 255, 0, 0.7);
+}
+.table.table-head-center thead th {
+  text-align: center;
+}
+.image-upload-component .image-drop-area {
+  padding: 3rem 0;
+  border: 4px dashed #d4d3d3 !important;
+  border-radius: 4px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.image-upload-component .image-upload-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+.image-upload-component .image-upload-buttons > :first-child {
+  flex-grow: 2;
+  margin-right: 1rem;
+}
+.image-upload-component input[type="file"] {
+  display: none;
+}
+.constrained-cafe-header-img {
+  width: auto;
+  height: auto;
+  max-width: 600px;
+  max-height: 130px;
+}
+.constrained-cafe-logo-img {
+  width: auto;
+  height: auto;
+  max-width: 160px;
+  max-height: 120px;
+}
+.constrained-dish-img {
+  width: auto;
+  height: auto;
+  max-width: 160px;
+  max-height: 160px;
+}
+.btn-info.schedule {
+  color: #fff !important;
+}
+.display-flex {
+  display: flex;
+}
+.display-flex.space-between {
+  justify-content: space-between;
+}
+.mr-1 {
+  margin-right: 5px;
+}
+.mr-4 {
+  margin-right: 20px;
+}

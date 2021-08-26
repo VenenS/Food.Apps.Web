@@ -1,0 +1,376 @@
+﻿@import "../../Content/Less/variables.less";
+
+@media only screen and (min-width : @screen-lg-min) {
+    .container {
+        width: 1200px;
+    }
+}
+
+@media (max-width : @screen-lg) {
+    #guide-nav {
+        display: none;
+    }
+}
+
+// for mobile
+@media (max-width : @screen-xs-max) {
+
+    .cut-text, li.divider, .rating-comment, .footer-logo {
+        display: none;
+    }
+
+    h4 {
+        font-size: 1.1em;
+    }
+
+    .navbar > .container .navbar-header {
+        display: inline-block;
+    }
+
+    .navbar > .container {
+        flex-direction: column;
+        flex: 1 0 auto;
+    }
+
+    #navbar-collapse-content, #nav-login {
+        padding-left: @s-primary-padding-double;
+    }
+
+    .nav .open > a, .nav .open > a:focus, .nav .open > a:hover {
+        background-color: #222;
+        border: none;
+    }
+
+    #navbar-collapse-content a {
+        color: white;
+    }
+
+    .form-inline .input-group.input-daterange > .form-control {
+        width: 100%;
+    }
+
+    .left-sidebar {
+        padding-right: 0;
+        padding-top: @s-primary-padding-double;
+    }
+
+    .container .main {
+        margin-top: @s-primary-margin-double;
+    }
+
+    .side-bar {
+        margin-top: @s-primary-margin-double;
+        padding: 0;
+    }
+
+    .card.dish {
+        margin: @s-primary-margin 0;
+    }
+
+    .card-content {
+        padding: 0;
+    }
+
+    a.back-to-top {
+        right: 0;
+        left: 20px;
+    }
+
+    #id-delivery-info {
+        padding: 0;
+        margin-top: @s-primary-margin-double;
+    }
+
+    .cafe-info {
+        margin: 1em 0;
+
+        & .card-image {
+            display: none;
+        }
+    }
+
+    .rating label {
+        font-size: small;
+    }
+
+    .cafe-additional-info {
+        font-size: 0.9em;
+    }
+
+    .main {
+        padding-right: 0;
+    }
+
+    .block {
+        height: 120px;
+    }
+
+    .block .card-image {
+        height: 90px;
+    }
+
+    .card-content {
+        height: 100%;
+    }
+
+    .card-title {
+        display: flex;
+        max-height: none !important;
+
+        & h4 {
+            align-self: center;
+        }
+    }
+
+    .left-sidebar {
+        width: 100%;
+    }
+
+    .fixed-cart.affix, .fixed-sidebar.affix {
+        position: relative;
+        max-width: 100%;
+        top: auto;
+
+        .sidebar-cart-items {
+            max-height: none !important;
+        }
+    }
+
+    .main {
+        padding-right: 0;
+    }
+}
+
+// For tablets.
+@media (min-width: @screen-sm-min) and (max-width: @screen-lg) {
+
+    .left-sidebar {
+        padding: @s-primary-padding-double 0;
+    }
+
+    .side-bar {
+        padding-right: 0;
+    }
+
+    .fixed-cart.affix, .fixed-sidebar.affix {
+        position: relative;
+        max-width: 100%;
+        top: auto;
+
+        .sidebar-cart-items {
+            max-height: none !important;
+        }
+    }
+
+    .sidebar-cart.shortCart .sidebar-cart-items {
+        max-height: none;
+    }
+
+    .cafe-info {
+        margin: 1em 0;
+    }
+}
+
+@media only screen and (min-width : @screen-md-min) and (max-width : @screen-md-max) {
+    .container {
+        width: 950px;
+    }
+}
+
+@media only screen and (min-width : @screen-sm-min) and (max-width : @screen-sm-max) {
+    .container {
+        width: 750px;
+    }
+}
+
+@media only screen and (max-width : @screen-sm-max) {
+    .text-sm-left {
+        text-align: left !important;
+    }
+
+    .pull-sm-left {
+        float: left !important;
+    }
+}
+
+@media only screen and (min-width : @screen-sm-min) {
+    .navbar {
+        height: 108px;
+        position: relative;
+        border: 0px;
+
+        .navbar-header {
+
+            .navbar-brand {
+                padding: 0;
+                margin: 0;
+                height: 86px;
+
+                > img {
+                    position: absolute;
+                    left: 50%;
+                    height: 80%;
+                    margin-left: -85px !important;
+                    display: block;
+                }
+            }
+        }
+
+        .navbar-right {
+            line-height: 100px;
+            margin-right: @s-primary-padding-quad;
+        }
+
+        .btn {
+            color: @c-background;
+        }
+    }
+
+    #nav-login {
+        text-align: center;
+        width: 266px;
+        padding-right: @s-primary-padding-double;
+    }
+
+    .popover {
+        max-width: 500px !important;
+        width: 500px !important;
+        white-space: pre-line;
+    }
+
+    .nav .open > a {
+        background-color: @c-text;
+        border-color: @c-text;
+
+        &:hover, &:focus {
+            background-color: @c-text;
+            border-color: @c-text;
+        }
+    }
+}
+
+@media only screen and (max-width : @screen-xs-max) {
+
+    .navbar {
+
+        .navbar-header {
+
+            .navbar-brand {
+                color: @c-btn-text;
+            }
+        }
+    }
+
+    main {
+        .container {
+            flex-direction: column;
+            align-items: center;
+
+            .main {
+                order: 2;
+            }
+
+            .side-bar {
+                order: 1;
+            }
+        }
+    }
+
+    .cafe-login {
+        order: 0;
+
+        .nav-user-name {
+            padding-left: 0;
+        }
+
+        .btn-group {
+            float: left !important;
+        }
+    }
+
+    .cafe-name {
+        order: 1;
+    }
+}
+
+@media only screen and (min-width : @screen-xs-min) and (max-width : @screen-xs-max) {
+    .navbar {
+        height: 60px;
+    }
+
+    .container {
+        width: 500px;
+
+        .main {
+            width: 100%;
+        }
+    }
+}
+
+@media only screen and (max-width : @screen-xs-min) {
+    .container {
+        min-width: 290px;
+        margin-right: @s-primary-padding-double;
+        margin-left: @s-primary-padding-double;
+
+        .main {
+            width: auto;
+        }
+    }
+
+    .card {
+        &.cafe,
+        &.dish {
+            height: 120px;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-content: flex-start;
+            align-items: flex-start;
+            flex-wrap: wrap;
+
+            .card-image {
+                flex: 0 0 auto;
+                height: 50px;
+                width: 50px;
+                align-self: center;
+            }
+
+            .card-content {
+                flex-basis: 80%;
+
+                .card-title {
+                    .text-overflow(ellipsis);
+                }
+            }
+        }
+
+        &.cafe {
+            .card-actions {
+                flex-basis: 50%;
+            }
+        }
+
+        &.dish {
+            align-content: initial;
+
+            .card-actions {
+                flex-direction: column;
+                right: 100px;
+            }
+
+            .card-content {
+                flex-direction: row;
+                border: none;
+            }
+        }
+    }
+
+    .popover {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    .pull-xs-left {
+        float: left !important;
+    }
+}

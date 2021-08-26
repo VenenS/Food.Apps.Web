@@ -1,0 +1,85 @@
+﻿@using ITWebNet.Food.Site.Models
+@model List<BanketModel>
+
+@{
+    ViewBag.Title = "Банкеты";
+    var companies = (List<CompanyModel>) ViewBag.Companies ?? new List<CompanyModel>();
+    var menus = (List<CafeMenuPatternModel>) ViewBag.Menus ?? new List<CafeMenuPatternModel>();
+}
+
+<div class="main wide-rigth content">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @if (TempData.ContainsKey("Result"))
+            {
+                <div class="alert alert-success">
+                    @TempData["Result"]
+                </div>
+            }
+            @Html.RouteLink("Создать банкет", "ManagerCafe",
+                new {action = "Create", controller = "Bankets"}, new {@class = "btn btn-default mb-3"})
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Компания</th>
+                    <th>Меню</th>
+                    <th>Дата начала<br/> заказа</th>
+                    <th>Дата окончания<br/> заказа</th>
+                    <th>Номер<br/> заказа</th>
+                    <th>Дата<br/> проведения</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                @for (var i = 1; i <= Model.Count; i++)
+                {
+                    var company = companies.FirstOrDefault(c => c.Id == Model[i - 1].CompanyId);
+                    var menu = menus.FirstOrDefault(c => c.Id == Model[i - 1].MenuId && c.IsBanket);
+                    <tr>
+                        <td>
+                            @i
+                        </td>
+                        <td>
+                            @if (company != null)
+                            {
+                                @(company.Name)
+                            }
+                        </td>
+                        <td>
+                            @if (menu != null)
+                            {
+                                <a href="@Url.RouteUrl("ManagerCafe", new {action = "Index", controller = "Menu", menuId = menu.Id})">
+                                    @menu.Name
+                                </a>
+                            }
+                        </td>
+                        <td>
+                            @Model[i - 1].OrderStartDate.ToShortDateString()
+                        </td>
+                        <td>
+                            @Model[i - 1].OrderEndDate.ToShortDateString()
+                        </td>
+                        <td>
+                            <a href="@Url.RouteUrl("ManagerCafe", new { controller = "Reports", action = "Details", returnUrl = "banket", id = Model[i-1].Id, orderType = EnumOrderType.Banket})">@Model[i-1].Id</a>
+                        </td>
+                        <td>
+                            @Model[i - 1].EventDate.Date.ToShortDateString()
+                        </td>
+                        <td class="text-nowrap text-center">
+                            <a href="@Url.RouteUrl("ManagerCafe",
+                                         new {action = "Edit", controller = "Bankets", id = Model[i-1].Id})" class="btn btn-link p-1">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <a href="@Url.RouteUrl("ManagerCafe", new {action = "Delete", controller = "Bankets", id = Model[i-1].Id})"
+                               class="btn btn-link p-1">
+                                <i class="fa fa-remove text-danger"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

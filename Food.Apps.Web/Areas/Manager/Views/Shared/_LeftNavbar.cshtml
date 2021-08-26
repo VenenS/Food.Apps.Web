@@ -1,0 +1,28 @@
+﻿@{
+    var cafe = (CafeModel)ViewBag.Cafe;
+    var id = cafe?.Id ?? (ViewContext.RouteData.Values["cafeId"] ?? ViewContext.RouteData.Values["id"]);
+    var cafeName = cafe != null ? cafe.Name : string.Empty;
+}
+
+<div class="card transparent">
+    <a href="@Url.Action("Index", "Cafe", new { cafeId = id })" class="btn btn-group-justified btn-default" title="@cafeName">
+        <h4 class="no-wordwrap">Кафе "@cafeName"</h4>
+    </a>
+    <ul class="nav nav-pills nav-stacked tree">
+        <li role="presentation" class="@Html.ActiveRoute(new RouteValueDictionary(new { controller = "Menu" }))">
+            @Html.RouteLink("Меню", "ManagerCafe", new { cafeId = id, controller = "Menu", action = "Index" })
+        </li>
+        <li role="presentation" class="@Html.ActiveRoute(new RouteValueDictionary(new { controller = "Dishes" }))">
+            @Html.RouteLink("Блюда", "ManagerCafe", new { cafeId = id, controller = "Dishes", action = "Index" })
+        </li>
+        <li role="presentation" class="@Html.ActiveRoute(new RouteValueDictionary(new { controller = "Reports" }))">
+            @Html.RouteLink("Заказы", "ManagerCafe", new { cafeId = id, controller = "Reports", action = "Index" })
+        </li>
+        <li role="presentation" class="@Html.ActiveRoute(new RouteValueDictionary(new { controller = "Bankets" }))">
+            @Html.RouteLink("Банкеты", "ManagerCafe", new { cafeId = id, controller = "Bankets", action = "Index" })
+        </li>
+        @*<li role="presentation" class="@Html.Active("Index", "Tags")">
+            @Html.RouteLink("Теги", "ManagerCafe", new { cafeId = cafeId, controller = "Tags", action = "Index" })
+        </li>*@
+    </ul>
+</div>

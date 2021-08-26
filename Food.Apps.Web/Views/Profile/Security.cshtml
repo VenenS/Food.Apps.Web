@@ -1,0 +1,25 @@
+﻿@model object
+
+@{
+    ViewBag.Title = "Безопасность";
+    Layout = "~/Views/Shared/_ProfileLayout.cshtml";
+}
+<div id="password-form">
+    @if (ViewBag.UserHasPassword)
+    {
+        @if (Model is ChangePasswordModel changePasswordModel)
+        {
+            @await Html.PartialAsync("~/Views/Profile/_ChangePassword.cshtml", changePasswordModel)
+        }
+        else
+        {
+            @await Html.PartialAsync("~/Views/Profile/_ChangePassword.cshtml", new ChangePasswordModel())
+        }
+    }
+    else
+    {
+        @await Html.PartialAsync("~/Views/Profile/_SetPassword.cshtml")
+    }
+    <div class="wip" id="processIcon"><i class="fa fa-spinner fa-pulse fa-3x"></i></div>
+</div>
+

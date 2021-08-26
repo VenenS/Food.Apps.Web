@@ -1,0 +1,120 @@
+﻿@model OrderViewModel
+
+<div class="main centered content" id="order-@Model.Id">
+    <div class="card col-xs-8">
+        <div class="card-body">
+            <div class="card-content">
+                <div>
+                    <h4>Заказ № @Html.DisplayFor(model => model.Id)</h4>
+                    <hr />
+                    <dl class="dl-horizontal dl-striped">
+                        <dt>
+                            Время поступления
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Create)
+                        </dd>
+                        <dt>
+                            Имя клиента
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Creator.UserFullName)
+                        </dd>
+                        <dt>
+                            Телефон
+                        </dt>
+
+                        <dd>
+                            @if (string.IsNullOrEmpty(Model.PhoneNumber))
+                            {
+                                @Html.Phone(Model.OrderInfo.OrderPhone)
+                            }
+                            else
+                            {
+                                @Html.Phone(Model.PhoneNumber)
+                            }
+
+                        </dd>
+                        <dt>
+                            Тип оплаты
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model=>model.PayType)
+                        </dd>
+                        <dt>
+                            Комментарий к оплате
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.OddMoneyComment)
+                        </dd>
+                        <dt>
+                            Комментарий к заказу
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Comment)
+                        </dd>
+
+                        <dt>
+                            Стоимость
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.TotalSum) <span class="text-muted"> ₽</span>
+                        </dd>
+
+                        <dt>
+                            Доставить ко времени
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.DeliverDate)
+                        </dd>
+                        @if (Model.OrderInfo != null)
+                        {
+                            <dt>
+                                Адрес доставки
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.OrderInfo.OrderAddress)
+                            </dd>
+                            <dt>
+                                Электронный ящик
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.OrderInfo.OrderEmail)
+                            </dd>
+                        }
+                        <dt style="padding-top: 6px;">
+                            Статус
+                        </dt>
+                        <dd>
+                            @Model.Status.GetDescription()
+                        </dd>
+                        <dt>
+                            Комментарий менеджера
+                        </dt>
+                        <dd>
+                            @if (String.IsNullOrEmpty(Model.ManagerComment))
+                            {
+                                <label>Комментария от менеджера пока нет</label>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(model => model.ManagerComment)
+                            }
+                        </dd>
+                    </dl>
+                </div>
+                <ul class="list-group">
+                    @foreach (var orderItem in Model.OrderItems)
+                    {
+                        @await Html.PartialAsync("_OrderItem", orderItem, new ViewDataDictionary(ViewData) { { "order", Model } })
+                    }
+                </ul>
+                <hr />
+                <div class="card-actions">
+                    @Html.RouteLink("К списку заказов", "AdministratorReports", new { cafeId = Model.CafeId, controller = "Reports", action = "Index" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

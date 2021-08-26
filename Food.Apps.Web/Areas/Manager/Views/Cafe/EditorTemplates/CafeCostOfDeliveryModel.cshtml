@@ -1,0 +1,38 @@
+﻿@model CafeCostOfDeliveryModel
+
+@{
+    string control = "form-control";
+    Guid index = Guid.NewGuid();
+    string CompanyOrPersonal = Model.ForCompanyOrders ? "Company" : "Personal";
+    var bindTarget = Model.ForCompanyOrders ? "CostOfDeliveryCompany" : "CostOfDeliveryPersonal";
+
+    var success = "removeDeliveryCostItem(\"" + @index + "\");";
+}
+
+<div class="row" id="Delivery-cost-@index" data-edit="false">
+    <input type="hidden" name="@(bindTarget).Index" value="@index" />
+    <input type="hidden" name="@(bindTarget)[@index].Id" value="@Model.Id" />
+    <input type="hidden" name="@(bindTarget)[@index].IsEdit" value="@Model.IsEdit.ToString()" />
+    <input type="hidden" name="@(bindTarget)[@index].ForCompanyOrders" value="@Model.ForCompanyOrders.ToString()" />
+    <div class="col-xs-2">
+        <input asp-for="OrderPriceFrom" class="@control" readonly name="@(bindTarget)[@index].OrderPriceFrom" />
+    </div>
+    <div class="col-xs-2">
+        <input asp-for="OrderPriceTo" class="@control" readonly name="@(bindTarget)[@index].OrderPriceTo" />
+    </div>
+    <div class="col-xs-2">
+        <input asp-for="DeliveryPrice" class="@control" readonly name="@(bindTarget)[@index].DeliveryPrice" />
+    </div>
+    <div class="col-xs-2">
+        <a href="#!" onclick="editDeliveryCostItem('@index');">Редактировать</a>
+    </div>
+    <div class="col-xs-2">
+        <a href="" data-ajax="true" data-ajax-success="@success" ajax-method="post" data-ajax-url="@Url.Action("RemoveDeliveryCostItem", "Cafe", new { itemId = Model.Id})" ajax-update="#CostOfDeliveryItems">Удалить</a>
+    </div>
+    <div class="col-xs-12">
+        @if (!string.IsNullOrEmpty(Model.Info))
+        {
+            <span class="text-danger">@Model.Info</span>
+        }
+    </div>
+</div>

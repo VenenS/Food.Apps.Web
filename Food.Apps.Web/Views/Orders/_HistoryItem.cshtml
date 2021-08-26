@@ -1,0 +1,102 @@
+﻿@model OrderHistoryViewModel
+
+@{
+    var collapseIn = ViewBag.CollapseIn ?? false;
+    bool preOrderParam = Model.CompanyOrderId.HasValue ? true : false; 
+}
+
+<div class="card p-2" id="order-history-@Model.Id">
+    <div class="card-header ml-3" role="tab" id="headingOne">
+        <h4>
+            Заказ создан @Model.Created.ToShortDateString() в @Model.Created.ToShortTimeString() на сумму @Model.TotalSum руб
+        </h4>
+    </div>
+    <div class="card-body">
+        @Html.ValidationSummary(true, null, new { @class = "text-danger" })
+        @if (Model.Banket != null)
+        {
+            <p>
+                Компания: @Model.Banket.Company.Name
+            </p>
+            <p>
+                Дата проведения банкета: @Model.Banket.EventDate.ToShortDateString()
+            </p>
+            <p>
+                Дата начала заказа: @Model.Banket.OrderStartDate.ToShortDateString()
+            </p>
+            <p>
+                Дата окончания заказа: @Model.Banket.OrderEndDate.ToShortDateString()
+            </p>
+        }
+        <p>
+            Кафе
+            <a href="@Url.RouteUrl(routeName: "SubdomainRoute", routeValues: new RouteValueDictionary(new {controller = "Cafe", action = "Index", name = Model.Cafe.CleanUrlName}), subdomain: true)">@Model.Cafe.Name</a>
+        </p>
+        <p>
+            Статус: @Model.Status.GetDescription()
+            @if (Model.Status == OrderStatusEnum.Created)
+            {
+                <a asp-action="DiscardOrder" class="pull-right" asp-route-orderId="@Model.Id"
+                   data-ajax="true" data-ajax-mode="replace-with" data-ajax-update="#order-history-@Model.Id"
+                   data-ajax-loading="#processIcon-@Model.Id" data-ajax-method="POST">Отменить</a>
+            }
+        </p>
+        <p>Дата доставки: @Model.DeliverDate.ToShortDateString()</p>
+        @if (Model.CompanyOrderId != null
+               && Model.Status != OrderStatusEnum.Abort
+               && Model.Status != OrderStatusEnum.Delivered
+               && Model.Banket == null
+               && Model.DeliveryAddress != null)
+        {
+            @await Html.PartialAsync("_DeliveryAddressHistory");
+        }
+        else
+        {
+            if (Model.OrderInfo != null && String.IsNullOrEmpty(Model.OrderInfo.OrderAddress))
+            {
+                <p>Адрес доставки: не определен</p>
+            }
+            else
+            {
+                <p>Адрес доставки: @Model.OrderInfo.OrderAddress</p>
+            }
+        }
+        <p>
+            Тип оплаты: @Model.DeliveryInfoPayType
+        </p>
+        <p>
+            <a role="button" data-toggle="collapse" href="#collapse-order-@Model.Id" aria-expanded="false" aria-controls="collapse-order-@Model.Id">
+                Детали заказа
+            </a>
+        </p>
+    </div>
+    <div id="collapse-order-@Model.Id" class="collapse @(collapseIn ? "in" : string.Empty)">
+        <ul class="list-group">
+            @if (Model.DeliverySum.HasValue && Model.DeliverySum.Value > 0 && Model.Count > 0)
+            {
+                <li class="list-group-item">
+                    <span class="badge">@Model.DeliverySum.Value.ToString(".##") руб</span>
+                    <h5 class="list-group-item-heading">Доставка</h5>
+                </li>
+            }
+            @foreach (var orderItem in Model.CartItems)
+            {
+                <li class="list-group-item">
+                    @if (Model.Status == OrderStatusEnum.Created && Model.Banket == null)
+                    {
+                        <a asp-action="DeleteOrderItem" asp-controller="Orders" class="pull-right ml-1"
+                           asp-route-orderId="@Model.Id" asp-route-orderItemId="@(orderItem.OrderItemId ?? -1)"
+                           data-ajax="true" data-ajax-mode="replace-with" data-ajax-update="#order-history-@Model.Id"
+                           data-ajax-loading="#processIcon-@Model.Id" data-ajax-method="POST"><i class="fa fa-remove text-danger"></i></a>
+                    }
+                    <span class="badge">@orderItem.Price руб X @orderItem.Count = @orderItem.TotalPrice руб</span>
+                    <h5 class="list-group-item-heading">@orderItem.Name</h5>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="wip" id="processIcon-@Model.Id">
+        <i class="fa fa-3x fa-spinner fa-pulse"></i>
+    </div>
+</div>

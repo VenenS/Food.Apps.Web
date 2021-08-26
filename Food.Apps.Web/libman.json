@@ -1,0 +1,111 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "provider": "unpkg",
+      "library": "bootstrap@3.3.7",
+      "destination": "wwwroot/lib/bootstrap",
+      "files": [
+        "dist/css/bootstrap.min.css",
+        "dist/css/bootstrap.css",
+        "dist/fonts/glyphicons-halflings-regular.svg",
+        "dist/fonts/glyphicons-halflings-regular.ttf",
+        "dist/js/bootstrap.min.js",
+        "dist/css/bootstrap.min.css.map"
+      ]
+    },
+    {
+      "library": "font-awesome@4.7.0",
+      "destination": "wwwroot/lib/font-awesome",
+      "files": [
+        "css/font-awesome.css",
+        "css/font-awesome.min.css",
+        "fonts/fontawesome-webfont.svg",
+        "fonts/fontawesome-webfont.ttf"
+      ]
+    },
+    {
+      "library": "jquery@3.4.1",
+      "destination": "wwwroot/lib/jquery",
+      "files": [
+        "jquery.js",
+        "jquery.min.js"
+      ]
+    },
+    {
+      "library": "jquery-validate@1.19.1",
+      "destination": "wwwroot/lib/jquery-validate/",
+      "files": [
+        "jquery.validate.js",
+        "jquery.validate.min.js",
+        "localization/messages_ru.min.js"
+      ]
+    },
+    {
+      "library": "jquery-validation-unobtrusive@3.2.3",
+      "destination": "wwwroot/lib/jquery-validation-unobtrusive",
+      "files": [
+        "jquery.validate.unobtrusive.js",
+        "jquery.validate.unobtrusive.min.js"
+      ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "signalr@2.4.1",
+      "destination": "wwwroot/lib/signalR",
+      "files": [
+        "jquery.signalR.js",
+        "jquery.signalR.min.js"
+      ]
+    },
+    {
+      "library": "jqueryui@1.12.1",
+      "destination": "wwwroot/lib/jquery-ui",
+      "files": [
+        "jquery-ui.css",
+        "jquery-ui.js",
+        "jquery-ui.min.css",
+        "jquery-ui.min.js",
+        "images/ui-icons_444444_256x240.png",
+        "images/ui-icons_555555_256x240.png",
+        "images/ui-icons_777777_256x240.png",
+        "images/ui-icons_777620_256x240.png",
+        "images/ui-icons_cc0000_256x240.png",
+        "images/ui-icons_ffffff_256x240.png"
+      ]
+    },
+    {
+      "library": "jquery-ui-timepicker-addon@1.6.3",
+      "destination": "wwwroot/lib/jquery-ui-timepicker-addon",
+      "files": [
+        "jquery-ui-timepicker-addon.css",
+        "jquery-ui-timepicker-addon.js",
+        "jquery-ui-timepicker-addon.min.css",
+        "jquery-ui-timepicker-addon.min.js"
+      ]
+    },
+    {
+      "library": "inputmask@4.0.8",
+      "destination": "wwwroot/lib/jquery.inputmask",
+      "files": [
+        "inputmask/jquery.inputmask.js",
+        "inputmask/jquery.inputmask.min.js",
+        "inputmask/inputmask.min.js"
+      ]
+    },
+    {
+      "library": "notify.js@3.0.0",
+      "destination": "wwwroot/lib/notifijs",
+      "files": [
+        "notify.js",
+        "notify.min.js"
+      ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "jquery-ajax-unobtrusive@3.2.6",
+      "destination": "wwwroot/lib/jquery-ajax-unobtrusive/"
+    }
+  ]
+}

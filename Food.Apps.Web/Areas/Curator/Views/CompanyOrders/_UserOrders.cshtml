@@ -1,0 +1,36 @@
+﻿@model List<OrderModel>
+
+<div style="border: 1px solid #ddd">
+    <div class="panel panel-default mb-0" style="margin-bottom: 0px;">
+        <div class="panel-heading">
+            <b class="ml-1 mt">
+                Заказы сотрудников
+                @if (ViewData.ContainsKey("companyOrdersAddress"))
+                {
+                    @ViewData["companyOrdersAddress"]
+                }
+            </b>
+            @if (ViewData.ContainsKey("companyOrdersTotalSum"))
+            {
+                <div class="pull-right">
+                    @ViewData["companyOrdersTotalSum"] р.
+                </div>
+            }
+        </div>
+        <table class="table table-striped table-hover table-bordered table-head-center" id="user-orders">
+            <thead>
+                <tr>
+                    <th>№ заказа</th>
+                    <th>Время поступления</th>
+                    <th>Имя клиента</th>
+                    <th>Телефон</th>
+                    <th>Стоимость заказа</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+
+            @await Html.PartialAsync("_ListUserReportsItem", Model)
+
+        </table>
+    </div>
+</div>

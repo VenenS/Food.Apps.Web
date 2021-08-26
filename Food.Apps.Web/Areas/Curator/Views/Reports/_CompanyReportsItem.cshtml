@@ -1,0 +1,38 @@
+﻿@using ITWebNet.Food.Site.Models
+@model ITWebNet.Food.Site.Models.CompanyOrderModel
+
+@{
+    AjaxOptions options = new AjaxOptions
+    {
+        UpdateTargetId = $"company-order-{Model.Id}",
+        InsertionMode = InsertionMode.ReplaceWith,
+        HttpMethod = "POST",
+        LoadingElementId = "processIcon"
+    };
+}
+
+<tr data-item-id="@Model.Id" data-name="CompanyOrders" id="company-order-@Model.Id">
+    <td>
+        <a href="@Url.RouteUrl(new {cafeId = Model.CafeId, controller = "Reports", action = "Details", id = Model.Id, companyId = Model.Company.Id, orderType = EnumOrderType.Collective})">@Model.Id</a>
+        @*<a href="@Url.RouteUrl("CuratorDefault", new {cafeId = Model.CafeId, controller = "Reports", action = "Details", id = Model.Id, companyId = Model.Company.Id, orderType = EnumOrderType.Collective})">@Model.Id</a>*@
+    </td>
+    <td>
+        <span>@Model.OrderOpenDate</span>
+    </td>
+    <td>
+        <span>@Model.DeliveryDate</span>
+    </td>
+    <td>
+        <span class="wrap-word-td">@Model.Cafe.FullName</span>
+    </td>
+    <td>
+        <span>@Model.TotalPrice<span class="text-muted"> ₽</span></span>
+    </td>
+    <td>@Model.OrderStatus.GetDescription()</td>
+    <td>
+        <a class="collapsed @(!ViewData.ContainsKey("filter-data") ? "expand-order" : string.Empty)" data-load="true" role="button" data-toggle="collapse" data-target="#individual-orders-@Model.Id" aria-expanded="false" aria-controls="individual-orders-@Model.Id"><i class="fa fa-expander"></i></a>
+    </td>
+</tr>
+    <tr class="collapse" id="individual-orders-@Model.Id">
+         @await Html.PartialAsync("_UserReports", Model.UserOrders, new ViewDataDictionary(ViewData) { { "collapseScope", "#company-order-" + Model.Id } })
+    </tr>

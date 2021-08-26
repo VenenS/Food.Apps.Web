@@ -1,0 +1,20 @@
+﻿@model string
+@inject ITWebNet.Food.Site.Services.Client.IContentServiceClient imageClient
+
+@{
+    var parameters = new ITWebNet.Food.Site.Models.GetImageModel()
+        .SetHash(Model)
+        .SetHeight(145)
+        .SetWidth(169)
+        .SetScale(ITWebNet.Food.Site.Models.ScaleImage.Width);
+}
+
+@if (ViewBag.Error != null)
+{
+    <div class="text-danger">
+        @Html.Raw(ViewBag.Error)
+    </div>
+}
+
+<input type="hidden" name="Image" id="Image" value="@Model"/>
+<img class="constrained-dish-img" src="@(!string.IsNullOrEmpty(Model) ? @imageClient.GetImage(parameters) : Url.Content("~/images/default.png"))" />

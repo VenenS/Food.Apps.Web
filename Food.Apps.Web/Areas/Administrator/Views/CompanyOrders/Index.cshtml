@@ -1,0 +1,36 @@
+﻿@using ITWebNet.Food.Core.DataContracts.Admin
+@using ITWebNet.Food.Site.Areas.Administrator.Models
+@model IEnumerable<CompanyOrderShortModel>
+@{
+    ViewBag.Title = "Администрирование";
+}
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <h4>Заказы компаний сегодня</h4>
+                <div class="row mb-4">
+                    <div class="col-xs-12">
+                        @if (ViewBag.ResultMessage != null && ViewBag.ResultMessageType != null)
+                        {
+                            <div id="result-message" class="alert alert-@ViewBag.ResultMessageType">@ViewBag.ResultMessage</div>
+                        }
+                    </div>
+                </div>
+                @await Html.PartialAsync("_List", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+@section adminStyles {
+    @await Html.PartialAsync("~/Areas/Administrator/Views/Styles/datatablesBootstrap.cshtml")
+    @await Html.PartialAsync("~/Areas/Administrator/Views/Styles/datatablesButtons.cshtml")
+    @await Html.PartialAsync("~/Areas/Administrator/Views/Styles/datatablesSelect.cshtml")
+}
+
+@section scripts
+{
+    @await Html.PartialAsync("~/Areas/Administrator/Views/Scripts/order-scripts.cshtml")
+}

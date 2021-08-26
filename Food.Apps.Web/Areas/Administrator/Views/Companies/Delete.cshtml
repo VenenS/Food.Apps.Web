@@ -1,0 +1,61 @@
+﻿@model CompanyModel
+@{
+    ViewBag.Title = "Удаление компании";
+}
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <h3>Вы уверены, что хотите удалить компанию @Html.DisplayFor(model => model.Name)?</h3>
+                <div>
+                    <hr />
+                    <dl class="dl-horizontal">
+                        <dt>
+                            Название
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.Name)
+                        </dd>
+
+                        <dt>
+                            Полное название
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.FullName)
+                        </dd>
+
+                        <dt>
+                            Юридический адрес
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.JuridicalAddress.StreetName)
+                            @Html.DisplayFor(model => model.JuridicalAddress.HouseNumber)
+                        </dd>
+
+                        <dt>
+                            Адрес доставки
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.DeliveryAddress.StreetName)
+                            @Html.DisplayFor(model => model.DeliveryAddress.HouseNumber)
+                        </dd>
+                    </dl>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-actions no-color">
+                            <input type="submit" value="Удалить" class="btn btn-danger" /> |
+                            @Html.ActionLink("Назад к списку", "Index")
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

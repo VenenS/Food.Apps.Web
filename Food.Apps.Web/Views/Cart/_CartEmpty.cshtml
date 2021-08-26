@@ -1,0 +1,49 @@
+﻿@{
+    string previousUrl = ViewContext.HttpContext.Request.Headers["Referrer"];
+    string place, message = "Корзина пуста, вернуться ";
+    var routeData = Context.GetRouteData();
+}
+<div>
+    @if (ViewData["cafeName"] != null)
+    {
+        <h4>Кафе "@ViewData["cafeName"]":</h4>
+    }
+    else if (previousUrl?.Contains("menu") == true) //зашел из меню кафе
+    {
+        var cafeName = await Component.InvokeAsync("GetCafeName", new {cleanUrlName = previousUrl.Split('/')[4]});
+        <h4>Кафе @cafeName.ToString():</h4>
+    }
+    @if (TempData.ContainsKey("ResultMessage"))
+    {
+        <div class="row">
+            <h4>@TempData["ResultMessage"]</h4>
+        </div>
+    }
+    <div class="row">
+        <h4>
+            @if (ViewData["cafeCleanUrlName"] != null)
+            {
+                message += "в";
+                @message
+                <a href="@Url.RouteUrl(routeName: "SubdomainRoute", routeValues: new  RouteValueDictionary(new { controller = "Cafe", action = "Index", name = ViewData["cafeCleanUrlName"] }), subdomain: true)" class="btn-link">меню</a>
+            }
+            else
+            {
+                if (routeData.Values["name"] != null) //зашел из меню кафе
+                {
+                    message += "в";
+                    place = "меню";
+                    @message
+                    <a href="@Url.RouteUrl(routeName: "SubdomainRoute", routeValues: new  RouteValueDictionary(new { controller = "Cafe", action = "Index", name = routeData.Values["name"].ToString() }), subdomain: true)" class="btn-link">@place</a>
+                }
+                else //переход на главную страницу, если зашел с главной или разлогинился в корзине
+                {
+                    message += "к ";
+                    place = "меню";
+                    @message
+                    <a href="@Url.RouteUrl(routeName: "SubdomainRoute", routeValues: new  RouteValueDictionary(new { action = "Index", controller = "Cafe", name = "" }), subdomain: true)" class="btn-link">@place</a>
+                }
+            }
+        </h4>
+    </div>
+</div>

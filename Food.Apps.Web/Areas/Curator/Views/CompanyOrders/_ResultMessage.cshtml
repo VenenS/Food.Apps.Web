@@ -1,0 +1,16 @@
+﻿@{
+    string message = ViewBag.Error ?? "";
+}
+@if (ViewBag.Success != null && ViewBag.Success == "Success")
+{
+    <div class="text-center col-xs-8 alert alert-success" role="alert">
+        Корпоративный заказ успешно отредактирован. <a href="/curator/companyorders/" class="alert-link">Вернуться к списку заказов</a>
+    </div>
+}
+else if (message != "")
+{
+<div class="text-center col-xs-8 alert alert-danger" role="alert">
+    @message 
+</div>
+}
+

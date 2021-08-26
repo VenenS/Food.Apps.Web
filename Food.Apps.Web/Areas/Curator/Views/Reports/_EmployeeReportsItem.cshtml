@@ -1,0 +1,27 @@
+﻿@using ITWebNet.Food.Site.Models
+@model Food.Services.Contracts.ReportUserOrdersModel
+
+@{
+    AjaxOptions options = new AjaxOptions
+    {
+        UpdateTargetId = $"company-order-{Model.User.Id}",
+        InsertionMode = InsertionMode.ReplaceWith,
+        HttpMethod = "POST",
+        LoadingElementId = "processIcon"
+    };
+
+    string userName = string.IsNullOrEmpty(Model.User.UserFullName) ? Model.User.Email : Model.User.UserFullName;
+}
+
+<tr data-item-id="@Model.User.Id" data-name="CompanyOrders" id="company-order-@Model.User.Id">
+    <td>@userName</td>
+    <td>@Model.StartDate.ToShortDateString()</td>
+    <td>@Model.EndDate.ToShortDateString()</td>
+    <td><span>@Model.TotalSumm<span class="text-muted"> ₽</span></span></td>
+    <td>
+        <a class="collapsed" data-load="true" role="button" data-toggle="collapse" data-target="#individual-orders-@Model.User.Id" aria-expanded="false" aria-controls="individual-orders-@Model.User.Id"><i class="fa fa-expander"></i></a>
+    </td>
+</tr>
+<tr class="collapse" id="individual-orders-@Model.User.Id">
+    @await Html.PartialAsync("OrderReports", OrderViewModel.AsModelList(Model.Orders), new ViewDataDictionary(ViewData) { { "collapseScope", "#company-order-" + Model.User.Id } })
+</tr>

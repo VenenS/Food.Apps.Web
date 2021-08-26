@@ -1,0 +1,122 @@
+[
+  {
+    "outputFileName": "wwwroot/lib/jquery-scrollbar/jquery.scrollbar.min.js",
+    "inputFiles": [
+      "wwwroot/lib/jquery-scrollbar/jquery.scrollbar.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/jquery-scrollbar/jquery.scrollbar.min.css",
+    "inputFiles": [
+      "wwwroot/lib/jquery-scrollbar/jquery.scrollbar.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/site.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/site.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/site-admin.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/site-admin.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/site-curator.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/site-curator.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/site-manager.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/site-manager.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/tags.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/tags.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/YaMetrika.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/YaMetrika.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/site-old.min.css",
+    "inputFiles": [
+      "wwwroot/css/site-old.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/notify-metro.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/notify-metro.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/notificationsClient.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/notificationsClient.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/hubs.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/hubs.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/modernizr-2.8.3.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/modernizr-2.8.3.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/jquery-datatables/russian.min.js",
+    "inputFiles": [
+      "wwwroot/lib/jquery-datatables/russian.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/user-scripts.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/user-scripts.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/order-scripts.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/order-scripts.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/company_orders-scripts.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/company_orders-scripts.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/reports-scripts.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/reports-scripts.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/jquery.unobtrusive-ajax-extended.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/jquery.unobtrusive-ajax-extended.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/scripts/geolocation-scripts.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/geolocation-scripts.js"
+    ]
+  }
+]

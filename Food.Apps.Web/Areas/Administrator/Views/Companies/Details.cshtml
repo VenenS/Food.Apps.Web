@@ -1,0 +1,76 @@
+﻿@model CompanyModel
+@{
+    ViewBag.Title = "Сведения о компании";
+    var addresses = Model.Addresses.Where(c => c.IsActive)
+        .Select(address => address.DisplayType == DisplayAddressType.Display 
+            ? address.RawAddress 
+            : address.GetAddressString()
+    ).ToList();
+}
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <h4>Компания @Html.DisplayFor(model => model.Name)</h4>
+                <hr/>
+                <dl class="dl-horizontal">
+                    <dt>
+                        Название
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+
+                    <dt>
+                        Полное название
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.FullName)
+                    </dd>
+                </dl>
+
+                <dl class="dl-horizontal">
+                    <dt>
+                        Основной адрес доставки
+                    </dt>
+                    <dd>
+                        @if (Model.DeliveryAddressId.HasValue && Model.Addresses != null && Model.Addresses.Where(c => c.IsActive).Select(c => c.Id).Contains(Model.DeliveryAddressId.Value))
+                        {
+                            @Model.Addresses.FirstOrDefault(c => c.Id == Model.DeliveryAddressId).GetAddressString()
+                        }
+                    </dd>
+                </dl>
+                <dl class="dl-horizontal">
+                    <dt>
+                        Юридический адрес
+                    </dt>
+                    <dd>
+                        @Model.JuridicalAddress.GetAddressString()
+                    </dd>
+                </dl>
+                @if (Model.Addresses != null && Model.Addresses.Count > 0)
+                {
+                    <dl>
+                        <dt>
+                            Полный список адресов доставок
+                        </dt>
+                        <dd>
+                            <ul>
+                                @foreach (var address in addresses.OrderBy(c => c))
+                                {
+                                    <li>@address</li>
+                                }
+                            </ul>
+                        </dd>
+                    </dl>
+                }
+            </div>
+            <p>
+                @Html.ActionLink("Редактировать", "Edit", new {id = Model.Id}) |
+                @Html.ActionLink("Назад к списку", "Index")
+            </p>
+        </div>
+    </div>
+</div>

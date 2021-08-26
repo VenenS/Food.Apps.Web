@@ -1,0 +1,20 @@
+﻿@model ITWebNet.Food.Site.Areas.Manager.Models.CafeBusinessHoursItemModel
+
+@{
+    Guid index = Guid.NewGuid();
+    string controlClass = "form-control";
+}
+
+<div class="form-inline">
+  <div class="form-group">
+    <input name="@string.Format("{0}.Index", ViewData["Prefix"])" type="hidden" value="@index" />
+    <input asp-for="OpeningTime" type="time" class="@controlClass" name="@(ViewData["prefix"])[@index].OpeningTime"/>
+    -
+    <input asp-for="ClosingTime" type="time" class="@controlClass" name="@(ViewData["prefix"])[@index].ClosingTime"/>   
+    <a href="#!" onclick="removeCafeBusinessHoursItem('@index', '@(((string)ViewData["Prefix"]).Split('.')[1])')">Удалить</a>
+  </div>
+</div>
+@if (!(string.IsNullOrEmpty(Model.Info)))
+{ 
+    <span class="text-danger">@Model.Info</span>
+}

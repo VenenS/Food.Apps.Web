@@ -1,0 +1,36 @@
+﻿@using ITWebNet.Food.Site.Models
+@inject ITWebNet.Food.Site.Services.Client.IContentServiceClient imageClient
+@model CafeModel
+@{
+    string itemDescription = !string.IsNullOrWhiteSpace(Model.Description) ? Model.Description : "Описание кафе еще не добавлено";
+    var imageParameters = new GetImageModel()
+        .SetHash(Model.BigImage)
+        .SetHeight(120)
+        .SetWidth(160);
+}
+<div class="card cafe hover" id="cafe-@Model.Id">
+    <div class="card-body">
+
+        @if (!string.IsNullOrEmpty(Model.BigImage))
+        {
+            <div class="card-image">
+                <img src="@imageClient.GetImage(imageParameters)" class="img-responsive" />
+            </div>
+        }
+        else
+        {
+            <div class="card-image default-img">
+            </div>
+        }
+        <div class="card-content">
+            <h4>@Html.DisplayFor(modelItem => Model.Name)</h4>
+        </div>
+        <div class="card-actions">
+            @await Html.PartialAsync("_Rating")
+            <a tabindex="0" role="button" class="btn btn-card-details" data-toggle="popover" data-trigger="focus" data-placement="bottom" ata-container="body" data-viewport="#list" data-content="@itemDescription">
+                <i class="fa fa-angle-double-down"></i>
+            </a>
+            <a asp-action="Index" asp-controller="Cafe" asp-route-cafeId="@Model.Id" class="btn btn-default">Перейти<i class="fa fa-angle-double-right"></i></a>
+        </div>
+    </div>
+</div>

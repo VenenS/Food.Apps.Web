@@ -1,0 +1,42 @@
+﻿@model ITWebNet.Food.Site.Areas.Manager.Models.CafeBusinessHoursDatedItemModel
+
+@{
+    Guid index = Guid.NewGuid();
+    string controlClass = "form-control";
+}
+
+<div id="work-data-@index" class="mb-4">
+    <div class="form-inline mb-1">
+        <div class="form-group">
+            <div class="input-date" id="datepicker" style="display: inline-block">
+                <input type="date" class="form-control" name="@string.Format("{0}[{1}].Date", ViewData["Prefix"], index)" value="@Model.Date.ToString("yyyy-MM-dd")" />
+            </div>
+            <label asp-for="IsDayOff"></label>
+            <input type="checkbox" class="@controlClass" name="@(string.Format("{0}[{1}].IsDayOff", ViewData["Prefix"], index))">
+        </div>
+    </div>
+    <div class="form-inline">
+        <div class="form-group">
+            <script>
+                $("input[name='@string.Format("{0}[{1}].IsDayOff", ViewData["Prefix"], index)']").change(function () {
+                    var checked = $(this).prop('checked');
+
+                    $("input[name='@string.Format("{0}[{1}].ClosingTime", ViewData["Prefix"], index)']").prop('readonly', checked);
+                    $("input[name='@string.Format("{0}[{1}].OpeningTime", ViewData["Prefix"], index)']").prop('readonly', checked);
+                });
+
+                initDatePickers();
+                $("input[name='@string.Format("{0}[{1}].IsDayOff", ViewData["Prefix"], index)']").trigger('change');
+            </script>
+            <input name="@string.Format("{0}.Index", ViewData["Prefix"])" type="hidden" value="@index" />
+            <input type="time" asp-for="OpeningTime" asp-format="{0:hh\:mm}" class="@controlClass" name="@(ViewData["Prefix"])[@index].OpeningTime" />
+            -
+            <input type="time" asp-for="ClosingTime" asp-format="{0:hh\:mm}" class="@controlClass" name="@(ViewData["Prefix"])[@index].ClosingTime" />
+            <a href="#!" onclick="removeCafeBusinessHoursDatedItem('@index')">Удалить</a>
+        </div>
+    </div>
+    @if (!string.IsNullOrEmpty(Model.Info))
+    {
+        <span class="text-danger">@Model.Info</span>
+    }
+</div>

@@ -1,0 +1,44 @@
+﻿@model FilterObjects
+
+@{
+    AjaxOptions options = new AjaxOptions()
+    {
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "POST",
+        UpdateTargetId = "destTagGrid",
+        OnSuccess = "scrollToTop"
+    };
+}
+
+
+<div class="card">
+    <div class="card-body">
+        <div class="card-content">
+                @foreach (var item in Model.Objects)
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>@Html.AjaxRouteLink(
+                                 item.Key.Name,
+                                 "ManagerCafe",
+                                 new { cafeId = Model.CafeId, controller = "Tags", id = item.Key.Id, objectType = ObjectTypesEnum.CATEGORY, action = "GetTags" },
+                                 options)</h4>
+                        </div>
+                        <ul>
+                            @foreach (var dish in item.Value)
+                            {
+                                <li class="list-group-item">
+                                 @Html.AjaxRouteLink(
+                                 dish.Name,
+                                 "ManagerCafe",
+                                 new { cafeId = Model.CafeId, controller = "Tags", id = dish.Id, objectType = ObjectTypesEnum.DISH, action = "GetTags" },
+                                 options)
+                                    
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>

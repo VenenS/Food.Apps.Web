@@ -1,0 +1,15 @@
+﻿<div id="guide-nav">
+
+    <div class="col-lg-3 stage">
+        <span @(NavigatorViewModel.Step == EnumNavigatorStep.SelectDishes ? "class=current" : string.Empty)>1</span> Ознакомьтесь с меню
+    </div>
+
+    <div class="col-lg-3 stage">
+        <span @(NavigatorViewModel.Step == EnumNavigatorStep.Checkout ? "class=current" : string.Empty)>2</span> Оформите заказ
+    </div>
+
+    <div class="col-lg-3 stage">
+        <span @(NavigatorViewModel.Step == EnumNavigatorStep.WaitDelivery ? "class=lastone" : string.Empty)>3</span> Встречайте курьера
+    </div>
+
+</div>

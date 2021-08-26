@@ -1,0 +1,59 @@
+﻿@model FoodCategoryModel
+
+<li class="list-group-item" id="category-@Model.Id" data-message="@ViewBag.ResultMessage" data-message-type="@ViewBag.ResultMessageType">
+    <div class="edit-dish">
+        <form asp-action="EditCategory" asp-controller="Categories" asp-area="AdministratorDefault" data-ajax="true" data-ajax-method="post" data-ajax-success="saveCategory">
+            @Html.HiddenFor(model => model.Id)
+            <div class="row">
+
+                <div class="form-group col-xs-5">
+                    <input asp-for="Name" class="form-control" maxlength="50" placeholder="Название" />
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-xs-5">
+                    <input asp-for="FullName" class="form-control" maxlength="50" placeholder="Полное название" />
+                    @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-xs-2" style="text-align: center;">
+
+                    <a href="#category-@Model.Id-extend" class="btn btn-link collapsed btn-collapse" data-toggle="collapse" title="Развернуть">
+                        <i class="fa fa-expander"></i>
+                    </a>
+
+                    <button type="submit" class="btn btn-link" title="Сохранить">
+                        <i class="fa fa-floppy-o text-success"></i>
+                    </button>
+                    <a href="@Url.Action("RemoveCategory", "Categories", new { categoryId = Model.Id })">
+                        <i class="fa text-danger fa-times"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div id="category-@Model.Id-extend" class="collapse row" style="padding-top: 2.5em; padding-bottom: 1em;">
+                <hr />
+                <div class="row">
+                    <div class="col-xs-8">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Description)
+                            @Html.TextAreaFor(model => model.Description,
+                                new
+                                     {
+                                         @class = "form-control",
+                                    placeholder = Html.DisplayNameFor(model => model.Description),
+                                    maxlength = 1024,
+                                         cols = "60",
+                                         rows = "4"
+                                     })
+                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="wip" id="process-@Model.Id">
+                <i class="fa fa-spinner fa-pulse fa-3x"></i>
+            </div>
+        </form>
+    </div>
+</li>

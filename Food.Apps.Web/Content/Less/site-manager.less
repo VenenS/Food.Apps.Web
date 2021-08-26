@@ -1,0 +1,79 @@
+﻿@import "../../Content/Less/variables.less";
+@import "radio-check-buttons.less";
+
+.table {
+    &.table-head-center {
+        thead {
+            th {
+                text-align: center;
+            }
+        }
+    }
+}
+
+.image-upload-component {
+    .image-drop-area {
+        padding: 3rem 0;
+        border: 4px dashed #d4d3d3 !important;
+        border-radius: 4px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .image-upload-buttons {
+        display: flex;
+        justify-content: space-around;
+
+        & > :first-child {
+            flex-grow: 2;
+            margin-right: 1rem;
+        }
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+}
+
+.constrained-cafe-header-img {
+    width: auto;
+    height: auto;
+    max-width: 600px;
+    max-height: 130px;
+}
+
+.constrained-cafe-logo-img {
+    width: auto;
+    height: auto;
+    max-width: 160px;
+    max-height: 120px;
+}
+
+.constrained-dish-img {
+    width: auto;
+    height: auto;
+    max-width: 160px;
+    max-height: 160px;
+}
+
+.btn-info {
+    &.schedule {
+        color: #fff !important;
+    }
+}
+
+.display-flex {
+    display: flex;
+
+    &.space-between {
+        justify-content: space-between;
+    }
+}
+
+.mr-1 {
+    margin-right: 5px;
+}
+
+.mr-4 {
+    margin-right: 20px;
+}

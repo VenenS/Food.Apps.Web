@@ -1,0 +1,43 @@
+﻿@model ITWebNet.Food.Site.Areas.Administrator.Models.UserDiscountViewModel
+
+@{
+    AjaxOptions editOptions = new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnSuccess = "edit_discount"
+    };
+
+    AjaxOptions deleteOptions = new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnSuccess = "remove_discount"
+    };
+}
+
+<div class="row form-group user-discount" id="user-discount-@Model.DiscountId">
+    <div class="col-xs-7 control-label">@Model.CafeName</div>
+    <div class="col-xs-3 control-label">@Model.DiscountValue %</div>
+    <div class="col-xs-2">
+        @Html.AjaxIconRouteLink(
+                                            "fa fa-edit",
+                                            "",
+                                            "AdministratorDefault",
+                                            new
+                                            {
+                                                controller = "Users",
+                                                action = "EditDiscount",
+                                                id = Model.DiscountId,
+                                                     userId = Model.UserId
+                                            },
+                                            editOptions,
+                                            new { @class = "col-xs-1" })
+        @Html.AjaxIconRouteLink(
+                                            "fa fa-times",
+                                            "",
+                                            "AdministratorDefault",
+                                            new { controller = "Users", action = "RemoveDiscount", discountId = Model.DiscountId },
+                                            deleteOptions,
+                                            new { @class = "col-xs-1" })
+
+    </div>
+</div>

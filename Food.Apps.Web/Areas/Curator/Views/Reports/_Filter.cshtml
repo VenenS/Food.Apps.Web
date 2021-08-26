@@ -1,0 +1,155 @@
+﻿@using ITWebNet.Food.Site.Models
+@model ITWebNet.Food.Site.Models.ReportViewFilter
+@{
+    AjaxOptions options = new AjaxOptions
+    {
+        InsertionMode = InsertionMode.ReplaceWith,
+        UpdateTargetId = "company-orders",
+        HttpMethod = "POST",
+        LoadingElementId = "processIcon",
+        OnComplete = "initDatePickers();expandOrder();",
+        OnFailure = "$('#result-message').removeClass('hidden')",
+        OnSuccess = "$('#result-message').addClass('hidden')"
+    };
+}
+<div class="card col-lg-12" style="margin-bottom: 20px;">
+    <form action="@Url.Action("Filter", "Reports", new { companyId = Model.Company.Id })"
+          method="post"
+          data-ajax="true"
+          data-ajax-update="#company-orders"
+          data-ajax-mode="replace-with"
+          data-ajax-success="$('#result-message').addClass('hidden')"
+          data-ajax-complete="initDatePickers();expandOrder();"
+          data-ajax-failure="$('#result-message').removeClass('hidden')">
+        @Html.HiddenFor(m => m.IsCompany)
+        @Html.HiddenFor(m => m.IsCustomer)
+        <div class="card-content pl-4">
+            <div class="row pt-4 pr-5 mb-4">
+                <div class="col-xs-6">
+                    <div class="input-group">
+                        @Html.EditorFor(model =>
+                            model.SearchQuery.SearchString, 
+                            new { htmlAttributes = 
+                                new
+                                {
+                                    @class = "form-control", 
+                                    type = "search", 
+                                    placeholder = "Поиск"
+                                }})
+                        <span class="input-group-addon">
+                            <i class="fa fa-filter"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-6 row">
+                    <div class="input-daterange input-group col-xs-9" id="datepicker">
+                        <input type="date" class="form-control" asp-for="Start" asp-format="{0:yyyy-MM-dd}" required />
+                        <span class="input-group-addon">-</span>
+                        <input type="date" class="form-control" asp-for="End" asp-format="{0:yyyy-MM-dd}" required />
+                    </div>
+                    <div class="input-group col-xs-3 ml-1">
+                        <input type="submit" value="Выбрать" class="btn btn-default pull-right" />
+                    </div>
+                </div>
+
+                <span id="result-message" class="text-danger hidden">Дата начала периода не может быть больше даты окончания</span>
+            </div>
+            <div class="row pb-4">
+                <div class="col-xs-4">
+                    <span><strong>Поиск по:</strong></span>
+                    <div class="radio">
+                        <label class="food-radio">
+                            @Html.RadioButtonFor(model => model.SearchQuery.Type, SearchType.SearchByName)
+                            <span class="food-radio-text">@SearchType.SearchByName.GetDescription()</span>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label class="food-radio">
+                            @Html.RadioButtonFor(model => model.SearchQuery.Type, SearchType.SearchByPhone)
+                            <span class="food-radio-text">@SearchType.SearchByPhone.GetDescription()</span>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label class="food-radio">
+                            @Html.RadioButtonFor(model => model.SearchQuery.Type, SearchType.SearchByOrderNumber)
+                            <span class="food-radio-text">@SearchType.SearchByOrderNumber.GetDescription()</span>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label class="food-radio">
+                            @Html.RadioButtonFor(model => model.SearchQuery.Type, SearchType.SearchByDish)
+                            <span class="food-radio-text">@SearchType.SearchByDish.GetDescription()</span>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label class="food-radio">
+                            @Html.RadioButtonFor(model => model.SearchQuery.Type, SearchType.SearchByCafe)
+                            <span class="food-radio-text">@SearchType.SearchByCafe.GetDescription()</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <span><strong>Сортировка</strong></span>
+                    <div class="col-xs-12">
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByDeliveryDate)
+                                <span class="food-radio-text">@SortType.OrderByDeliveryDate.GetDescription()</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByDate)
+                                <span class="food-radio-text">@SortType.OrderByDate.GetDescription()</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByStatus)
+                                <span class="food-radio-text">@SortType.OrderByStatus.GetDescription()</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByPrice)
+                                <span class="food-radio-text">@SortType.OrderByPrice.GetDescription()</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByOrderNumber)
+                                <span class="food-radio-text">@SortType.OrderByOrderNumber.GetDescription()</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByCafeName)
+                                <span class="food-radio-text">@SortType.OrderByCafeName.GetDescription()</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByEmployeeName)
+                                <span class="food-radio-text">@SortType.OrderByEmployeeName.GetDescription()</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <span><strong>Статус</strong></span>
+                    <div class="col-xs-12">
+                        @foreach (OrderStatusEnum item in Model.AvailableStatuses)
+                        {
+                            <div class="checkbox">
+                                <label class="food-checkbox">
+                                    <input type="checkbox" name="@Html.NameFor(model => model.Statuses)" value="@item" checked="@(Model.Statuses?.Contains(item)?? false)" />
+                                    <span class="food-checkbox-text">@item.GetDescription().Replace("Заказ ", string.Empty)</span>
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

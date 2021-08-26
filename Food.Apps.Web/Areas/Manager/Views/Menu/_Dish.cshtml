@@ -1,0 +1,49 @@
+﻿@model ITWebNet.Food.Core.DataContracts.Common.FoodDishModel
+@{
+    var cafeId = ViewContext.RouteData.Values["cafeId"] ?? ViewContext.RouteData.Values["id"];
+    ViewContext.ClientValidationEnabled = false;
+    
+}
+<li class="list-group-item menu-dish" data-category="@Model.CategoryId">
+    <form asp-route="ManagerCafe" asp-route-action="Save" asp-route-controller="Menu" method="post">
+        <input type="hidden" name="Id" id="Id" value="@Model.Id" />
+        <input asp-for="Name" type="hidden"/>
+        <div class="row">
+            @if (ViewData["actionType"] == null)
+            {
+                <div class="col-xs-2 remove-action">
+                    <a role="button" class="btn btn-danger btn-sm pull-left">
+                        <i class="fa fa-angle-double-left"></i>
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="col-xs-2 add-action">
+                    <a role="button" class="btn btn-default btn-sm pull-right">
+                        <i class="fa fa-angle-double-right"></i>
+                    </a>
+                </div>
+            }
+            <div class="col-xs-6 name">
+                @Model.Name
+            </div>
+            <div class="col-xs-4 price">
+                <div class="input-group">
+                    <input name="BasePrice" class="form-control" value="@Model.BasePrice" data-val="true" data-val-required="Введите цену блюда" data-val-regex="Цена указана некорректно" data-val-regex-pattern="[0-9]*[.,]?[0-9]{0,2}" maxlength="7" placeholder="0,00" />
+
+                    @*@Html.TextBoxFor(model => model.BasePrice,
+                    new
+                    {
+                        @class = "form-control",
+                             placeholder = Html.DisplayNameFor(model => model.BasePrice)
+                    })*@
+                    <span class="input-group-addon save-price">
+                        <i class="fa fa-rub"></i>
+                    </span>
+                </div>
+                <span asp-validation-for="BasePrice" class="text-danger"></span>
+            </div>
+        </div>
+    </form>
+</li>

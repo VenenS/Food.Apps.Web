@@ -1,0 +1,289 @@
+﻿@model ITWebNet.Food.Site.Areas.Manager.Models.CafeInfoModel
+@inject ITWebNet.Food.Site.Services.Client.IContentServiceClient imageClient
+@{
+    string labelClass = "control-label col-xs-2";
+}
+<form method="post"
+      class="form-horizontal"
+      data-ajax="true"
+      data-ajax-url="@Url.Action("ViewCafeInfo", "Cafe")"
+      data-ajax-method="post"
+      data-ajax-update="#cafeInfo"
+      data-ajax-mode="replace">
+
+    @Html.HiddenFor(m => m.CafeId)
+    @Html.HiddenFor(m => m.CompanyOnly)
+    <div style="text-align: right;">
+        <input type="submit" value="Изменить" class="btn btn-default" />
+    </div>
+    <div class="title">Сведения о кафе</div>
+    <div class="form-group">
+        <label asp-for="Description" class="@labelClass"></label>
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.Description)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ShortDescription, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.ShortDescription)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.NotificationContact, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.NotificationContact)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Address, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.Address)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Phone, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.Phone)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.CafeIcon, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.HiddenFor(m => m.CafeIcon)
+            @if (string.IsNullOrEmpty(Model.CafeIcon))
+            {
+                <img src="~/images/Cafe_default_icon.png" width="32" height="32" />
+            }
+            else
+            {
+                var imageParameters = new GetImageModel()
+                    .SetHash(Model.CafeIcon)
+                    .SetHeight(32)
+                    .SetWidth(32);
+                <img src="@imageClient.GetImage(imageParameters)" width="32" height="32" />
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Logotype, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.HiddenFor(m => m.Logotype)
+            @if (string.IsNullOrEmpty(Model.Logotype))
+            {
+                <img src="~/images/default.png" width="160" height="120" />
+            }
+            else
+            {
+                var imageParameters = new GetImageModel()
+                    .SetHash(Model.Logotype)
+                    .SetHeight(120)
+                    .SetWidth(160);
+                <img src="@imageClient.GetImage(imageParameters)" width="160" height="120" />
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.HeadPicture, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.HiddenFor(m => m.HeadPicture)
+            @if (string.IsNullOrEmpty(Model.HeadPicture))
+            {
+                <img src="~/images/Cafe/info-bg-default.png" width="600" height="100" />
+            }
+            else
+            {
+                var imageParameters = new GetImageModel()
+                    .SetHash(Model.HeadPicture)
+                    .SetHeight(100)
+                    .SetWidth(600);
+                <img src="@imageClient.GetImage(imageParameters)" width="600" height="100" />
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.WeekMenuIsActive, new { @class = labelClass })
+        <div class="col-xs-10">
+            <i class="fa @(Model.WeekMenuIsActive ? "fa-check" : string.Empty)"></i>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.DeferredOrder, new { @class = labelClass })
+        <div class="col-xs-10">
+            <i class="fa @(Model.DeferredOrder ? "fa-check" : string.Empty)"></i>
+        </div>
+    </div>
+    <h4>Время работы</h4>
+    <div class="form-group">
+        @Html.LabelFor(m => m.BusinessHours.Monday, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.BusinessHours.Monday)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.BusinessHours.Tuesday, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.BusinessHours.Tuesday)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.BusinessHours.Wednesday, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.BusinessHours.Wednesday)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.BusinessHours.Thursday, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.BusinessHours.Thursday)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.BusinessHours.Friday, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.BusinessHours.Friday)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.BusinessHours.Saturday, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.BusinessHours.Saturday)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.BusinessHours.Sunday, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.BusinessHours.Sunday)
+        </div>
+    </div>
+    <h4>Время работы на дату</h4>
+    <div class="form-group">
+        <div class="col-xs-offset-2 col-xs-10">
+            @Html.DisplayFor(m => m.BusinessHours.DatedItems)
+        </div>
+    </div>
+    @if (!Model.CompanyOnly)
+    {
+        <h4>Стоимость доставки персональных заказов</h4>
+        <div class="form-group">
+            <div class="col-xs-offset-2">
+                <div class="row">
+                    <label class="@labelClass">Цена от:</label>
+                    <label class="@labelClass">Цена до:</label>
+                    <label class="@labelClass">Цена доставка:</label>
+                </div>
+                @Html.DisplayFor(m => m.CostOfDeliveryPersonal)
+            </div>
+        </div>
+    }
+    <h4>Стоимость доставки корпоративных заказов</h4>
+    <div class="form-group">
+        <div class="col-xs-offset-2">
+            <div class="row">
+                <label class="@labelClass">Цена от:</label>
+                <label class="@labelClass">Цена до:</label>
+                <label class="@labelClass">Цена доставка:</label>
+            </div>
+            @Html.DisplayFor(m => m.CostOfDeliveryCompany)
+        </div>
+    </div>
+    <h4>Способы оплаты</h4>
+    <div class="form-group">
+        <div class="col-xs-offset-2">
+            <p>
+                <ol class="breadcrumb" style="background: transparent;">
+                    @foreach (var item in Model.PaymentTypes)
+                    {
+                        @if (item.Value)
+                        {
+                            <li>@item.Key.GetDescription()</li>
+                        }
+                    }
+                </ol>
+            </p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.AverageDeliveryTime, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.AverageDeliveryTime)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.MinimumOrderSum, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.MinimumOrderSum)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.DeliveryComment, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.DeliveryComment)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Regions, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.DisplayFor(m => m.Regions)
+        </div>
+    </div>
+
+    <h4>Кухни</h4>
+    <div class="form-group">
+        <div class="col-xs-offset-2">
+            <p>
+                <ol class="breadcrumb" style="background: transparent;">
+                    @foreach (var item in Model.Kitchens)
+                    {
+                        <li>@item.Name</li>
+                    }
+                </ol>
+            </p>
+        </div>
+    </div>
+
+    <h4>Сумма ежедневного общекорпоративного заказа:</h4>
+    <div class="form-group">
+        <div class="col-xs-offset-2">
+            @Html.DisplayFor(m => m.DailyCorpOrderSum)
+        </div>
+    </div>
+    @if (Model.OrderAbortTime.HasValue)
+    {
+        <h4>Время отмены заказов по адресу, если не набрана минимальная сумма:</h4>
+        <div class="form-group">
+            <div class="col-xs-offset-2">
+                @Model.OrderAbortTime.Value.ToString(@"hh\:mm")
+            </div>
+        </div>
+    }
+
+    <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <p>
+            <strong>Подсказка!</strong>
+        </p>
+        <p>
+            Значения полей <strong>Цена От</strong> и <strong>Цена До</strong> не могут пересекаться, поэтому указывайте <strong>Цена До</strong> меньше на единицу,
+            в описании кафе она будет корректно отображаться увеличенной на единицу.
+        </p>
+        <p>
+            <strong>Цена От</strong> равная <strong>0</strong> будет считаться стартовой и в описании кафе не отобразится.
+        </p>
+        <p>Например, диапазон от 0 до 299 пользователь увидит как "до 300 ₽."</p>
+        <p>
+            При значении поля <strong>Цена До</strong> выше 99999 будет считаться, что оно бесконечное.
+        </p>
+        <p>
+            Если хотите сделать доставку бесплатной в каком-то диапазоне, поставьте в поле <strong>Доставка</strong> <strong>0</strong>.
+            В описании кафе такая доставка отобразится словом <strong>Бесплатно</strong>
+        </p>
+        <p>Например, если вы хотите сделать доставку от 500 рублей бесплатной, то следует написать: от 500 до 100000 доставка 0. Пользователь увидит это как "от 500 ₽ бесплатно".</p>
+    </div>
+    <div class="text-right">
+        <input type="submit" value="Изменить" class="btn btn-default" />
+    </div>
+</form>

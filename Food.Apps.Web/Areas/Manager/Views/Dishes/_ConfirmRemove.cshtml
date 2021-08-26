@@ -1,0 +1,17 @@
+﻿@model DishModel
+
+<div class="modal fade p-5" id="confirmRemove" tabindex="-1" role="dialog" aria-labelledby="userDetails-label" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content modal-content--edit-user">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="userDetails-label">Подтверждение действия</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                @Html.RouteLink("Удалить", "ManagerCafe", new { controller = "Dishes", action = "Delete", id = Model.Id }, new { @class = "btn btn-danger", id = "delete-btn" })
+                <button onclick="$('#confirmRemove').modal('hide');" class="btn btn-default">Отменить</button>
+            </div>
+        </div>
+    </div>
+</div>

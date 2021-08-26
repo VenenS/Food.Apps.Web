@@ -1,0 +1,80 @@
+﻿@model CafeModel
+@inject ITWebNet.Food.Site.Services.Client.IContentServiceClient imageClient
+@{
+    string isClosed = Model.IsClosed() ? "is-closed" : string.Empty;
+    double? minSumRub = Model.MinimumSumRub;
+    int? averDeliveryTime = Model.AverageDeliveryTime;
+
+    var imageParameters = new GetImageModel()
+        .SetHash(Model.BigImage)
+        .SetHeight(120)
+        .SetWidth(160);
+    bool cafeAvailable = !ViewData.ContainsKey("Unavailable");
+}
+<div class="block @isClosed" id="cafe-@Model.Id">
+    <div class="col-sm-3 col-xs-3">
+        @if (cafeAvailable)
+        {
+            <a href="@Url.RouteUrl(routeName: "SubdomainRoute", routeValues: new RouteValueDictionary(new {controller = "Cafe", action = "Index", name = Model.CleanUrlName}), subdomain: true)">
+                @if (!string.IsNullOrEmpty(Model.BigImage))
+                {
+                    <div class="card-image placeholder">
+                        <img src="@imageClient.GetImage(imageParameters)" class="img-responsive" />
+                    </div>
+                }
+                else
+                {
+                    <div class="card-image placeholder default-img">
+                    </div>
+                }
+
+            </a>
+        }
+        else
+        {
+
+            @if (!string.IsNullOrEmpty(Model.BigImage))
+            {
+                <div class="card-image placeholder default-img">
+                </div>
+            }
+        }
+    </div>
+
+    <div class="col-sm-7 col-xs-6">
+        <div class="column block-content">
+            <div class="text-muted">
+                <h4 class="card-title" title="@Model.Name">@Html.DisplayFor(modelItem => Model.Name)</h4>
+                <p class="cut-text">@Model.ShortDescription</p>
+            </div>
+            <div class="row cafe-additional-info">
+                @if (minSumRub > 0)
+                {
+                    <div class="col-sm-5 col-xs-12">
+                        <i class="glyphicon glyphicon-ok" title="Минимальная сумма заказа"></i> Мин. @Model.MinimumSumRub ₽
+                    </div>
+                }
+                @if (averDeliveryTime > 0)
+                {
+                    <div class="col-sm-5 col-xs-12"><i class="glyphicon glyphicon-time" title="Среднее время доставки"></i> @Model.AverageDeliveryTime мин.</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-2 col-xs-3 column cafe-actions">
+        <div class="rating-placeholder">@await Html.PartialAsync("_Rating", Model, new ViewDataDictionary(ViewData) { { "companyOnly", !cafeAvailable } })</div>
+        <div class="button-placeholder">
+            @if (cafeAvailable)
+            {
+                <a class="btn btn-dashed" href="@Url.RouteUrl(routeName: "SubdomainRoute", routeValues: new RouteValueDictionary(new {controller = "Cafe", action = "Index", name = Model.CleanUrlName}), subdomain: true)">Меню</a>
+            }
+            else
+            {
+                <div class="text-center">Корпоративное<br />обслуживание</div>
+            }
+        </div>
+    </div>
+</div>
+
+

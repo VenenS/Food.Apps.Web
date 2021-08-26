@@ -1,0 +1,11 @@
+﻿@model CityModel
+
+<div class="row p-4 lh-1">
+    <p class="col-xs-12 h4 centered">Ваш город @(Model.Name.Trim())?</p>
+    <div class="col-xs-6 p-2">
+        <a class="btn btn-default w-100" asp-action="ConfirmCurrentCity" asp-controller="City" asp-area="" asp-route-id="@Model.Id" data-ajax="true" data-ajax-success="location.reload();">Да</a>
+    </div>
+    <div class="col-xs-6 p-2">
+        <a class="btn btn-white w-100" onclick="choiceCity()" style="color: #000;">Нет, выбрать другой</a>
+    </div>
+</div>

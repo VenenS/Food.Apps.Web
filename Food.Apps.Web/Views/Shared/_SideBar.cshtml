@@ -1,0 +1,16 @@
+﻿@{
+    long? cafeId = null;
+
+    if (ViewBag.Cafe != null)
+    {
+        cafeId = ViewBag.Cafe.Id;
+    }
+    var cartType = ViewBag.CartType ?? EnumCartType.Short;
+}
+@if (!User.IsInRole("Manager"))
+{
+    <div id="shortCart" class="sidebar-cart shortCart" data-carttype="@cartType">
+        @*TODO: компонент @await Component.InvokeAsync("Cart", new { cartType = cartType, cafeId = (cafeId ?? -1) })*@
+        @Html.Action("GetCart", "Cart", new { cartType = cartType, cafeId = (cafeId ?? -1) })
+    </div>
+}

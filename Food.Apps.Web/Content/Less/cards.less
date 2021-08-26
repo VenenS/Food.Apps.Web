@@ -1,0 +1,237 @@
+﻿@import "../../Content/Less/variables.less";
+@cafe-image: 160px;
+@dish-image: 145px;
+
+.card {
+    .flex(100%);
+    position: relative;
+    background-color: @c-background;
+    padding: @s-primary-padding-double;
+    border: 1px solid @c-border;
+    flex-direction: column;
+
+    &-image {
+        .flex(auto);
+        overflow: hidden;
+
+        &.default-img {
+            background-image: url(../../images/default.png);
+            background-position: center center;
+            background-size: contain;
+            background-repeat: space;
+        }
+    }
+
+    &-content {
+        /*display: flex;*/
+        .flex(auto);
+        .text-overflow(ellipsis);
+        flex-direction: column;
+        padding-left: @s-primary-padding-double;
+    }
+
+    &-header {
+        .flex(auto);
+        font-size: 16px;
+
+        .row {
+            align-items: center;
+        }
+    }
+
+    &-body {
+        .flex(auto);
+        flex-direction: column;
+
+        &.collapse {
+            display: none;
+        }
+
+        &.collapse.in {
+            display: flex;
+        }
+    }
+
+    &-title {
+        max-height: 2em;
+        overflow: hidden;
+        .text-overflow(ellipsis);
+        line-height: 1em;
+        color: @c-text;
+        padding-bottom: 2%;
+        word-break: break-word;
+    }
+
+    &-footer {
+        .flex(auto);
+    }
+
+
+    &-actions {
+        .flex(auto);
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &.transparent,
+    &.transparent [class*=card-] {
+        background-color: transparent;
+        border-color: transparent;
+    }
+
+    &.cafe {
+        height: 317px;
+    }
+
+    &.dish {
+        .border-radius(3px);
+        border: 1px solid @c-border;
+        background-color: @c-content-background;
+        margin-right: @s-primary-margin;
+        margin-left: @s-primary-margin;
+        margin-bottom: @s-primary-margin-double;
+        padding: 0;
+
+
+        @media (min-width: 481px) {
+            max-height: 342px;
+            min-height: 342px;
+        }
+
+        @media only screen and (max-width: 480px) {
+            height: auto !important;
+
+            .card-content {
+                width: 50%;
+                flex-basis: auto !important;
+            }
+        }
+
+        .cafe-logo {
+            width: 100%;
+        }
+
+        .card-title {
+            max-height: 5em;
+        }
+
+        .card-image {
+            height: @dish-image;
+            display: flex;
+            justify-content: center;
+        }
+
+        &:hover {
+            border-color: @c-btn-red;
+        }
+
+        .dish-detail {
+            padding: @s-primary-padding-double;
+            position: absolute;
+            top: 0;
+            z-index: 2000;
+            background: @c-content-background;
+            min-height: 300px;
+            width: 300px;
+            box-shadow: 0 0 7px #555;
+            -moz-box-shadow: 0 0 7px #555;
+            -webkit-box-shadow: 0 0 7px #555;
+            display: none;
+            right: 180px;
+
+            .card-image {
+                height: 230px;
+                width: 272px;
+                margin-bottom: 10px;
+            }
+        }
+    }
+
+    &.cafe {
+        .card-image {
+            height: @cafe-image;
+        }
+
+        &.is-closed {
+            color: gray;
+
+            img {
+                -webkit-filter: grayscale(0.75);
+                filter: grayscale(0.75);
+            }
+        }
+    }
+
+    .corner {
+        position: absolute;
+        right: 0;
+        top: 40px;
+        border-top: solid 30px @c-brand-primary;
+        border-right: solid 30px @c-brand-primary;
+        border-bottom: solid 30px transparent;
+        border-left: solid 30px transparent;
+        z-index: 99;
+        .border-radius(3px);
+
+        .discount {
+            color: @c-btn-text;
+            font-weight: bold;
+            position: absolute;
+            right: -31px;
+            top: -31px;
+            -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+    }
+}
+
+.block {
+    .flex(100%);
+    position: relative;
+    flex-direction: row;
+    background-color: @c-background;
+    .border-radius(3px);
+    border: 1px solid @c-border;
+    padding: @s-primary-padding-double;
+    margin-bottom: @s-primary-margin;
+    height: 150px;
+
+    .card-image {
+        height: 120px;
+    }
+
+    .cafe-actions {
+        align-items: center;
+        justify-content: space-between;
+
+        & > .rating-placeholder {
+            padding-top: .8em;
+        }
+
+        & > .rating-placeholder > .rating, .button-placeholder > a {
+            margin: auto;
+        }
+    }
+
+    .block-content {
+        padding-left: @s-primary-padding-double;
+        height: 100%;
+    }
+}
+
+.cafe-description {
+    width: 100%;
+}
+
+.cafelogo {
+    height: 32px;
+    width: 32px;
+    margin: 5px;
+}
+
+.dish-container:nth-child(3n+1) .dish-detail {
+    left: 180px;
+}

@@ -1,0 +1,50 @@
+﻿@model CompanyCuratorViewModel
+@{
+    ViewBag.Title = $"Кураторы компании {Model.Company.Name}";
+}
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <h4>Кураторы компании <strong>@Model.Company.Name</strong></h4>
+                <div class="row">
+                    @Html.ActionLink("Назад", "Edit", "Companies", new { id = Model.Company.Id }, new {@class = "btn btn-link"})
+                </div>
+                <div class="row">
+                    @Html.RouteLink("Добавить", "AdministratorDefault", new { action = "AddCurator", controller = "Companies", companyId = Model.Company.Id }, new { @class = "btn btn-default" })
+                </div>
+                <table class="table table-bordered table-responsive" style="width: 60%;">
+                    <thead>
+                    <tr>
+                        <th>
+                            Ид <br/> пользователя
+                        </th>
+                        <th>
+                            Имя Пользователя
+                        </th>
+                        <th>
+                            Действия
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var curator in Model.Curators.OrderBy(c => c.UserId))
+                    {
+                        <tr>
+                            <td>@curator.UserId</td>
+                            <td>@(curator.User.UserFullName ?? curator.User.Email)</td>
+                            <td>
+                                <a href="@Url.RouteUrl("AdministratorDefault", new {controller = "Companies", action = "DeleteCurator", companyId = Model.Company.Id, id = curator.User.Id})"
+                                   class="btn btn-link">
+                                    <i class="fa fa-remove text-danger"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

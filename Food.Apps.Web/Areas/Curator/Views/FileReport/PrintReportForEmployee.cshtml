@@ -1,0 +1,18 @@
+﻿@model string
+@{
+    Layout = null;
+}
+
+<!--
+    Отчет для сортировки
+    По сотруднику
+    По сотрудникам
+    -->
+
+@Html.Raw(Model)
+
+<script>
+    setTimeout(function () {
+        window.print();
+    }, 1000)
+</script>

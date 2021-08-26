@@ -1,0 +1,68 @@
+﻿@model PageDishInMenuHistoryModel
+@{
+}
+<li class="list-group-item filterable-item">
+    <h4 class="filter-field">
+        @Html.DisplayFor(model => model.Name)
+    </h4>
+    <p>
+        <b>Текущая цена:</b> @Model.Price руб.
+        <b>Вес:</b> @Model.Weight
+    </p>
+    <p><b>Описание</b></p>
+    <p>
+        @Model.Description
+    </p>
+    <p>
+        <a role="button" data-toggle="collapse" href="#schedule-history-@Model.Name.Replace(' ', '_')" 
+           aria-expanded="false" aria-controls="#schedule-history-@Model.Name.Replace(' ', '_')">
+            Посмотреть историю изменений
+        </a>
+    </p>
+    <div class="collapse" id="schedule-history-@Model.Name.Replace(' ', '_')">
+        <table class="table table-bordered">
+            <tr>
+                <th>Дата изменения</th>
+                <th>Комментарий</th>
+                <th>Кем изменено</th>
+            </tr>
+            @foreach (var schedule in Model.DishesHistory)
+            {
+                if (@schedule.LastUpdDate.HasValue)
+                {
+                    <tr>
+                        <td>@schedule.LastUpdDate.Value.ToShortDateString()</td>
+                        <td>
+                            @if (schedule.Type == "E")
+                            {
+                                @: Блюдо было исключено из расписания
+                            }
+                            else
+                            {
+                                if (schedule.Price.HasValue)
+                                {
+                                    @: Блюдо появилось в расписании
+                                    <p>Цена - @schedule.Price</p>
+                                }
+                                else
+                                {
+                                    @: Блюдо появилось в кафе
+                                }
+                            }
+                            @if (schedule.LastUpdDate.HasValue)
+                            {
+                                <p>Дата раписания: @schedule.LastUpdDate.Value.ToShortDateString()</p>
+                            }
+                        </td>
+                        <td>
+                            @if (schedule.Creator != null)
+                            {
+                                @schedule.Creator.UserFullName
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+</li>

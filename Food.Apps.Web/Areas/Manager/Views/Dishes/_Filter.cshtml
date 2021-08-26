@@ -1,0 +1,27 @@
+﻿@model DishFilter
+
+@{
+    var cafeId = ViewContext.RouteData.Values["cafeId"] ?? ViewContext.RouteData.Values["id"];
+    AjaxOptions options = new AjaxOptions
+    {
+        InsertionMode = InsertionMode.ReplaceWith,
+        UpdateTargetId = "manager-dishes",
+        HttpMethod = "POST",
+        LoadingElementId = "processIcon"
+    };
+}
+
+
+<div class="form-group card">
+
+    @using (Html.AjaxBeginRouteForm("ManagerCafe", new { cafeId = cafeId, controller = "Dishes", action = "Filter"}, options))
+    {
+        <div class="input-group">
+            <input type="search" class="form-control" value="@Model.SearchQuery" placeholder="Поиск по названию" name="@nameof(Model.SearchQuery)" />
+            <span class="input-group-addon btn btn-reset">
+                <i class="fa fa-times"></i>
+            </span>
+        </div>
+    }
+
+</div>

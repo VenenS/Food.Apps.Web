@@ -1,0 +1,64 @@
+﻿@import "../../Content/Less/variables.less";
+@import "radio-check-buttons.less";
+
+.label-default {
+  background-color: @c-brand-primary;
+  font-weight: normal;
+  font-size: 18px;
+  font-weight: 500;
+  padding: @s-primary-padding-double;
+
+  &[href]{
+      background: @c-btn-default-bg;
+      &:hover, &:active, &:focus{
+          background: @c-btn-default-bg;
+      }
+  }
+}
+
+
+.input-group-curator {
+    position: relative;
+    display: table;
+    border-collapse: inherit;
+    width: 450px;
+}
+
+.container{
+    flex-direction: row !important;
+}
+
+.main.card{
+    border: none;
+}
+
+.panel-schedule {
+    margin: 0 1em 1em 0;
+    border-radius: 3px;
+    border: 1px solid @c-border;
+
+    > .panel-heading {
+        padding: 0.5em 1em;
+        background-color: @c-brand-primary;
+        color: white;
+
+        > h4 {
+            margin: 0;
+            font-size: 16px;
+        }
+    }
+
+    > .panel-body {
+        padding: @s-primary-padding-double;
+    }
+}
+
+.table {
+    &.table-head-center {
+        thead {
+            th {
+                text-align: center;
+            }
+        }
+    }
+}

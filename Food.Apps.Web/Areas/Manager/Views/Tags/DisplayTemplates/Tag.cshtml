@@ -1,0 +1,31 @@
+﻿@model TagModel
+
+@if (Model.IsActive.HasValue && Model.IsActive.Value)
+{
+        <div class="row @(Model.ParentId.HasValue ? @"collapse": string.Empty)" id="@(Model.ParentId.HasValue ? @"tags-parent-" + Model.ParentId : string.Empty)">
+            <div class="col-xs-2 @(Model.ParentId.HasValue ? "tag-expanded": string.Empty)">
+                @if (Model.HasChildren)
+                {
+                    <a role="button" class="collapsed @(Model.HasChildren ? @"btn btn-link fa fa-expander" : string.Empty)"
+                       data-toggle="collapse"
+                       data-target="#tags-parent-@Model.Id"
+                       aria-controls="tags-parent-@Model.Id">
+                    </a>
+                }
+            </div>
+
+            <div class="col-xs-8">
+                @Model.Name
+            </div>
+            <div class="col-xs-2 add-tag">
+                <a ajax-url="@Url.RouteUrl("ManagerCafe", new { controller = "Tags", action = "AddTag", id = ViewBag.ObjectId, tagId = Model.Id, objectType = ViewBag.ObjectType})"
+                   class="btn btn-default" ajax-method="post" ajax-mode="replace" ajax-update="#destTagGrid">»</a>
+            </div>
+            @if (Model.HasChildren)
+            {
+                @Html.DisplayFor(m => m.Children)
+            }
+        </div>
+
+        
+}

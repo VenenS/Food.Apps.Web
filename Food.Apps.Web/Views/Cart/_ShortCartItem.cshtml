@@ -1,0 +1,44 @@
+﻿@model CartItemViewModel
+@{
+    var cartType = ViewBag.CartType ?? EnumCartType.Short;
+    string dateStr = Model.DeliveryDate.ToString("yyyy-MM-dd");
+    string deliveryCostUrl = Url.Action("GetDeliveryCostForDate", "Cart",
+        new { cafeId = Model.CafeId, date = dateStr });
+}
+<div class="cart-item short" id="cart-item-@(Model.Id)-@Model.DeliveryDate.Day">
+    @{ 
+        var update = "#cart-item-" + Model.Id + '-' + Model.DeliveryDate.Day;
+        var success = $"updateSideBar(); updateDeliveryCost({Model.CafeId.ToString()}, '{dateStr}', '{deliveryCostUrl}');";
+        var routeValues = new { CafeId = Model.CafeId, DishId = Model.Id, cartType, d = Model.DeliveryDate.ToString("s") };
+    }
+    <form method="POST" action="@Url.Action("ChangeDishCount", "Cart", routeValues)"
+          data-ajax="true"
+          data-ajax-success="@success"
+          data-ajax-update="@update"
+          data-ajax-mode="replace-with">
+        <p class="header">@Model.Name</p>
+        <a class="btn btn-remove right" data-ajax-url="@Url.Action("RemoveDish", "Cart", routeValues)" data-ajax="true"
+           data-ajax-method="POST" data-ajax-mode="replace-with" data-ajax-update="@update" data-ajax-success="@success">
+           <span class="fa fa-trash"></span>
+        </a>
+        <div class="row">
+            <div class="col-xs-7">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <a data-ajax="true" data-ajax-url="@Url.Action("DecreaseDishCount", "Cart", routeValues)"
+                           class="btn btn-white" data-ajax-update="@update" data-ajax-success="@success" data-ajax-mode="replace-with">-</a>
+                    </span>
+                    <input type="text" class="form-control" name="count" value="@Model.Count" DishId="order-Model-" + @Model.Id
+                           onchange="$(this.form).submit()">
+                    <span class="input-group-btn">
+                        <a class="btn btn-white" data-ajax="true" data-ajax-url="@Url.Action("IncreaseDishCount", "Cart", routeValues)"
+                           data-ajax-success="@success" data-ajax-update="@update" data-ajax-mode="replace-with">+</a>
+                    </span>
+                </div>
+            </div>
+            <div class="col-xs-5 totalprice text-right">
+                <span>@Model.TotalPrice<span class="text-muted"> ₽</span></span>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,8 @@
+﻿@model List<FoodDishModel>
+
+@foreach (var dish in Model)
+{
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-xxs-12 dish-container">
+        @await Html.PartialAsync("~/Views/Cafe/_Dish.cshtml", dish)
+    </div>
+}

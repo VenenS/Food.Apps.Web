@@ -1,0 +1,25 @@
+﻿@model IEnumerable<TagModel>
+@foreach (var item in Model)
+{
+  if (item.IsActive.HasValue && item.IsActive.Value)
+  {
+        <li>
+          <div class="sub-category">
+              <a class="collapsed"
+                 data-toggle="collapse" onclick="selectTag($(this))"
+                 data-target="#nested-tags-@item.Id"
+                 aria-controls="nested-tags-@item.Id">
+                  <input type="checkbox" style="display: none;" class="tag-checkbox" id="tags" value="@item.Id" name="tags" form="formFilter"/>
+                @Html.DisplayFor(modelItem => item.Name)
+              </a>
+          </div>
+          @if (item.HasChildren)
+          {
+              <ul class="tree collapse tree-item-children" id="nested-tags-@item.Id">
+                @await Html.PartialAsync("_TagsTree", item.Children)
+              </ul>
+          }
+        </li>
+  }
+}
+

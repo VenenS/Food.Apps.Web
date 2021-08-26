@@ -1,0 +1,91 @@
+﻿@model ITWebNet.Food.Site.Areas.Curator.Models.ScheduleCreateModel
+
+@{
+    ViewBag.Title = "Добавить расписание";
+    Model.Schedule.BeginDate = DateTime.Now;
+    Model.Schedule.EndDate = DateTime.Now;
+    string message = Model.ValidationError ?? "";
+}
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+
+                @using (Html.BeginForm("Create", "Schedules"))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        <h4>Добавить новое расписание</h4>
+                        <hr />
+
+                        @Html.HiddenFor(model => model.Schedule.CompanyId)
+                        @Html.HiddenFor(model => model.Schedule.CompanyDeliveryAdress)
+                        <label class="text-danger">@message</label>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Выберите кафе</label>
+                            <div class="col-md-4">
+                                @Html.DropDownListFor(model => model.Schedule.CafeId, Model.Cafes, "Выберите кафе из списка", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Schedule.CafeId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Расписание действует с </label>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <input readonly type="date" class="form-control" asp-for="Schedule.BeginDate" asp-format="{0:yyyy-MM-dd}" required />
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Schedule.BeginDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Расписание действует до </label>
+                            <div class="col-md-4">
+                                <div class="input-group date" id="datepicker">
+                                    <input type="date" class="form-control" asp-for="Schedule.EndDate" asp-format="{0:yyyy-MM-dd}" required />
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Schedule.EndDate, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-12">Время для заказа</label>
+                            <div class="input-group col-md-4 col-sm-12">
+                                <input asp-for="Schedule.OrderStartTime" asp-format="{0:HH:mm}" type="time" class="form-control timepicker" required />
+                                <span class="input-group-addon">-</span>
+                                <input asp-for="Schedule.OrderStopTime" asp-format="{0:HH:mm}" type="time" class="form-control timepicker" required />
+                            </div>
+                            <div class="col-sm-12">
+                                @Html.ValidationMessageFor(model => model.Schedule.OrderStopTime, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-12">Время отправления заказа</label>
+                            <div class="col-md-2 col-sm-12">
+                                <input asp-for="Schedule.OrderSendTime" asp-format="{0:HH:mm}" type="time" class="form-control timepicker" required />
+                            </div>
+                            <div class="col-sm-12">
+                                @Html.ValidationMessageFor(model => model.Schedule.OrderSendTime, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-9">
+                                <input type="submit" value="Готово" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div>
+                    @Html.ActionLink("Назад к списку", "Index")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

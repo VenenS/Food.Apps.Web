@@ -1,0 +1,27 @@
+﻿@model List<FoodCategoryModel>
+
+@if (Model.Count > 0)
+{
+    <div id="category-anchors">
+        <div class="reset-controls reset-title text-left text-uppercase">
+            <strong>Категории</strong>
+        </div>
+                <ul class="nav-stacked" role="tablist">
+                    <li class="active">
+                        <a href="#category-all" role="tab" data-toggle="tab">
+                            <span class="fa fa-check radio-category"></span>
+                            Все блюда
+                        </a>
+                    </li>
+                    @foreach (var item in Model)
+                {
+                        <li>
+                            <a href="#category-@item.Id" role="tab" data-toggle="tab">
+                                <span class="fa fa-check radio-category"></span>
+                                @item.Name
+                            </a>
+                        </li>
+                    }
+                </ul>
+    </div>
+}

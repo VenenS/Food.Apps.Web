@@ -1,0 +1,9 @@
+﻿@model List<ITWebNet.Food.Core.DataContracts.Manager.XSLTModel>
+
+@if (Model != null)
+{
+    foreach (var layout in Model)
+    {
+        @await Html.PartialAsync("_Layout", layout)
+    }
+}

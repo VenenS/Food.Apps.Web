@@ -1,0 +1,47 @@
+﻿@model OrderMultiCafeViewModel
+
+@if (Model.CartMulti.CafeCarts.Count == 0)
+{
+    @await Html.PartialAsync("_CartEmpty")
+}
+else
+{
+    NavigatorViewModel.Step = Model.OrderIsDone ? EnumNavigatorStep.WaitDelivery : EnumNavigatorStep.Checkout;
+    @await Html.PartialAsync("_Navigator")
+
+    if (Model.Message != null)
+    {
+        <div class="jumbotron bg-transparent">
+            @{ var errors = Model.Message.Text.Split('\n', StringSplitOptions.RemoveEmptyEntries); }
+            @if (errors.Length > 1)
+            {
+                <ul class="list-bullet-inside m-0 p-0">
+                    @foreach (var error in errors)
+                    {
+                        <li>@error</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <h4 class="text-center">@errors[0]</h4>
+            }
+            <br />
+            <a href="/" class="btn btn-lg btn-default text-uppercase"><i class="fa fa-home"></i> на главную</a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-1 col-md-8 col-sm-8 mb-4">
+                @await Html.PartialAsync("_DeliveryInfo", Model.DeliveryInfo)
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 side-bar cart">
+                @await Html.PartialAsync("_SideBar", Model.CartMulti)
+            </div>
+        </div>
+    }
+    <div class="wip" id="processIcon">
+        <i class="fa fa-spinner fa-pulse fa-3x"></i>
+    </div>
+}

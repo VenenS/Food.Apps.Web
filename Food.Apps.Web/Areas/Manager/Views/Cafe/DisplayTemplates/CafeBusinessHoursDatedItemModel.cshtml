@@ -1,0 +1,17 @@
+﻿@model ITWebNet.Food.Site.Areas.Manager.Models.CafeBusinessHoursDatedItemModel
+
+<div class="display">
+    <div>
+        @Model.Date.ToString("dd.MM.yyyy")
+    </div>
+    <div>
+        @if (Model.IsDayOff)
+        {
+            @:Выходной
+        }
+        else
+        {
+            @:@string.Format("{0} - {1}", Model.OpeningTime.ToString("hh\\:mm"), Model.ClosingTime.ToString("hh\\:mm"))
+        }
+    </div>
+</div>

@@ -1,0 +1,153 @@
+﻿@model FoodDishModel
+@inject ITWebNet.Food.Site.Services.Client.IContentServiceClient imageClient
+@{
+    var queryDate = DateTime.Now;
+    if (Context.Request.Query.ContainsKey("d"))
+    {
+        DateTime valueDate;
+        if (DateTime.TryParse(Context.Request.Query["d"].ToString(), out valueDate))
+        {
+            queryDate = valueDate;
+        }
+    }
+    string dateStr = queryDate.ToString("yyyy-MM-dd");
+    string deliveryCostUrl = Url.Action("GetDeliveryCostForDate", "Cart",
+        new { cafeId = Model.CafeId, date = dateStr });
+    var success = $"updateDeliveryCost({Model.CafeId.ToString()}, '{dateStr}', '{deliveryCostUrl}');";
+    int discount = Model.Discount;
+    double price = Math.Round(Model.BasePrice * (1 - discount / 100.0), 2);
+    var cafe = (CafeModel)ViewBag.Cafe;
+    var parameters = new GetImageModel()
+        .SetHash(Model.Image)
+        .SetHeight(145)
+        .SetWidth(169)
+        .SetScale(ScaleImage.Width);
+    var detailParameters = new GetImageModel()
+        .SetHash(Model.Image)
+        .SetHeight(230)
+        .SetWidth(270)
+        .SetScale(ScaleImage.Width);
+    var logoParameters = new GetImageModel()
+        .SetHash(Model.CafeLogo)
+        .SetHeight(32)
+        .SetWidth(32)
+        .SetScale(ScaleImage.Width);
+
+    EnumCartType cartType = ViewBag.CartType ?? EnumCartType.Short;
+
+    var preOrderParam = false;
+    if (Context.Request.Query.ContainsKey("preOrder"))
+    {
+        preOrderParam = bool.Parse(Context.Request.Query["preOrder"].ToString());
+    }
+}
+
+<div class="card dish" onmouseover="showDishDetails($(this))" onmouseout="hideDishDetails($(this))">
+    <div class="cafe-logo">
+        <table>
+            <tr>
+                <td>
+                    <div class="cafelogo">
+                        <a href="@Url.RouteUrl(routeName: "SubdomainRoute", routeValues: new RouteValueDictionary(new { controller = "Cafe", action = "Index", name = Model.CafeUrl }), subdomain: true)">
+                            @if (string.IsNullOrWhiteSpace(Model.CafeLogo))
+                            {
+                                <img src="~/images/Cafe_default_icon.png" width="32" height="32" />
+                            }
+                            else
+                            {
+                                <img src="@imageClient.GetImage(logoParameters)" width="32" height="32" />
+                            }
+                        </a>
+                    </div>
+                </td>
+                <td>
+                    Кафе:<br />
+                    <a href="@Url.RouteUrl(routeName: "SubdomainRoute", routeValues: new RouteValueDictionary(new { controller = "Cafe", action = "Index", name = Model.CafeUrl }), subdomain: true)">
+                        @Model.CafeName
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    @if (discount > 0)
+    {
+        <div class="corner">
+            <h4 class="discount">@Html.Raw(string.Format("-{0}%", discount))</h4>
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(Model.Image))
+    {
+        <div class="card-image placeholder ">
+            <img src="@imageClient.GetImage(parameters)" class="img-responsive" />
+        </div>
+    }
+    else
+    {
+        <div class="card-image placeholder default-img">
+        </div>
+    }
+
+    <div class="card-content">
+        <div class="card-title">
+            <h4 title="@Model.Name">@Model.Name.Truncate(40, "...")</h4>
+        </div>
+        <div class="card-actions col-xxs-4">
+            <h5 class="text-right" style="font-weight: 800;">@price ₽</h5>
+            @if (!User.IsInRole("Manager"))
+            {
+                <form asp-action="AddDish" asp-controller="Cart" method="post"
+                      asp-route-cafeId="@Model.CafeId"
+                      asp-route-cartType="@cartType"
+                      asp-route-cafeIsClosed="@Model.IsDishCafeClosed()"
+                      asp-route-d="@queryDate.Date.ToString("s")"
+                      asp-route-preOrder="@preOrderParam"
+                      data-ajax="true"
+                      data-ajax-update="#shortCart"
+                      data-ajax-mode="replace"
+                      data-ajax-success="@success"
+                      onsubmit="event.preventDefault()">
+                    <input type="hidden" value="@Model.Id" name="Id" />
+                    <input type="hidden" value="@Model.BasePrice" name="BasePrice" />
+                    <input type="hidden" value="@Model.Composition" name="Composition" />
+                    <input type="hidden" value="@Model.Description" name="Description" />
+                    <input type="hidden" value="@Model.Image" name="Image" />
+                    <input type="hidden" value="@Model.Kcalories" name="Kcalories" />
+                    <input type="hidden" value="@Model.Name" name="Name" />
+                    <input type="hidden" value="@Model.Weight" name="Weight" />
+                    <input type="hidden" value="@Model.WeightDescription" name="WeightDescription" />
+                    <input type="submit" value="Добавить" class="btn btn-dashed" />
+                </form>
+            }
+        </div>
+    </div>
+    <div class="dish-detail">
+
+        @if (!string.IsNullOrEmpty(Model.Image))
+        {
+            <div class="card-image placeholder">
+                <img src="@imageClient.GetImage(detailParameters)" class="img-responsive" />
+            </div>
+        }
+        else
+        {
+            <div class="card-image placeholder default-img">
+            </div>
+        }
+        <p>
+            <h3 class="wrap-word-td">@Model.Name</h3>
+        </p>
+        <p class="wrap-word-td">
+            <strong>Описание: </strong> @(!string.IsNullOrEmpty(Model.Description) ? Model.Description : "-")
+        </p>
+
+        <p class="wrap-word-td">
+            <strong>Состав: </strong> @(!string.IsNullOrEmpty(Model.Composition) ? Model.Composition : "-")
+        </p>
+        <p>
+            <strong>Вес: </strong> @(Model.Weight.HasValue ? Model.Weight + " " + Model.WeightDescription : "-")
+        </p>
+        <p>
+            <strong>Калорийность: </strong> @(Model.Kcalories?.ToString() ?? "-")
+        </p>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+﻿@model OrderViewModel
+
+<td colspan="7">
+    @if (!string.IsNullOrWhiteSpace(Model.Comment))
+    {
+        <p class="order-comment">
+            <strong>Комментарий пользователя:</strong> @Model.Comment
+        </p>
+    }
+    <ul class="list-group">
+        @foreach (var orderItem in Model.OrderItems)
+        {
+            @await Html.PartialAsync("_OrderItem", orderItem, new ViewDataDictionary(ViewData) {{ "order", Model }})
+        }
+    </ul>
+</td>

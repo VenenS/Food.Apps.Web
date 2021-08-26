@@ -1,0 +1,87 @@
+﻿@model ITWebNet.Food.Site.Models.CompanyOrderModel
+<div class="main wide-rigth content" id="company-order-@Model.Id">
+  <div class="card">
+    <div class="card-body">
+      <div class="card-content">
+        <div>
+          <h4>Заказ № @Html.DisplayFor(model => model.Id)</h4>
+          <hr />
+            <dl class="dl-horizontal dl-striped">
+                <dt>
+                    @*@Html.DisplayNameFor(model => model.DeliveryDate)*@
+                    Время доставки
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.DeliveryDate)
+                </dd>
+
+                <dt>
+                    @*@Html.DisplayNameFor(model => model.Company.Name)*@
+                    Имя компании
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Company.Name)
+                </dd>
+                <dt>
+                    Контактный телефон
+                </dt>
+                <dd>
+                    @Html.Phone(Model.ContactPhone)
+                </dd>
+                <dt>
+                    E-mail
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ContactEmail)
+                </dd>
+
+                <dt>
+                    @*@Html.DisplayNameFor(model => model.OrderAutoCloseDate)*@
+                    Время поступления
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OrderAutoCloseDate)
+                </dd>
+
+                <dt>
+                    @*@Html.DisplayNameFor(model => model.OrderStatus)*@
+                    Статус
+                </dt>
+                <dd>
+                    @(((OrderStatusEnum)Model.OrderStatus).GetDescription())
+                </dd>
+
+                <dt>
+                    @*@Html.DisplayNameFor(model => model.OrderStatus)*@
+                    Стоимость
+                </dt>
+                <dd>
+                    @Model.TotalPrice<span class="text-muted"> ₽</span>
+                </dd>
+                @if (Model.Company.DeliveryAddress != null)
+            {
+                    <dt>
+                        Адрес доставки
+                    </dt>
+                    <dd>
+                        @string.Format("г. {0}, ул. {1}, д. {2}{3}\n{4}",
+                    Model.Company.DeliveryAddress.CityName,
+                    Model.Company.DeliveryAddress.StreetName,
+                    Model.Company.DeliveryAddress.HouseNumber,
+                    Model.Company.DeliveryAddress.BuildingNumber,
+                    Model.Company.DeliveryAddress.AddressComment)
+                    </dd>
+                }
+            </dl>
+            <div>
+              @await Html.PartialAsync("_UserReportsGroup", Model.UserOrders, new ViewDataDictionary (ViewData) { { "CompanyOrderId", Model.Id } })
+            </div>
+        </div>
+        <hr />
+        <div class="card-actions">
+          @Html.RouteLink("К списку заказов", "ManagerCafe", new { cafeId = Model.CafeId, controller = "Reports", action = "Index" })
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+﻿@model CompanyModel
+@{
+    ViewBag.Title = "Оповещения";
+}
+
+
+@if (Model == null)
+{
+    @await Html.PartialAsync("_ErrorCompany")
+}
+else
+{
+    <div>
+        <h3>Управление оповещением о заказах по СМС</h3>
+        @using (Html.BeginForm("Index", "Notification"))
+        {
+            if (TempData["ErrorSave"] != null)
+            {
+                @await Html.PartialAsync("_Message", new ITWebNet.Food.Site.Models.MessageViewModel { Type = (string)TempData["ErrorType"], Text = (string)TempData["ErrorSave"] })
+            }
+            @Html.HiddenFor(c => c.Id)
+            @Html.CheckBoxFor(c => c.SmsNotify)
+            <label>Разрешить СМС-оповещение об изменении состояния заказа</label>
+            <br />
+            @Html.ValidationMessageFor(c => c.SmsNotify, string.Empty, new { @class = "text-danger" })
+            <br />
+            <button class="btn btn-default">Сохранить</button>
+            <a href="@Url.Action("Index", "Notification")" class="btn btn-reset--no-js">Отмена</a>
+        }
+    </div>
+}

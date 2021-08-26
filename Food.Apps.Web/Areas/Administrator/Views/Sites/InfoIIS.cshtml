@@ -1,0 +1,22 @@
+﻿@model List<string>
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <ul>
+                    @foreach (var s in Model)
+                    {
+                        <li>@s</li>
+                    }
+
+                    @using (Html.BeginForm("Bindings", "Sites", FormMethod.Post))
+                    {
+                        <input type="text" name="Code" value="" />
+                        <input type="submit" class="btn btn-danger" value="Применить бинды"/>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

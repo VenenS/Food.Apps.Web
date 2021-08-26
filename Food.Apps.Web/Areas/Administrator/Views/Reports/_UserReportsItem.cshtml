@@ -1,0 +1,65 @@
+﻿@model OrderViewModel
+@{
+    string scopeId;
+
+    if (ViewData["collapseScope"] != null)
+    {
+        scopeId = ViewData["collapseScope"].ToString();
+    }
+    else
+    {
+        scopeId = "#user-orders";
+    }
+
+    string userName = Model.Creator.UserFullName ?? Model.Creator.Email;
+    string dataTarget = scopeId + " #order-positions-" + Model.Id;
+    AjaxOptions options = new AjaxOptions
+    {
+        UpdateTargetId = $"order-{Model.Id}",
+        InsertionMode = InsertionMode.ReplaceWith,
+        HttpMethod = "POST",
+        LoadingElementId = $"process-{Model.Id}"
+    };
+}
+<tbody class="selectable filterable" id="order-@Model.Id" data-order-id="@Model.Id">
+    <tr class="selectable-item filterable-item" data-item-id="@Model.Id" data-name="UserOrders">
+        <td>
+            <a href="@Url.RouteUrl("AdministratorReports", new { cafeId = Model.CafeId, controller = "Reports", action = "Details", id = Model.Id, orderType = EnumOrderType.Individual })">
+                @Model.Id
+            </a>
+        </td>
+        <td>@Model.Create</td>
+        @if (Model.CompanyOrderId == null)
+        {
+            <td>
+                @{
+                    if (Model.DeliverDate?.Date == Model.Create.Date && Model.Create >= Model.DeliverDate)
+                    {
+                        @Model.DeliverDate?.ToShortDateString()
+                        <br /><text>Как можно скорее</text>
+                    }
+                    else
+                    {
+                        @Model.DeliverDate.ToString()
+                    }
+                }
+            </td>
+        }
+        <td class="wrap-word-td">@userName</td>
+        <td>@Html.Phone(Model.PhoneNumber)</td>
+        <td>
+            @Model.TotalSum <span class="text-muted"> ₽</span>
+        </td>
+        <td class="cancel-select">
+            @Model.Status.GetDescription()
+        </td>
+        <td>
+            <a class="collapsed @(!ViewData.ContainsKey("filter-data") ? "expand-order-items" :  string.Empty)" data-load="true" data-item-id="@Model.Id" role="button" data-toggle="collapse" data-target="@dataTarget" aria-expanded="true" aria-controls="order-@Model.Id">
+                <i class="fa fa-expander"></i>
+            </a>
+        </td>
+    </tr>
+<tr class="collapse" id="order-positions-@Model.Id">
+    @await Html.PartialAsync("_OrderItems", Model)
+</tr>
+</tbody>

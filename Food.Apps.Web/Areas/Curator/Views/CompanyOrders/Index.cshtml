@@ -1,0 +1,22 @@
+﻿@model IEnumerable<ITWebNet.Food.Core.DataContracts.Common.CompanyOrderModel>
+@{
+    ViewBag.Title = "Корпоративные заказы";
+}
+
+    <div class="content main full-width">      
+        <div class="card">
+            <h4>Корпоративные заказы</h4>
+            <div class="card-body">
+                <div class="card-content">
+                    @await Html.PartialAsync("_List", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+<div id="authorLoader" data-request-url="@Url.Action("Edit", "CompanyOrders")"></div>
+
+@section scripts
+{
+    @await Html.PartialAsync("~/Areas/Curator/Views/Scripts/datatables.cshtml")
+    @await Html.PartialAsync("~/Areas/Curator/Views/Scripts/company_orders-scripts.cshtml")
+}

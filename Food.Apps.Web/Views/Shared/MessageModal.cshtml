@@ -1,0 +1,16 @@
+﻿<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModal-label" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="messageModal-label">Оповещение</h4>
+      </div>
+      <div class="modal-body" id="messageModal-body">
+          <a href="@Url.Action("Login", "Account", new { ReturnUrl = "/" })">Войдите</a> на сайт, чтобы оценить кафе
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,125 @@
+﻿.food-checkbox input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+  margin: 10px 0 0 20px;
+}
+.food-checkbox-text {
+  /*position: relative;*/
+  padding: 0 0 0 10px;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.food-checkbox-text:before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 25px;
+  height: 13px;
+  border-radius: 13px;
+  background: #CDD1DA;
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.2);
+  transition: 0.2s;
+}
+.food-checkbox-text:after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 1px;
+  width: 13px;
+  height: 13px;
+  border-radius: 10px;
+  background: #FFF;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: 0.2s;
+}
+.food-checkbox input:checked + .food-checkbox-text:before {
+  background: #9FD468;
+}
+.food-checkbox input:checked + .food-checkbox-text:after {
+  left: 12px;
+}
+.food-checkbox input:focus + .food-checkbox-text:before {
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.2), 0 0 0 3px rgba(255, 255, 0, 0.7);
+}
+.food-radio input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+  margin: 5px 0 0 3px;
+}
+.food-radio-text {
+  /*position: relative;
+    padding: 0 0 0 35px;*/
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.food-radio-text:before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  border: 1px solid #CDD1DA;
+  border-radius: 50%;
+  background: #FFF;
+}
+.food-radio-text:after {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #9FD468;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: 0.2s;
+}
+.food-radio input:checked + .food-radio-text:after {
+  opacity: 1;
+}
+.food-radio input:focus + .food-radio-text:before {
+  box-shadow: 0 0 0 3px rgba(255, 255, 0, 0.7);
+}
+.main.full-width {
+  width: 1200px;
+  margin: 0;
+}
+#admin-menu .btn-default {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+#admin-menu.open .btn-default {
+  background-color: #80b00c;
+}
+#nav-login .nav-user-name {
+  width: 200px;
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+}
+.addresses {
+  height: 250px;
+  overflow-y: scroll;
+  padding-left: 20px !important;
+  margin-left: 20px;
+}
+#reports-page .panel {
+  width: 100%;
+}
+textarea#Transformation {
+  resize: none;
+  height: 300px;
+  margin-bottom: 20px;
+}
+.modal-content--edit-user span.text-danger {
+  margin-left: 40%;
+}
+.modal-header {
+  margin-bottom: 20px;
+}

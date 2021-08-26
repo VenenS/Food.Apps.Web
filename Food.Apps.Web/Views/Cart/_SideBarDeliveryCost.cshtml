@@ -1,0 +1,18 @@
+﻿@model OrderDeliveryPriceModel
+@{
+    string deliveryCost = Model.PriceForOneOrder > 0 ? String.Format("{0:##} рублей", Model.PriceForOneOrder) : "бесплатно";
+}
+
+<div class="deliveryCost-cart-item" style="text-align: center;">
+    <span>
+        Доставка @deliveryCost
+    </span>
+    @* Если заказ корпоративный и доставка не бесплатна - надо показать общую стоимость и количество заказов. *@
+    @if (Model.CompanyOrder && Model.PriceForOneOrder > 0)
+    {
+        <br />
+        <span class="delivery-short-details">Общая стоимость: @String.Format("{0:##} рублей", Model.TotalPrice)</span>
+        <br />
+        <span class="delivery-short-details">Количество заказов: @Model.CountOfOrders.ToString()</span>
+    }
+</div>

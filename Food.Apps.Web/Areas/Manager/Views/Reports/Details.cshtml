@@ -1,0 +1,33 @@
+﻿@model ReportDetailsModel
+@if (Model.CompanyOrder != null)
+{
+    ViewBag.Title = "Заказ № " + Model.CompanyOrder.Id;
+
+    @await Html.PartialAsync("_CompanyDetails", Model.CompanyOrder)
+}
+else
+{
+    if (Model.UserOrder != null)
+    {
+        ViewBag.Title = "Заказ № " + Model.UserOrder.Id;
+
+        @await Html.PartialAsync("_UserDetails", Model.UserOrder)
+    }
+    else
+    {
+        if (Model.BanketOrder != null)
+        {
+            ViewBag.Title = "Заказ № " + Model.BanketOrder.Id;
+
+            @await Html.PartialAsync("_BanketDetails", Model.BanketOrder)
+        }
+    }
+}
+
+@section scripts {
+    <script>
+        (function() {
+            expandOrderItems(document);
+        }());
+    </script>
+}

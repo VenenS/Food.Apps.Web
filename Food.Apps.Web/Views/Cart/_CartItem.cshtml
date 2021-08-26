@@ -1,0 +1,69 @@
+﻿@model CartItemViewModel
+@{ 
+    var dateFormat = "dd-MM-yyyy";
+}
+@inject ITWebNet.Food.Site.Services.Client.IContentServiceClient imageClient
+
+<div class="cart-item card" id="cart-item-@(Model.Id)-@Model.DeliveryDate.Day">
+    @{
+        var update="#cart-item-"+ Model.Id + '-' + Model.DeliveryDate.Day;
+        var routeValues = new { CafeId = Model.CafeId, DishId = Model.Id, cartType = EnumCartType.Full, d = Model.DeliveryDate.ToString(dateFormat)};
+        var parameters = new GetImageModel()
+            .SetHash(Model.Image)
+            .SetHeight(150)
+            .SetWidth(200);
+        string itemDescription = Model.Description ?? Model.Name;
+        var cartType = ViewBag.CartType ?? EnumCartType.Full;
+    }
+    <div class="card-body">
+        <div class="row">
+            @Html.HiddenFor(modelItem => Model.Id)
+            @if (!string.IsNullOrEmpty(Model.Image))
+            {
+                <div class="card-image placeholder hidden-sm hidden-xs">
+                    <img src="@imageClient.GetImage(parameters)" class="img-responsive" />
+                </div>
+            }
+            else
+            {
+                <div class="card-image placeholder hidden-sm hidden-xs default-img">
+                </div>
+            }
+            <a class="fa fa-trash btn-remove right" ajax-method="POST" ajax-mode="replace-with"   ajax-update="@update"
+               ajax-url="@Url.Action("RemoveDish", "Cart", routeValues)"></a>
+            <div class="card-content col-lg-8 col-md-7 col-sm-12 col-xs-12">
+                <div class="description">
+                    <div>
+                        <h4>@Html.DisplayFor(modelItem => Model.Name)</h4>
+                        <span class="text-muted">@itemDescription</span>
+                    </div>
+                </div>
+                <div class="totals">
+
+                    <div class="input-group">
+                        <input ajax-url="@Url.Action("ChangeDishCount", "Cart", routeValues)" name="count" value="@Model.Count" id="order-item-@Model.Id" 
+                               ajax-method="POST" ajax-mode="replace-with"   ajax-update="@update" class = "form-control text-box single-line"/>
+                        <div class="cart-actions input-group-addon col-xs-3">
+                            <div class="col-xs-12">
+                                <a ajax-url="@Url.Action("IncreaseDishCount", "Cart", routeValues)" ajax-method="POST" ajax-mode="replace-with"   ajax-update="@update">+</a>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="col-xs-12">
+                                    <a ajax-url="@Url.Action("DecreaseDishCount", "Cart", routeValues)" ajax-method="POST" ajax-mode="replace-with" ajax-update="@update">-</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span>
+                        @Model.TotalPrice <span class="text-muted"> ₽</span>
+                    </span>
+                </div>
+                <div class="comment">
+                  <input name="comment" value="@Model.Comment" ajax-url="@Url.Action("SetComment", "Cart", routeValues)" ajax-method="POST" ajax-mode="replace-with" ajax-update="@update"
+                           id="order-comment-@Model.Id" class = "form-control text-box single-line" placeholder = "Хотите мясо без лука? Поменьше майонеза? Соус поострее? Напишите Ваши пожелания и мы учтем их при приготовлении блюда!"/>
+                </div>
+            </div>
+        </div>
+        @Html.ValidationMessage("order-comment-" + Model.Id, "", new {@class = "text-danger", style = "text-align: right;"})
+    </div>
+</div>

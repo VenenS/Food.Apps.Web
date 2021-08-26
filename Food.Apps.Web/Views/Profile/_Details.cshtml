@@ -1,0 +1,300 @@
+﻿@model UserInfoModel
+@{
+    //double totalPoints = Model.PersonalPoints + Model.ReferralPoints;
+    List<CompanyModel> companies = ViewBag.Companies ?? new List<CompanyModel>();
+}
+@*<h4>Баллы</h4>
+    <div class="form-group" style="margin-left: 3%;">
+        <div class="control-label">Общее количество: <span style="color:green;">@Math.Round(totalPoints, 2)</span></div>
+        <div class="control-label">Лично заработанные: <span style="color:brown;">@Math.Round(Model.PersonalPoints, 2)</span></div>
+        <div class="control-label"><a href="@Url.Action("ReferralProgramShortDescription", "Info")" class="btn-link" title="Описание реферальной программы">От реферальной программы:</a> <span style="color:blue;">@Math.Round(Model.ReferralPoints, 2)</span></div>
+    </div>*@
+
+<h4>Личные данные</h4>
+<div class="row">
+    <div class="form-group col-xs-12">
+        @Html.LabelFor(model => model.UserFullName, new { @class = "control-label" })
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-user"></i>
+            </span>
+            @if (!string.IsNullOrEmpty(Model.UserFullName))
+            {
+                @Html.EditorFor(model => model.UserFullName, 
+                    new
+                    {
+                        htmlAttributes = new
+                        {
+                            @class = "form-control", 
+                            placeholder = Html.DisplayNameFor(model => model.UserFullName), 
+                            @readonly = true
+                        }
+                    })
+            }
+            else
+            {
+                <input value="@Model.Email" name="UserFullName" class="form-control" type="text" placeholder=@Html.DisplayNameFor(model => model.UserFullName) readonly>
+            }
+        </div>
+    </div>
+</div>
+@if (!Model.EmailConfirmed)
+{
+    <div class="notification-alert">Необходимо подтвердить Email. <br>Для подтверждения нажмите кнопку "Выслать код", затем введите код полученный в письме в поле "Код" и нажмите кнопку "Далее".</div>
+}
+<div class="row">
+    <div class="form-group col-xs-12">
+        @Html.LabelFor(model => model.Email, new { @class = "control-label" })
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-envelope"></i>
+            </span>
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.Email), @readonly = true } })
+            @if (Model.EmailConfirmed)
+            {
+                <span class="input-group-addon">
+                    <i class="fa fa-check text-success" title="Подтвержден"></i>
+                </span>
+            }
+            else
+            {
+                <span class="input-group-addon">
+                    <a href="#" title="Подтвердить">
+                        <i class="fa fa-info text-warning" title="Не подтвержден"></i>
+                    </a>
+                </span>
+            }
+        </div>
+        @if (!Model.EmailConfirmed && !Model.IsSendEmailConfirmationCode)
+        {
+            <a asp-action="SendEmailConfirmationCode" class="btn btn-default" style="margin-top:5px;"
+               data-ajax="true" data-ajax-mode="replace" data-ajax-update="#form-user-info"
+               data-ajax-loading="#processIcon" data-ajax-method="GET">Выслать код</a>
+        }
+    </div>
+</div>
+@if (!Model.EmailConfirmed && Model.IsSendEmailConfirmationCode)
+{
+    using (Html.BeginForm("ConfirmEmail", "Profile", new { ReturnUrl = ViewBag.ReturnUrl }))
+    {
+        @Html.HiddenFor(model => model.Email)
+
+        <div class="row">
+            <div class="form-group col-xs-12">
+                <div class="sms-code-form">
+                    <div class="input-group input-group-small">
+                        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                        <input asp-for="EmailCode" class="form-control" placeholder="Код" />
+                    </div>
+                    <button type="submit" class="btn btn-default">Далее</button>
+                </div>
+
+
+                @Html.ValidationMessageFor(model => model.EmailCode, "", new { @class = "text-danger" })
+
+
+            </div>
+        </div>
+    }
+}
+<!--Телефон-->
+@if (!Model.PhoneNumberConfirmed)
+{
+    <div class="notification-alert">Необходимо подтвердить номер телефона. <br>Для подтверждения нажмите кнопку "Выслать код", затем введите код полученный в СМС в поле "Код" и нажмите кнопку "Далее".</div>
+}
+<div class="row">
+    <div class="col-xs-12 form-group">
+        @Html.LabelFor(model => model.PhoneNumber, new { @class = "control-label" })
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-phone"></i>
+            </span>
+            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.PhoneNumber), @readonly = true, autocomplete = "on" } })
+            @if (Model.PhoneNumberConfirmed)
+            {
+                <span class="input-group-addon">
+                    <i class="fa fa-check text-success" title="Подтвержден"></i>
+                </span>
+            }
+            else
+            {
+                <span class="input-group-addon">
+                    <a href="#" title="Подтвердить">
+                        <i class="fa fa-info text-warning" title="Не подтвержден"></i>
+                    </a>
+                </span>
+            }
+        </div>
+        @if (!Model.PhoneNumberConfirmed && !Model.IsSendCode)
+        {
+            <a asp-action="SendCode" class="btn btn-default" style="margin-top:5px;"
+               data-ajax="true" data-ajax-mode="replace" data-ajax-update="#form-user-info"
+               data-ajax-loading="#processIcon" data-ajax-method="GET">Выслать код</a>
+        }
+    </div>
+</div>
+@if (!Model.PhoneNumberConfirmed && Model.IsSendCode)
+{
+    using (Html.BeginForm("ConfirmPhone", "Profile", new { ReturnUrl = ViewBag.ReturnUrl }))
+    {
+        @Html.HiddenFor(model => model.PhoneNumber)
+
+        <div class="row">
+            <div class="form-group col-xs-12">
+                <div id="id-timer" class="sms-timer">Осталось времени: <span id="id-js-timer"></span></div>
+                <div class="sms-code-form">
+                    <div class="input-group input-group-small">
+                        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                        <input asp-for="SmsCode" class="form-control" placeholder="Код" />
+                    </div>
+                    <button type="submit" class="btn btn-default">Далее</button>
+                </div>
+
+
+                @Html.ValidationMessageFor(model => model.SmsCode, "", new { @class = "text-danger" })
+
+
+            </div>
+        </div>
+        <script>profileTimer();</script>
+    }
+}
+
+@Html.HiddenFor(model => model.HasPassword)
+@Html.HiddenFor(model => model.TwoFactorEnabled)
+@Html.HiddenFor(model => model.PhoneNumberConfirmed)
+@Html.HiddenFor(model => model.EmailConfirmed)
+@Html.HiddenFor(model => model.DefaultAddressId)
+@Html.HiddenFor(model => model.PercentOfOrder)
+@Html.HiddenFor(model => model.PhoneNumberConfirmed)
+<!--Адрес доставки-->
+
+
+<form>
+    <div class="row">
+        <div class="col-sm-6 mr-1">
+            @Html.LabelFor(model => model.City, new { @class = "control-label" })
+            @Html.DropDownListFor(model => model.City,
+                new SelectList(ViewBag.Cities, "Id", "Name"),
+                "Выберите город из списка", new { @class = "form-control", @disabled = true })
+        </div>
+        <div class="col-sm-6">
+            @Html.LabelFor(model => model.Street, new { @class = "control-label" })
+            <input asp-for="@Model.Street" class="form-control " placeholder="Улица" readonly />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 mr-1">
+            @Html.LabelFor(model => model.House, new { @class = "control-label" })
+            <input asp-for="@Model.House" class="form-control" placeholder="Номер дома" readonly />
+        </div>
+        <div class="col-sm-3 mr-1">
+            @Html.LabelFor(model => model.Building, new { @class = "control-label" })
+            <input asp-for="@Model.Building" class="form-control" placeholder="Строение" readonly />
+        </div>
+        <div class="col-sm-3 mr-1">
+            @Html.LabelFor(model => model.Flat, new { @class = "control-label" })
+            <input asp-for="@Model.Flat" class="form-control" placeholder="Квартира" readonly />
+        </div>
+        <div class="col-sm-3">
+            @Html.LabelFor(model => model.Office, new { @class = "control-label" })
+            <input asp-for="@Model.Office" class="form-control" placeholder="Офис" readonly />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 mr-1">
+            @Html.LabelFor(model => model.Entrance, new { @class = "control-label" })
+            <input asp-for="@Model.Entrance" class="form-control" placeholder="Подъезд" readonly />
+        </div>
+        <div class="col-sm-4 mr-1">
+            @Html.LabelFor(model => model.Storey, new { @class = "control-label" })
+            <input asp-for="@Model.Storey" class="form-control" placeholder="Этаж" readonly />
+        </div>
+        <div class="col-sm-4">
+            @Html.LabelFor(model => model.Intercom, new { @class = "control-label" })
+            <input asp-for="@Model.Intercom" class="form-control" placeholder="Домофон" readonly style="width: 103.5%" />
+        </div>
+    </div>
+    <div class="row mb-4">
+        @Html.LabelFor(model => model.AddressComment, new { @class = "control-label" })
+        <textarea asp-for="@Model.AddressComment" class="form-control" placeholder="Комментарий к адресу" readonly style="resize:none"></textarea>
+    </div>
+</form>
+@if (companies != null && Model.UserInCompanies != null && Model.UserInCompanies.Count > 0)
+{
+    <div class="row">
+        <label class="control-label">Компании</label>
+        <table class="table table-bordered table-responsive">
+            <tr>
+                <th>
+                    Название
+                </th>
+                <th>
+                    Адрес доставки
+                </th>
+            </tr>
+            @foreach (var company in Model.UserInCompanies)
+            {
+                <tr>
+                    @{
+                        var companyModel = companies.FirstOrDefault(c => c.Id == company.CompanyId);
+                    }
+                    @if (companyModel != null)
+                    {
+                        <td>
+                            @companyModel.Name
+                        </td>
+                        <td>
+                            @(companyModel.Addresses?
+                                  .FirstOrDefault(c => c.Id == company.DeliveryAddressId)?.GetAddressString() ?? string.Empty)
+                        </td>
+                    }
+                </tr>
+            }
+        </table>
+    </div>
+}
+@*
+    <div class="form-group">
+        @Html.LabelFor(model => model.UserReferralLink, new { @class = "control-label" })
+        <div class="input-group">
+            <a href="#" title="Копировать в буфер" class="input-group-addon btn-copy"><i class="fa fa-files-o"></i></a>
+            @Html.EditorFor(model => model.UserReferralLink, new { htmlAttributes = new { @class = "form-control copy-text", @readonly = true,
+                    Value = @Url.Action("Register", "Account", new { referralLink = Model.UserReferralLink }, Request.Url.Scheme) } })
+        </div>
+        @Html.ActionLink("Посмотреть таблицу рефералов", "Referrals", "Profile")
+    </div>
+*@<div class="row">
+    <a asp-action="Edit" class="btn btn-default" style="margin-top:5px;"
+       data-ajax="true" data-ajax-mode="replace" data-ajax-update="#form-user-info"
+       data-ajax-loading="#processIcon" data-ajax-method="GET">Редактировать</a>
+</div>
+
+@if (!Model.PhoneNumberConfirmed && Model.IsSendCode)
+{
+    <script>
+        setPhoneMask('#PhoneNumber', true);
+    </script>
+}
+
+<script>
+    //Таймер на странице Входа на сайт
+    var profileTimerId;
+    //Время в сек, таймер на форме
+    var profileTimerCurrent = 120;
+
+    function profileTimer() {
+        profileTimerId = setInterval(function () {
+            if (profileTimerCurrent <= -1) {
+                //перезагружаем страницу
+                window.location.reload("/profile/");
+            }
+            else {
+                //обновляем значение таймера на форме
+                $("#id-js-timer").html(" " + profileTimerCurrent + " секунд.");
+                profileTimerCurrent--;
+            }
+        }, 1000);
+    }
+    setPhoneMask('#PhoneNumber', true);
+</script>

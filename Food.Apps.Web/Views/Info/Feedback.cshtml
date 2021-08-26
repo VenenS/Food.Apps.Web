@@ -1,0 +1,93 @@
+﻿@model FeedbackViewModel
+@{
+    ViewBag.Title = "Обратная связь";
+    string labelClass = "control-label col-xs-3";
+    string controlClass = "col-xs-9";
+    string validationClass = "text-danger small";
+}
+<div class="centered">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                @using (Html.BeginForm(new { returnUrl = ViewBag.ReturnUrl }))
+                {
+                    @Html.HiddenFor(m=>m.Url)
+                    <div class="form-horizontal">
+                        <h4>
+                            Отправьте нам свои предложения или замечания<br />
+                            <small>Мы рассмотрим все Ваши пожелания</small>
+                        </h4>
+                        <hr />
+
+                        @if (ViewBag.ResultMessage != null)
+                        {
+                            <div class="alert alert-success alert-dismissible" role="alert">
+                                <p>@ViewBag.ResultMessage</p>
+                                <a href="@Url.Action("Index", "Cafe")" class="btn btn-link">Вернуться на главную</a>
+                            </div>
+                        }
+                        else
+                        {
+                            @Html.AntiForgeryToken()
+
+                            @Html.ValidationSummary(true, "", new { @class = validationClass })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = labelClass })
+                                <div class="@controlClass">
+                                    <input asp-for="UserName" class="form-control" placeholder="@Model.UserName" />
+                                    @Html.ValidationMessageFor(model => model.UserName, "", new { @class = validationClass })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = labelClass })
+                                <div class="@controlClass">
+                                    <input asp-for="Email" class="form-control" placeholder="@Model.Email" />
+                                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = validationClass })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = labelClass })
+                                <div class="@controlClass">
+                                    <input asp-for="Title" class="form-control" placeholder="@Model.Title" />
+                                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = validationClass })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Message, htmlAttributes: new { @class = labelClass })
+                                <div class="@controlClass">
+                                    @Html.TextAreaFor(model => model.Message,
+                                             new
+                                             {
+                                                 @class = "form-control",
+                                                 placeholder = "Длина сообщения не должна быть более 2000 символов",
+                                                 rows = "4",
+                                                 cols = "60",
+                                                 maxlength = "2000",
+                                                 @style = "resize: vertical;"
+                                             })
+                                    @Html.ValidationMessageFor(model => model.Message, "", new { @class = validationClass })
+                                </div>
+                            </div>
+                            <environment names="Production">
+                                <div class="form-group">
+                                    <div class="g-recaptcha col-xs-offset-3" data-sitekey="6LeSNmIUAAAAAGvndqD4ChDngyYWJDQ2o-UJt2iP"></div>
+                                    @Html.ValidationMessage("RecaptchaId", new { @class = "col-xs-offset-3 text-danger small" })
+                                </div>
+                            </environment>
+                            <div class="form-group">
+                                <div class="col-xs-offset-3 col-xs-9">
+                                    <button type="submit" class="btn btn-default">Отправить</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+    @await Html.PartialAsync("~/Views/Scripts/jqueryval.cshtml")
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+}

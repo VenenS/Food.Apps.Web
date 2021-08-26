@@ -1,0 +1,33 @@
+﻿@import "../../Content/Less/variables.less";
+
+.fa {
+  width: @s-primary-padding-double;
+  // .fa.fa-2_5x
+  &.fa-2_5x {
+    font-size: 2.5em;
+  }
+}
+
+.fa-cc-visa {
+  // .fa-cc-visa:before
+  &:before {
+    color: @c-btn-text;
+    background-color: #1A1F71;
+  }
+}
+
+.fa-cc-mastercard {
+  // .fa-cc-mastercard:before
+  &:before {
+    color: @c-btn-text;
+    background: linear-gradient(to right, @c-icon-mastercard-1 0,@c-icon-mastercard-1 48%,@c-icon-mastercard-2 52%,@c-icon-mastercard-2 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@c-icon-mastercard-1', endColorstr='@c-icon-mastercard-2',GradientType=1 );
+  }
+}
+
+.fa-money {
+  // .fa-money:before
+  &:before {
+    color: @c-brand-primary;
+  }
+}

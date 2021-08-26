@@ -1,0 +1,9 @@
+﻿@model string
+
+<div class="col-xs-2">
+    <a asp-action="AddBusinessHoursItem" asp-controller="DishCategorySchedule"
+       asp-route-prefix="BusinessHours.@Model"
+       data-ajax="true"
+       data-ajax-update="#@Model.ToLower()BusinessHours"
+       data-ajax-success="afterAddBusinessHours($(this))">Добавить</a>
+</div>

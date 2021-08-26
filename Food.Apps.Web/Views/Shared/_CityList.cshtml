@@ -1,0 +1,30 @@
+﻿@model List<RegionModel>
+
+<div id="cities">
+    <ul class="row list-unstyled panel panel-default">
+        @foreach (var region in Model)
+        {
+        <li class="col-xs-12">
+            <div class="panel-heading">
+                <hr class="m-1" />
+                <h5>
+                    <a href="#region-@region.Id" class="" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="region-@region.Id">
+                        <i class="fa fa-expander"></i>
+                        @region.Name
+                    </a>
+                </h5>
+            </div>
+            <hr class="m-1" />
+            <ul class="row list-unstyled mb-3 collapse in" id="region-@region.Id" aria-describedby="heading-@region.Id">
+                @foreach (var city in region.Cities)
+                {
+                    <li class="col-lg-3 col-md-4 col-sm-6 col-xs-12 p-2">
+                        <a asp-action="ConfirmCurrentCity" asp-controller="City" asp-area="" asp-route-id="@city.Id"
+                           data-ajax="true" data-ajax-success="location.reload();">@city.Name.Trim()</a>
+                    </li>
+                }
+            </ul>
+        </li>
+        }
+    </ul>
+</div>

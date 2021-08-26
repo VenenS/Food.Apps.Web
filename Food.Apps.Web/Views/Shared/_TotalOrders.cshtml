@@ -1,0 +1,7 @@
+﻿@* TODO:Возможно нужно чекать еще и роль *@
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="total-order-per-day">
+      <label>Обработано заказов сегодня: @Component.InvokeAsync("TotalOrders")</label>
+    </div>
+}

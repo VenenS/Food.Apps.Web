@@ -1,0 +1,163 @@
+﻿@model DishModel
+@inject ITWebNet.Food.Site.Services.Client.IContentServiceClient imageClient
+@{
+    var imageOptions = new AjaxOptions
+    {
+        UpdateTargetId = $"dish-image-{Model.Id}",
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "POST",
+        LoadingElementId = $"process-{Model.Id}",
+    };
+}
+
+<div class="main wide-rigth content">
+    <div class="panel panel-default edit-dish">
+        <div class="panel-body">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <form method="post" enctype="multipart/form-data" asp-controller="Dishes" asp-action="Save" asp-route-id="@Model.Id">
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Uuid)
+                @Html.HiddenFor(model => model.CategoryId)
+                @Html.HiddenFor(model => model.DishIndex)
+                @Html.HiddenFor(model => model.VersionFrom)
+                @Html.HiddenFor(model => model.VersionTo)
+                @Html.HiddenFor(model => model.IsSimply)
+                <div class="form-group">
+                    @Html.RouteLink("Назад", "ManagerCafe", new { action = "Index", controller = "Dishes" }, new { @class = "btn btn-default" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name)
+                    <input class="form-control" asp-for="Name" />
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BasePrice)
+                    <input asp-for="BasePrice" class="form-control" type="text" maxlength="7" placeholder="@(string.Format("{0:F2}", 0d))" />
+                    @*@Html.ValidationInputFor(model => model.BasePrice, null, new { @class = "form-control" })*@
+                    @Html.ValidationMessageFor(model => model.BasePrice, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description)
+                    @Html.TextAreaFor(model => model.Description, new { @class = "form-control", rows = "3", maxlength = "500", placeholder = Html.DisplayNameFor(model => model.Description), style = "resize: vertical; min-height: 50px;" })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Composition)
+                    <input class="form-control" asp-for="Composition" />
+                    @Html.ValidationMessageFor(model => model.Composition, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Weight)
+                    <input class="form-control" asp-for="Weight" />
+                    @Html.ValidationMessageFor(model => model.Weight, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.WeightDescription)
+                    <input class="form-control" asp-for="WeightDescription" />
+                    @Html.ValidationMessageFor(model => model.WeightDescription, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Kcalories)
+                    <input class="form-control" asp-for="Kcalories" />
+                    @Html.ValidationMessageFor(model => model.Kcalories, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Управление фотографиями</div>
+                        <div class="panel-body">
+                            <div id="ImageUploadComponent" class="image-upload-component">
+                                <div id="ImagePreview" class="image-drop-area">
+                                    @if (string.IsNullOrWhiteSpace(@Model.Image))
+                                    {
+                                        <img src="~/images/Dish/default.png" class="img-responsive center-block" />
+                                    }
+                                    else
+                                    {
+                                        var imageParameters = new GetImageModel().SetHash(Model.Image);
+                                        <img src="@imageClient.GetImage(imageParameters)" class="img-responsive center-block" />
+                                    }
+                                </div>
+                                <input asp-for="Image" id="Image" type="hidden" />
+                                <span class="text-danger" id="ImageValidationSpan"></span>
+                                <div class="image-upload-buttons">
+                                    <div class="input-group">
+                                        <label class="input-group-btn">
+                                            <span class="btn btn-default">
+                                                Выбрать файл
+                                                <input type="file" name="ImageFile" id="ImageFile" accept=".png,.jpg,.jpeg,.bmp">
+                                            </span>
+                                        </label>
+                                        <input type="text" class="form-control" readonly placeholder="Выберите иконку для загрузки">
+                                    </div>
+                                    <button type="button" class="btn btn-danger" onclick="clearDishImage()">Удалить</button>
+                                </div>
+                                <span asp-validation-for="Image" class="text-danger"></span>
+                                <span asp-validation-for="ImageFile" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    function clearDishImage() {
+                        clearImage('Image');
+                    }
+
+                    function handleImageFileSelect(evt) {
+                        handleFileSelect(evt, 'ImageValidationSpan', 'Image',
+                            @DishModel.kMaxImageSize,
+                            @DishModel.kMaxImageWidth, @DishModel.kMaxImageHeight,
+                            0, 0,
+                            0, 0);
+                    }
+
+                    document.getElementById('ImageFile').addEventListener('change', handleImageFileSelect, false);
+                </script>
+
+                <div class="form-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Управление категориями</div>
+                        <div class="panel-body" id="manage-category">
+                            @for (var i = 0; i < Model.FoodCategories.Count; i++)
+                            {
+                            <div class="form-group">
+                                <input asp-for="FoodCategories[i].Id" type="hidden" />
+                                <input asp-for="FoodCategories[i].Name" type="hidden" />
+                                <input asp-for="FoodCategories[i].IsSelected" />
+                                @Html.Label(Model.FoodCategories[i].Name)
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.CheckBoxFor(model => model.IsDaily)
+                    @Html.Label("Включено в меню на каждый день")
+                </div>
+                <div class="form-group pull-left">
+                    @*<input type="submit" value="Сохранить" class="btn btn-default" />*@
+                    <a class="btn btn-default" onclick="saveDish()">Сохранить</a>
+                </div>
+            </form>
+
+            <div class="form-group pull-left col-xs-offset-1" style="margin-left: 2%;">
+                @*@Html.RouteLink("Удалить", "ManagerCafe", new { controller = "Dishes", action = "Delete", id = Model.Id },
+                    new { @class = "btn btn-danger" })*@
+                <button onclick="removeDishFromAllCategories()" class="btn btn-danger">Удалить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section modals
+{
+    @await Html.PartialAsync("_ConfirmRemove", Model)
+}
+@section scripts {
+    @await Html.PartialAsync("~/Views/Scripts/jqueryval.cshtml")
+}

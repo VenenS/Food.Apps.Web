@@ -1,0 +1,16 @@
+﻿@model ITWebNet.Food.Site.Areas.Manager.Models.CafeInfoModel
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+
+<div class="main wide-rigth content">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="cafeInfo">
+                @await Html.PartialAsync("_ViewCafeInfo", Model)
+            </div>
+        </div>
+    </div>
+</div>

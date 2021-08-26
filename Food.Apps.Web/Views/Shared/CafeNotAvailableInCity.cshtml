@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = $"Кафе недоступно в вашем городе";
+}
+<div class="jumbotron">
+    <center>
+        <h1>Кафе недоступно</h1>
+        <br />
+        <p>
+            Данное кафе недоступно в вашем городе.
+            Пожалуйста, выберите другое кафе для заказа или измените город в профиле
+        </p>
+    </center>
+    <hr style="clear: both;" />
+    <p>
+        Также Вы можете нажать кнопку <b>Назад</b> вашего браузера, чтобы перейти на предыдущую страницу.
+        <b>Или вернуться на домашнюю страницу, нажав кнопку</b>
+    </p>
+    <center>
+        <a href="@Url.RouteUrl(routeName: "SubdomainRoute", routeValues: new  RouteValueDictionary(new { action = "Index", controller = "Cafe", name = "" }), subdomain: true)" class="btn btn-lg btn-default text-uppercase"><i class="fa fa-home"></i> на главную</a>
+        <button class="btn btn-lg btn-default text-uppercase" onclick="choiceCity()"><i class="fa fa-map-marker"></i> выбрать город</button>
+    </center>
+</div>

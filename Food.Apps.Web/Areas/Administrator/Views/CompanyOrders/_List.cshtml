@@ -1,0 +1,31 @@
+﻿@model IEnumerable<ITWebNet.Food.Site.Areas.Administrator.Models.CompanyOrderShortModel>
+
+<div class="panel panel-default">
+    @{
+        foreach (var item in Model)
+        {
+            <form method="post" action="@Url.Action("EditOrder", "CompanyOrders")" name="edit-@item.Id" id="edit-@item.Id" data-ajax="true"
+                  data-ajax-success="onEditOrder"></form>
+        }
+    }
+    <table class="table responsive display no-wrap table-striped table-hover table-bordered" id="admin-orders">
+        <thead>
+            <tr>
+                <th>ИД</th>
+                <th>Компания</th>
+                <th>Кафе</th>
+                <th>Время открытия заказа</th>
+                <th>Время закрытия заказа</th>
+                <th>Время доставки</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                @await Html.PartialAsync("_CompanyOrderItem", item)
+            }
+        </tbody>
+    </table>
+    <br />
+</div>

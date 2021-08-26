@@ -1,0 +1,31 @@
+﻿@model CartMultiCafeViewModel
+
+@{
+    bool preOrderParam = false;
+    if (ViewContext.HttpContext.Request.Query.ContainsKey("preOrder"))
+    {
+        preOrderParam = bool.Parse(ViewContext.HttpContext.Request.Query["preOrder"]);
+    }
+}
+
+@if (Model.Type == EnumCartType.Short)
+{
+    <div class="form-group">
+        <a asp-action="ResetOrder" asp-controller="Cart" asp-route-cartType="@EnumCartType.Short"
+           data-dismiss="modal" class="btn btn-danger cart-action"
+           data-ajax="true" data-ajax-update="#shortCart" data-ajax-method="POST" data-ajax-mode="replace">Сбросить</a>
+        @Html.ActionLink("Продолжить", "Index", "Cart", new { preOrder = preOrderParam }, new { @class = "btn btn-default cart-action" })
+    </div>
+}
+else
+{
+    if (Model.Type == EnumCartType.Banket)
+    {
+        <a href="@Url.Action("Save", "Banket")" class="btn btn-default btn-block">Сохранить</a>
+    }
+    else
+    {
+        <input type="submit" value="Подтвердить" form="delivery-form" class="btn btn-default btn-block" />
+        <a href="@Url.Action("Index", "Cafe")" class="btn btn-default btn-block">Вернуться к меню</a>
+    }
+}

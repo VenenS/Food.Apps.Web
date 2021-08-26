@@ -1,0 +1,49 @@
+﻿@using ITWebNet.Food.Core.DataContracts.Admin
+@model CompanyCuratorModel
+
+@{
+    ViewBag.Title = "Добавление куратора";
+    var listUsers = (List<UserModel>)ViewBag.Users ?? new List<UserModel>();
+    var selectList = listUsers.Select(c =>
+        new Tuple<long, string>(c.Id, !string.IsNullOrEmpty(c.UserFullName) ? c.UserFullName : c.Email))
+        .OrderBy(c => c.Item2).ToList();
+}
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <h4>Добавление куратора к компании</h4>
+                @if (TempData.ContainsKey("Message"))
+                {
+                    <div class="alert alert-danger">
+                        @TempData["Message"]
+                    </div>
+                }
+                @if (TempData.ContainsKey("Result"))
+                {
+                    <div class="alert alert-success">
+                        @TempData["Result"]
+                    </div>
+                }
+                <div claass="row">
+                    @Html.RouteLink("Назад к списку", "AdministratorDefault", new { controller = "Companies", action = "Curators", companyId = Model.CompanyId }, new { @class = "btn btn-link" })
+                </div>
+                <form asp-action="AddCurator" asp-controller="Companies" asp-area="AdministratorDefault" method="post">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.CompanyId)
+                    <div class="form-group">
+                        @Html.LabelFor(c => c.UserId)
+                        <div class="col-xs-5">
+                            @Html.DropDownListFor(c => c.UserId, new SelectList(selectList, "Item1", "Item2"), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(c => c.UserId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-actions no-color">
+                        <input type="submit" value="Добавить" class="btn btn-default" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

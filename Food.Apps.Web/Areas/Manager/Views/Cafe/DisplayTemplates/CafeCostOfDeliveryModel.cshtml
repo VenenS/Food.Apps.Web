@@ -1,0 +1,33 @@
+﻿@model CafeCostOfDeliveryModel
+    <div class="row">
+        <div class="col-xs-2 control-label">
+            @if (Model.OrderPriceFrom != 0.0)
+            {
+                @:@string.Format("{0:N2} руб", Model.OrderPriceFrom.ToString())
+            }
+            else
+            {
+                @: ---
+            }
+        </div>
+        <div class="col-xs-2 control-label">
+            @if (Model.OrderPriceTo != 0.0)
+            {
+                @:@string.Format("{0:N2} руб", Model.OrderPriceTo.ToString())
+            }
+            else
+            {
+                @: ---
+            }
+        </div>
+        <div class="col-xs-2 control-label">
+            @if (Model.DeliveryPrice != 0.0)
+            {
+                @:@string.Format("{0:N2} руб", Model.DeliveryPrice.ToString())
+            }
+            else
+            {
+                @: Бесплатно
+            }
+        </div>
+    </div>

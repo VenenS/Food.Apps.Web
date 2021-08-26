@@ -1,0 +1,27 @@
+﻿@model ITWebNet.Food.Site.Areas.Administrator.Models.CompanysLists
+
+@{
+    ViewBag.Title = "Компании";
+    var activeModel = Model.ActiveCompanys;
+    var inactiveModel = Model.InactiveCompanys;
+}
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <p>
+                    <a href=@Url.Action("Create") class="btn btn-success"><i class="fa fa-plus"> </i> Новая компания</a>
+                </p>
+                <div class="row">
+                    <div class="col-md-5">
+                        @await Html.PartialAsync("_List", activeModel)
+                    </div>
+                    <div class="col-md-5 col-md-offset-2">
+                        @await Html.PartialAsync("_ListInactive", inactiveModel)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

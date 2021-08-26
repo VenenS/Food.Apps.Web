@@ -1,0 +1,73 @@
+﻿@model ITWebNet.Food.Core.DataContracts.Manager.XSLTModel
+@{
+    ViewBag.Title = "Добавить шаблон";
+    
+    SelectList sl = new SelectList(new[]{
+    new SelectListItem{ Text="true", Value="Общий"},
+    new SelectListItem{ Text="false", Value="Для указанных кафе"}
+    }, "Text", "Value");
+    AjaxOptions options = new AjaxOptions
+    {
+        UpdateTargetId = $"layout-{Model.Id}",
+        InsertionMode = InsertionMode.ReplaceWith
+    };
+    
+}
+<div class="edit-dish">
+    <form asp-action="AddLayout" asp-controller="ReportsLayouts" asp-area="AdministratorDefault" method="post">
+        @Html.HiddenFor(e => e.Id)
+        <div class="row">
+
+            <div class="form-group col-xs-9">
+                @Html.LabelFor(e=>e.Name)
+                <input asp-for="Name" class="form-control" maxlength="50" placeholder="Название"/>
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group col-xs-9">
+                @Html.LabelFor(e => e.Description)
+                <input asp-for="Description" class="form-control" maxlength="50" placeholder="Описание" />
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+
+            @*<div class="form-group col-xs-3">
+                    <p>Предпросмотр</p>
+                    @Html.RouteLink("Предпросмотр", "ReportsLayouts", new { layoutId = Model.Id, controller = "ReportsLayouts", action = "Show" }, new { @class = "btn btn-link", @_target = "blank" }))
+                </div>*@
+            <div id="layout-@Model.Id-extend" style="padding-bottom: 1em;">
+                <hr />
+                <div class="row">
+                    <div class="col-xs-9">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Transformation)
+                            @Html.TextAreaFor(model => model.Transformation, 20, 150, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.Transformation) })
+                            @Html.ValidationMessageFor(model => model.Transformation, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            @*@Html.EditorFor(e => e.IsCommon)*@
+                            @Html.LabelFor(model => model.IsCommon)
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    @Html.DropDownListFor(model => model.IsCommon, sl, new { @class = "form-control" })
+                                </div>
+
+                                <div class="col-xs-5 text-right">
+                                    <div class="form-inline">
+                                        <div class="form-group">
+                                            <input type="submit" value="Сохранить" class="btn btn-default" title="Сохранить" />
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.RouteLink("Назад", new { controller = "ReportsLayouts", action = "Index" }, new { @class = "btn btn-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,31 @@
+﻿@model Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature
+@{
+    Layout = "_Layout.cshtml";
+    ViewBag.Title = "Error";
+}
+<div class="main content" style="width:100%"> 
+  <div>
+    <h3>Error</h3>
+  </div>
+  <div>
+    <div class="alert alert-danger" role="alert">
+      An unexpected error has occurred. Please contact the system administrator.
+    </div>
+    <environment names="Testing">
+        @if (Model != null)
+        {
+            <div>
+                <p>
+                    <b>Exception:</b> @Model.Error.Message<br />
+                    <b>Path:</b> @Model.Path<br />
+                </p>
+                <div>
+                    <pre>
+            @Model.Error.StackTrace
+          </pre>
+                </div>
+            </div>
+        }
+    </environment>
+  </div>
+</div>

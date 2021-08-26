@@ -1,0 +1,51 @@
+﻿@model ResetPasswordModel
+@using (Html.BeginForm("ResetPassword", "Account"))
+{
+<form asp-antiforgery="true" asp-action="ResetPassword" asp-controller="Account">
+    <p>Придумайте новый пароль</p>
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Email" class="sr-only"></label>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-envelope"></i>
+            </span>
+            <input asp-for="Email" class="form-control" readonly placeholder="Email"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Password" class="sr-only"></label>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-lock"></i>
+            </span>
+            <input asp-for="Password" class="form-control" placeholder="Пароль"/>
+        </div>
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ConfirmPassword" class="sr-only"></label>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-lock"></i>
+            </span>
+            <input asp-for="ConfirmPassword" class="form-control" placeholder="Пароль (еще раз)" />
+        </div>
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <div class="input-group">
+            @Html.HiddenFor(model => model.Code)
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Сменить пароль" class="btn btn-default"/>
+    </div>
+</form>
+}

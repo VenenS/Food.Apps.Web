@@ -1,0 +1,70 @@
+﻿@model LoginViewModel
+
+@{
+    ViewBag.Title = "Вход";
+    @*Dictionary<string, ExternalLoginModel> loginButtons = ViewBag.LoginButtons;*@
+}
+
+<div class="centered">
+    <div class="col-md-11 col-xs-12">
+        <div class="card">
+            <div class="card-body">
+                @if (TempData.ContainsKey("Unauthorized"))
+                {
+                    <div class="alert alert-danger text-center alert-dismissible" role="alert">
+                        <a href="#" class="close" data-dismiss="alert">×</a>
+                        <p>@TempData["Unauthorized"]</p>
+                    </div>
+                }
+                <h4 class="text-center">Войдите или @Html.ActionLink("Зарегистрируйтесь", "Register")</h4>
+                <hr />
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div id="loginForm">
+                                @await Html.PartialAsync("_Login", (LoginModel)Model.Login)
+                            </div>
+                        </div>
+                        @*<div class="col-xs-1">
+                            <div class="or-spacer-vertical left">
+                                <div class="mask"></div>
+                                <span>ИЛИ</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-2">
+                            @if (loginButtons != null) {
+                                @if (loginButtons.TryGetValue("facebook", out var fb)) {
+                                    <a href="@fb.Url" class="btn btn-block btn-social btn-facebook"><i class="fa fa-facebook"></i>Facebook</a>
+                                }
+                                @if (loginButtons.TryGetValue("vkontakte", out var vk)) {
+                                    <a href="@vk.Url" class="btn btn-block btn-social btn-vk"><i class="fa fa-vk"></i>ВКонтакте</a>
+                                }
+                            }
+                        </div>*@
+                        <div class="col-xs-2">
+                            <div class="or-spacer-vertical left">
+                                <div class="mask"></div>
+                                <span>ИЛИ</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-5">
+                            <div id="loginSmsForm">
+                                @await Html.PartialAsync("_LoginSms", (LoginSmsViewModel)Model.LoginSms)
+                            </div>
+                        </div>
+                        <div class="wip" id="processIcon">
+                            <i class="fa fa-spinner fa-pulse fa-3x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        @if(Model.LoginSms.IsSendCode) { @Html.Raw("runLoginSmsCooldown();"); }
+        setPhoneMask('#Phone', true);
+    </script>
+}

@@ -1,0 +1,20 @@
+﻿@model TagsModel
+
+@{
+    ViewBag.Title = "Теги";
+    ViewBag.ObjectType = Model.ObjectType;
+    ViewBag.ObjectId = Model.Id;
+    var cafeId = ViewContext.RouteData.Values["cafeId"] ?? ViewContext.RouteData.Values["id"];
+}
+
+<div class="main wide-rigth content">
+    <div class="row">
+        <h4>@Model.ObjectName</h4>
+        <div id="srcTagGrid" class="col-xs-6">
+            @await Html.PartialAsync("_AvailableTags", Model.AvailableTags)
+        </div>
+        <div id="destTagGrid" class="col-xs-6">
+            @await Html.PartialAsync("_ObjectTags", Model)
+        </div>
+    </div>
+</div>

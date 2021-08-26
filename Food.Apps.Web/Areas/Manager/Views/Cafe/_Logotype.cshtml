@@ -1,0 +1,11 @@
+﻿@model ITWebNet.Food.Site.Areas.Manager.Models.CafeInfoModel
+@inject ITWebNet.Food.Site.Services.Client.IContentServiceClient imageClient
+@{
+    var parameters = new ITWebNet.Food.Site.Models.GetImageModel()
+        .SetHash(Model.Logotype)
+        .SetWidth(160)
+        .SetHeight(120);
+}
+@Html.HiddenFor(model => model.Logotype)
+
+<img class="constrained-cafe-logo-img" src="@(!string.IsNullOrEmpty(Model.Logotype) ? imageClient.GetImage(parameters) : Url.Content("~/images/default.png"))" />

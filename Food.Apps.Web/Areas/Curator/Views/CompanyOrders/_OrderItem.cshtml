@@ -1,0 +1,46 @@
+﻿@model OrderItemModel
+
+@{
+    var order = ViewData["order"] as OrderModel;
+    var totalSum = order.TotalSum - order.OrderInfo.DeliverySumm;
+    var optionsForDelete = new AjaxOptions()
+    {
+        UpdateTargetId = "order-item-" + @Model?.Id,
+        InsertionMode = InsertionMode.ReplaceWith,
+        Confirm = "Вы действительно хотите удалить элемент?",
+    };
+    var optionsForDecrement = new AjaxOptions()
+    {
+        UpdateTargetId = "order-item-" + @Model?.Id,
+        InsertionMode = InsertionMode.ReplaceWith,
+        Confirm = "Вы действительно хотите уменьшить количество блюда?"
+    };
+}
+
+
+@if (Model != null)
+{
+    <li class="list-group-item" id="order-item-@Model.Id">
+        @Html.AjaxIconActionLink("fa fa-remove", "", "DeleteOrderItem", "CompanyOrders",
+        new { orderItemId = Model.Id, cafeId = order?.CafeId, orderId = order?.Id }, optionsForDelete, new { @class = "pull-right text-danger", style = "margin-left:5px;" })
+        @Html.AjaxIconActionLink("fa fa-minus", "", "DeleteOrderItem", "CompanyOrders",
+        new { orderItemId = Model.Id, cafeId = order?.CafeId, orderId = order?.Id, isDecrement = true }, optionsForDecrement, new { @class = "pull-right text-danger", style = "margin-left:5px;" })
+        <span class="badge">@Model.DishCount @DeclensionHelper.GetNoun(Model.DishCount, "порция", "порции", "порций")</span>
+        <h5 class="list-group-item-heading">@Model.DishName</h5>
+        @if (!string.IsNullOrWhiteSpace(Model.Comment))
+        {
+            <p class="list-group-item-text">
+                <strong>Комментарий к блюду:</strong>
+                @Model.Comment
+            </p>
+        }
+    </li>
+}
+@if (ViewContext.HttpContext.Request.IsAjaxRequest())
+{
+    <script>
+        $("#order-" + @order.Id)[0].rows[0].children[4].innerHTML = @totalSum + " <span class='text-muted'> ₽</span>";
+        if (@totalSum == 0)
+            $("#order-" + @order.Id)[0].rows[0].children[5].innerHTML = 5;
+    </script>
+}

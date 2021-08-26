@@ -1,0 +1,11 @@
+﻿@model ITWebNet.Food.Site.Models.ReportsModel
+@{
+    ViewBag.Title = "Отчеты";
+}
+@if (Model.Filter.Company != null)
+{
+    <div class="main card col-xs-9 column" id="reports-page">
+        @await Html.PartialAsync("_Filter", Model.Filter)
+        @await Html.PartialAsync("_CompanyReports", Model.CompanyOrders)
+    </div>
+}

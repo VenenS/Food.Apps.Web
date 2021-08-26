@@ -1,0 +1,70 @@
+﻿@model IEnumerable<FoodCategoryModel>
+
+@{
+    ViewBag.Title = "Категории блюд";
+}
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <div class="row mb-4">
+                    <div class="col-xs-3">
+                        @Html.AjaxRouteLink(
+                            "Добавить категорию",
+                            "AdministratorDefault",
+                            new {controller = "Categories", action = "Add"},
+                            new AjaxOptions
+                            {
+                                HttpMethod = "GET",
+                                OnSuccess = "onSuccessAddCategory"
+                            },
+                            new {@class = "btn btn-default" })
+
+                    </div>
+                    <div class="col-xs-9">
+                        @{
+                            if (ViewBag.ResultMessage != null && ViewBag.ResultMessageType != null)
+                            {
+                                <div id="result-message" class="alert alert-@ViewBag.ResultMessageType">@ViewBag.ResultMessage</div>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="row">
+
+                    <ul class="list-group" id="list-categories">
+                        @if (Model != null)
+                        {
+                            foreach (var category in Model.OrderBy(c => c.Name))
+                            {
+                                @await Html.PartialAsync("_Category", category)
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wip" id="processIcon"><i class="fa fa-spinner fa-pulse fa-3x"></i>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function scrollToDish() {
+            var element = document.querySelector("#list-categories > li:last-child");
+            element.scrollIntoView();
+            element.querySelector('input[type="text"]').focus();
+        }
+
+        function addCategory(res) {
+            $('#list-categories').append(res);
+        }
+
+        function onSuccessAddCategory(data) {
+            addCategory(data);
+            scrollToDish();
+        }
+    </script>
+}

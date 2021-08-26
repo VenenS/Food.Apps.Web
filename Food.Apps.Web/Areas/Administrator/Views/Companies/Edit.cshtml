@@ -1,0 +1,144 @@
+﻿@model CompanyModel
+@{
+    ViewBag.Title = "Редактирование компании";
+    var addresses = Model.Addresses ?? new List<DeliveryAddressModel>();
+    var addressItems = addresses.Where(c => c.IsActive).Select(c => new SelectListItem()
+    {
+        Text = c.DisplayType == DisplayAddressType.Display ? c.RawAddress : c.GetAddressString(),
+        Value = c.Id.ToString(),
+        Selected = Model.DeliveryAddressId == c.Id
+    });
+    var sortedAddress = Model.Addresses != null && Model.Addresses.Count > 0 
+        ? addresses.Select(c => new Tuple<string, DeliveryAddressModel>(c.GetAddressString(), c)).OrderBy(c => c.Item1).ToList() 
+        : new List<Tuple<string, DeliveryAddressModel>> ();
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content main full-width">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-content">
+                    <div class="form-horizontal">
+                        <h4>Редактирование</h4>
+                        @Html.ActionLink("Кураторы компании", "Curators", "Companies", new { companyId = Model.Id, Area = "AdministratorDefault" })
+                        <hr />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @if (TempData.ContainsKey("Result"))
+                        {
+                            <div class="alert alert-success">
+                                @TempData["Result"]
+                            </div>
+                        }
+                        @Html.HiddenFor(model => model.Id)
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-3">
+                                <input asp-for="Name" class="form-control" />
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.FullName, new { @class = "control-label col-md-2" })
+                            <div class="col-md-3">
+                                <input asp-for="FullName" class="form-control" />
+                                @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.DeliveryAddressId, new { @class = "control-label col-md-2" })
+
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(model => model.DeliveryAddressId,
+                                    new SelectList(addressItems.OrderBy(c => c.Text), "Value", "Text"),
+                                    "Выберите адрес из списка", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.DeliveryAddressId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.JuridicalAddressId, new { @class = "control-label col-md-2" })
+                            <div class="col-md-3">
+                                @Html.DropDownListFor(model => model.JuridicalAddressId,
+                                    new SelectList(ViewBag.Addresses, "Id", "RawAddress"),
+                                    "Выберите адрес из списка", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.JuridicalAddressId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CityId, new { @class = "control-label col-md-2" })
+                            <div class="col-md-3">
+                            @Html.DropDownListFor(model => model.CityId,
+                                new SelectList(ViewBag.Cities, "Id", "Name"),
+                                "Выберите город из списка", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Адреса доставок</label>
+                            <div class="col-md-6">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th>Актив</th>
+                                        <th>Адрес</th>
+                                        <th>Операции</th>
+                                    </tr>
+                                    @if (Model.Addresses != null)
+                                    {
+                                        for (int i = 0; i < Model.Addresses.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <input type="hidden" name="Addresses[@i].CompanyAddressId" value="@Model.Addresses[i].CompanyAddressId" />
+                                                    <input type="hidden" name="Addresses[@i].RawAddress" value="1" />
+                                                    <input type="hidden" name="Addresses[@i].BuildingNumber" value="1" />
+                                                    <input type="hidden" name="Addresses[@i].CityName" value="1" />
+                                                    <input type="hidden" name="Addresses[@i].OfficeNumber" value="1" />
+                                                    <input type="hidden" name="Addresses[@i].StreetName" value="1" />
+                                                    <input type="hidden" name="Addresses[@i].HouseNumber" value="1" />
+                                                    @Html.CheckBoxFor(m => m.Addresses[i].IsActive, new { Name = "Addresses[" + @i + "].IsActive" })
+                                                </td>
+                                                <td>
+                                                    @Model.Addresses[i].GetAddressString()
+                                                </td>
+                                                <td>
+                                                    <a href="@Url.Action("EditAddress", "Companies", new { id = Model.Addresses[i].CompanyAddressId, companyId = Model.Id, Area = "AdministratorDefault" })"
+                                                       class="btn btn-link">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                    <a href="@Url.Action("DeleteAddress",
+                                                                 new {id = Model.Addresses[i].CompanyAddressId, companyId = Model.Id, Area = "AdministratorDefault" })"
+                                                       class="btn btn-link">
+                                                        <i class="fa fa-remove text-danger"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </table>
+                                <a href="@Url.Action("CreateAddress", new {id = Model.Id})" class="btn btn-link">
+                                    Добавить адрес
+                                </a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Сохранить" class="btn btn-default" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div>
+                        @Html.ActionLink("Назад к списку", "Index")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    @await Html.PartialAsync("~/Views/Scripts/jqueryval.cshtml")
+}

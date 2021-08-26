@@ -1,0 +1,42 @@
+﻿@model MenuFilters
+@{
+    var cafeId = ViewContext.RouteData.Values["cafeId"] ?? ViewContext.RouteData.Values["id"];
+    var date = Model.OneDate ?? DateTime.Today;
+}
+<form asp-route="ManagerCafe" asp-route-action="Filter" asp-route-controller="Menu"
+      data-ajax="true"
+      data-ajax-complete="eventHandlers(); initDatePickers();"
+      data-ajax-loading="#processIcon"
+      data-ajax-mode="replace-with"
+      data-ajax-update="#manager-menu">
+   <div class="panel panel-default">
+     <div class="panel-body">
+       <div class="row">
+         <div class="col-xs-4">
+           <div class="input-group">
+               @Html.EditorFor(model => model.KeyWords, new { htmlAttributes = new { @class = "form-control", type = "search" } })
+             <span class="input-group-addon btn btn-reset">
+               <i class="fa fa-times"></i>
+             </span>
+           </div>
+         </div>
+         <div class="col-xs-4">
+           <div class="input-group date" id="datepicker">
+             <input type="date" class="form-control" name="OneDate" value="@date.ToString("yyyy-MM-dd")" />
+             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+           </div>
+         </div>
+         <div class="col-xs-2">
+           <div class="form-group">
+             <input type="submit" value="Выбрать" class="btn btn-default pull-right" />
+           </div>
+         </div>
+        <div class="col-xs-2">
+            <a asp-route="ManagerCafe" asp-route-action="ScheduleDetails" asp-route-controller="Menu" class="btn btn-default pull-right">
+                <i class="fa fa-archive"></i> История
+            </a>
+        </div>
+       </div>
+     </div>
+   </div>
+</form>

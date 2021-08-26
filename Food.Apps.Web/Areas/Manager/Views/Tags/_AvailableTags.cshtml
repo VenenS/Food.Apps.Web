@@ -1,0 +1,16 @@
+﻿@model List<TagModel>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">      
+                <h4>Доступные теги</h4>
+                <button class="btn btn-default btn-toggle-groups" data-target="#available-tags" state="0">
+                    <i class="fa fa-plus"></i>
+                    Развернуть все
+                </button>
+                <div class="form-group tags" id="available-tags">
+                        @Html.DisplayFor(m => m)
+                </div>
+            </div>
+        </div>
+    </div>

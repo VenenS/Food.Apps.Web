@@ -1,0 +1,20 @@
+﻿@if (User.Identity.IsAuthenticated && (Html.Controller().Equals("Cafe", StringComparison.InvariantCultureIgnoreCase)))
+{
+    <form asp-action="Filter" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#list" data-ajax-method="GET" 
+            class="navbar-form" role="search">
+        if (ViewBag.Cafe != null)
+        {
+        <div>
+            @Html.Hidden("cafeId", (long)ViewBag.Cafe.Id)
+        </div>
+        }
+        <div>
+            <div class="input-group">
+                @Html.TextBox("filter", ViewBag.CurrentFilter as string, htmlAttributes: new { @class = "form-control", placeholder = "Поиск по каталогу" })
+                <div class="input-group-btn">
+                    <button type="submit" class="btn btn-search"><span class="fa fa-search"></span></button>
+                </div>
+            </div>
+        </div>
+    </form>
+}

@@ -1,0 +1,40 @@
+﻿@model ReportsModel
+@{
+    ViewBag.Title = "Заказы";
+}
+<div class="content main full-width centered" id="reports-page">
+    <div class="card col-xs-8">
+        <div class="card-body">
+            <div class="card-content">
+                <div class="row">
+                    @await Html.PartialAsync("_Filter", Model.Filter)
+                </div>
+                <div class="row">
+                    @await Html.PartialAsync("_CompanyReports", Model.CompanyOrders)
+                </div>
+                <div class="row">
+                    @await Html.PartialAsync("_UserReports", Model.UserOrders)
+                </div>
+                <div class="row">
+                    @await Html.PartialAsync("_BanketReports", Model.BanketOrders)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @await Html.PartialAsync("~/Views/Scripts/jqueryui.cshtml")
+    <script>
+        (function() {
+            initDatePickers();
+            expandOrders();
+            expandOrderItems(document);
+        }());
+    </script>
+}
+
+@section adminStyles
+{
+    @await Html.PartialAsync("~/Views/Styles/jqueryui.cshtml")
+}

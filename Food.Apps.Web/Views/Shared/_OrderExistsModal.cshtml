@@ -1,0 +1,22 @@
+﻿<div class="modal fade" id="orderExistsModal" tabindex="-1" role="dialog" aria-labelledby="orderExistsModal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="orderExistsModal-label">Заказ уже есть</h4>
+      </div>
+      <div class="modal-body">
+        <p>У Вас уже есть блюда из кафе <a href="" class="btn btn-default right order-exist-cafe"></a> в корзине</p>
+        <span>Чтобы заказать в этом кафе вам нужно </span>
+          <a asp-action="ResetOrder" asp-controller="Cart" asp-route-cartType="@EnumCartType.Short" data-dismiss="modal" 
+             class="btn btn-danger" data-ajax="true" data-ajax-update="#shortCart" data-ajax-mode="replace" data-ajax-method="POST"
+             data-ajax-success="updateSideBar">Сбросить заказ</a>
+        <span>или</span>
+        вернуться в кафе <a href="" class="btn btn-default right order-exist-cafe"></a>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>

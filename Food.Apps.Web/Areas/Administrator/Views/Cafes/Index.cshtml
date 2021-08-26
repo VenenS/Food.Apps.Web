@@ -1,0 +1,55 @@
+﻿@model List<CafeModel>
+@{
+    ViewBag.Title = "Кафе";
+}
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <div class="row">
+                    <div class="col-xs-3">
+                        @Html.AjaxRouteLink(
+                            "Добавить кафе",
+                            "AdministratorDefault",
+                            new { controller = "Cafes", action = "Add" },
+                            new AjaxOptions
+                            {
+                                HttpMethod = "GET",
+                                OnSuccess = "onSuccessAddCafe"
+                            },
+                            new { @class = "btn btn-default", title = "Добавить кафе" })
+
+                    </div>
+
+                    <div class="form-group col-xs-9">
+                        @using (Html.AjaxBeginRouteForm("AdministratorDefault",
+                           new { controller = "Cafes", action = "Filter" },
+                           new AjaxOptions { UpdateTargetId = "listCafes", InsertionMode = InsertionMode.Replace, LoadingElementId = "processIcon" },
+                           new { id = "formFilter" }))
+                        {
+
+                            <div class="input-group form-inline">
+                                <input name="filter" type="text" class="form-control" placeholder="Поиск" />
+                                <span class="input-group-addon btn btn-search" onclick="$('#formFilter').submit()"><i class="fa fa-search"></i></span>
+                            </div>
+
+                        }
+                    </div>
+
+                    <ul id="listCafes" class="list-group">
+                        @await Html.PartialAsync("_CafesList", Model)
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wip" id="processIcon">
+        <i class="fa fa-spinner fa-pulse fa-3x"></i>
+    </div>
+</div>
+
+@section modals
+{
+    @await Html.PartialAsync("_DeleteCafeModal")
+}

@@ -1,0 +1,35 @@
+﻿@model List<UserReferralModel>
+
+@{
+    var id = "user-referrals" + Model.FirstOrDefault().Referral.Id;
+}
+
+<table class="table table-striped table-hover table-bordered" id="@id">
+    <thead>
+        <tr>
+            <th>Имя пользователя</th>
+            <th>Уровень реферала</th>
+            <th>Количество заработанных баллов</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @if (!string.IsNullOrEmpty(item.Referral.UserFullName))
+                {
+                    @item.Referral.UserFullName
+                }
+                else
+                {
+                    @item.Referral.Email
+                }
+            </td>
+
+            <td>@item.Level</td>
+            <td>@item.EarnedPoints</td>
+        </tr>
+    }
+    </tbody>
+</table>

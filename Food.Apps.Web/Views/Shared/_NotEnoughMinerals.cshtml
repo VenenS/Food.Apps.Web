@@ -1,0 +1,37 @@
+﻿@model CartMultiCafeViewModel
+<div class="modal fade" id="notEnoughMinerals" tabindex="-1" role="dialog" aria-labelledby="notEnoughMinerals-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="notEnoughMinerals-label">Недостаточная сумма заказа</h4>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+
+              @foreach (long key in Model.CafeCarts.Keys)
+              {
+                  CartViewModel cafeCart = Model.CafeCarts[key];
+                  if (cafeCart != null && cafeCart.OrderBelowMinimal)
+                  {
+                  <div class="col-xs-12">
+                      <p>
+                          Минимальная сумма заказа в кафе @cafeCart.Cafe.Name составляет @string.Format("{0:##}", cafeCart.Cafe.MinimumSumRub)
+                          <span class="text-muted"> ₽</span>
+                      </p>
+                      <p>
+                          Вам не хватает <span class="distinction">@(string.Format("{0:0.##}", (cafeCart.Cafe.MinimumSumRub.Value - cafeCart.TotalPrice)))</span><span class="text-muted"> ₽</span> для оформления заказа.
+                      </p>
+                  </div>
+                  }
+              }
+              </div>
+      </div>
+      <div class="modal-footer">
+        <a href="@Url.RouteUrl(routeName: "SubdomainRoute", routeValues: new  RouteValueDictionary(new { controller = "Cafe", action = "Index", name = string.Empty }), subdomain: true)" class="btn btn-default">Вернуться в меню</a>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+

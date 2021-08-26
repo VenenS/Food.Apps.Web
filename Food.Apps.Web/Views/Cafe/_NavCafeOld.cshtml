@@ -1,0 +1,29 @@
+@model CafeModel
+<div class="cafe-nav">
+  <ul class="nav nav-tabs">
+    <li role="presentation">
+      <a href="Url.RouteUrl(routeName: "SubdomainRoute", routeValues: new  RouteValueDictionary(new { controller ="Cafe", action ="Index", name = Model.CleanUrlName }), subdomain: true)" class="btn btn-link">
+        <i class="fa fa-cutlery"></i>
+        Меню
+      </a>
+    </li>
+    @*<li role="presentation">
+      <a href="#" class="btn btn-link">
+        <i class="fa fa-info"></i>
+        Инфо
+      </a>
+    </li>
+    <li role="presentation">
+      <a href="#" class="btn btn-link">
+        <i class="fa fa-comments-o"></i>
+        Отзывы
+      </a>
+    </li>*@
+    <li role="presentation">
+      <a href="@Url.Action("Index", "Cafe")" class="btn btn-link" style="color: #555555">
+        <i class="glyphicon glyphicon-home"></i>
+        К выбору кафе
+      </a>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,32 @@
+﻿@{
+    string userName;
+    userName = !String.IsNullOrEmpty(User.Identity.GetUserFullName())?
+        User.Identity.GetUserFullName() : 
+        User.Identity.Name;
+}
+<div class="btn-group">
+    <a class="btn btn-link nav-user-name" href="@Url.Action("Index", "Profile", new {area = ""})">@userName</a>
+    <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu">
+        <li>
+            <a href="@Url.Action("Index", "Profile", new {area = ""})">Профиль</a>
+        </li>
+        <li>
+            <a href="@Url.Action("Security", "Profile", new {area = ""})">Безопасность</a>
+        </li>
+        @if (User.IsInRole("Manager"))
+        {
+            <li role="separator" class="divider"></li>
+            <li>
+                <a asp-area="Manager" asp-route-action="Index" asp-route-controller="Home" title="Управление">Управление</a>
+            </li>
+        }
+        <li role="separator" class="divider"></li>
+        <li>
+            <a href="@Url.Action("Logout", "Account", new {area = ""})">Выйти</a>
+        </li>
+    </ul>
+</div>

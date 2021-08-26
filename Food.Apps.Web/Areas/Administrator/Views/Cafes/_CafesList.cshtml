@@ -1,0 +1,9 @@
+﻿@model List<CafeModel>
+
+@if (Model != null)
+{
+    foreach (var cafe in Model)
+    {
+        @await Html.PartialAsync("_Cafe", cafe)
+    }
+}

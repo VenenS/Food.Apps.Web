@@ -1,0 +1,30 @@
+﻿@model List<ITWebNet.Food.Core.DataContracts.Manager.XSLTModel>
+@{
+    ViewBag.Title = "Шаблоны отчетов";
+}
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <div class="row">
+                    <div class="col-xs-3">
+                        @Html.RouteLink("Добавить шаблон", "AdministratorDefault", new {controller = "ReportsLayouts", action = "AddLayout"}, new { @class = "btn btn-default", title = "Добавить шаблон" })
+                    </div>
+                    <div class="col-xs-9">
+                        @{
+                            if (ViewBag.ResultMessage != null && ViewBag.ResultMessageType != null)
+                            {
+                                <div id="result-message" class="alert alert-@ViewBag.ResultMessageType">@ViewBag.ResultMessage</div>
+                            }
+                        }
+                    </div>
+                    <hr>
+                </div>
+                <ul id="LayoutsList" class="list-group">
+                     @await Html.PartialAsync("_ReportsList", Model)
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+﻿@model ForgotPasswordModel
+
+@using (Html.BeginForm("ForgotPassword", "Account"))
+{
+<form asp-action="ForgotPassword" asp-controller="Account" asp-antiforgery="true">
+  @if (ViewBag.ResultMessage != null)
+  {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <p>@Html.Raw(ViewBag.ResultMessage)</p>
+          <a asp-action="Index"  asp-controller="Cafe" class="btn btn-link">Вернуться на главную</a>
+        </div>
+  }
+  else
+  {
+        <p>Введите адрес почты, указанный при регистрации на сайте.</p>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+          <label asp-for="Email" class="sr-only"></label>
+          <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+            <input asp-for="Email" class="form-control" placeholder="Логин или электронная почта" />
+          </div>
+          <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+          <input type="submit" value="Сбросить пароль" class="btn btn-default" />
+          <a asp-action="Index" asp-controller="Cafe" class="btn btn-link">Вернуться на главную</a>
+        </div>
+  }
+</form>
+}

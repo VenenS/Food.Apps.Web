@@ -1,0 +1,546 @@
+﻿@using CafeInfoModel = ITWebNet.Food.Site.Areas.Manager.Models.CafeInfoModel
+@model CafeInfoModel
+@inject ITWebNet.Food.Site.Services.Client.IContentServiceClient imageClient
+@{
+    string labelClass = "control-label col-xs-2";
+    string controlClass = "form-control";
+
+    AjaxOptions imageOptions = new AjaxOptions
+    {
+        UpdateTargetId = $"cafe-logotype",
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "POST"
+    };
+
+    AjaxOptions headOptions = new AjaxOptions
+    {
+        UpdateTargetId = $"cafe-head",
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "POST"
+    };
+}
+<script>
+    function addCafeBusinessHoursItem(prefix, target) {
+        $.ajax({
+            cache: false,
+            success: function (s) {
+                $("#" + target).append(s);
+            },
+            url: "@Url.Action("AddCafeBusinessHoursItem")" + "?prefix=" + prefix
+        });
+
+        return false;
+    }
+
+    function addCafeBusinessHoursDatedItem(prefix, target) {
+        $.ajax({
+            cache: false,
+            success: function (s) {
+                $("#" + target).append(s);
+            },
+            url: "@Url.Action("AddCafeBusinessHoursDatedItem")" + "?prefix=" + prefix
+        });
+
+        return false;
+    }
+
+    function removeCafeBusinessHoursItem(index, day) {
+        $("input[value=" + index + "]").parent().remove();
+        $.ajax({
+            method: 'POST',
+            url: "@Url.Action("GetLinkAddBusinessHoursItem")",
+            data: {
+                day: day
+            },
+            success: function (res) {
+                $('#' + day.toLowerCase() + 'BusinessHours').parents('.form-group').append(res);
+            }
+        });
+
+        return false;
+    }
+
+    function removeCafeBusinessHoursDatedItem(index) {
+        $('#work-data-' + index).remove();
+        return false;
+    }
+
+    function afterAddBusinessHours(el) {
+        $(el).parent().remove();
+    }
+
+</script>
+<form method="post" enctype="multipart/form-data"
+      data-ajax="true"
+      data-ajax-url="@Url.Action("EditCafeInfo", "Cafe")"
+      data-ajax-method="post"
+      data-ajax-update="#cafeInfo"
+      data-ajax-mode="replace">
+
+    <input type="hidden" asp-for="CafeId" />
+    <input type="hidden" asp-for="CompanyOnly" />
+    <div class="text-right">
+        <input type="submit" value="Сохранить" class="btn btn-default" />
+    </div>
+    <h4>Сведения о кафе</h4>
+
+    <div class="form-group row">
+        <label asp-for="Description" class="@labelClass"></label>
+        <div class="col-xs-10">
+            <input asp-for="Description" class="@controlClass" maxlength="1200" placeholder="Описание" style="resize: vertical; min-height: 50px;" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="ShortDescription" class="@labelClass"></label>
+        <div class="col-xs-10">
+            <input asp-for="ShortDescription" class="@controlClass" placeholder="Краткое описание" />
+            <span asp-validation-for="ShortDescription" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="NotificationContact" class="@labelClass"></label>
+        <div class="col-xs-10">
+            <input asp-for="NotificationContact" class="@controlClass" placeholder="E-mail для уведомления" />
+            <span asp-validation-for="NotificationContact" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="@labelClass" asp-for="Address"></label>
+        <div class="col-xs-10">
+            <input asp-for="Address" class="@controlClass" placeholder="Адрес кафе" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="Phone" class="@labelClass"></label>
+        <div class="col-xs-10">
+            <input asp-for="Phone" class="@controlClass" placeholder="Телефон кафе" />
+            <span class="text-danger" asp-validation-for="Phone"></span>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label asp-for="CafeIcon" class="@labelClass"></label>
+        <div class="col-xs-10">
+            <div class="alert alert-warning alert-dismissable" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <p>Доступна загрузка изображений размером не более 48х48</p>
+            </div>
+            <div id="CafeIconUploadComponent" class="image-upload-component">
+                <div id="CafeIconPreview" class="image-drop-area">
+                    @if (string.IsNullOrWhiteSpace(@Model.CafeIcon))
+                    {
+                        <img src="~/images/Cafe_default_icon.png" width="32" height="32" />
+                    }
+                    else
+                    {
+                        var imageParameters = new GetImageModel()
+                            .SetHash(Model.CafeIcon)
+                            .SetHeight(32)
+                            .SetWidth(32);
+                        <img src="@imageClient.GetImage(imageParameters)" width="32" height="32" />
+                    }
+                </div>
+                <input asp-for="CafeIcon" id="CafeIcon" type="hidden" />
+                <span class="text-danger" id="IconValidationSpan"></span>
+                <div class="image-upload-buttons">
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-default">
+                                Выбрать файл
+                                <input type="file" name="CafeIconFile" id="CafeIconFile" accept=".png,.jpeg,.jpg,.bmp">
+                            </span>
+                        </label>
+                        <input type="text" class="form-control" readonly placeholder="Выберите иконку для загрузки">
+                    </div>
+                    <button class="btn btn-danger" onclick="clearIcon()">Удалить</button>
+                </div>
+                <span asp-validation-for="CafeIcon" class="text-danger"></span>
+                <span asp-validation-for="CafeIconFile" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label asp-for="Logotype" class="@labelClass"></label>
+        <div class="col-xs-10">
+            <div id="LogotypeUploadComponent" class="image-upload-component">
+                <div id="LogotypePreview" class="image-drop-area">
+                    @if (string.IsNullOrWhiteSpace(@Model.Logotype))
+                    {
+                        <img src="~/images/Cafe_default_icon.png" width="160" height="120" />
+                    }
+                    else
+                    {
+                        var imageParameters = new GetImageModel()
+                            .SetHash(Model.Logotype)
+                            .SetHeight(120)
+                            .SetWidth(160);
+                        <img src="@imageClient.GetImage(imageParameters)" width="160" height="120" />
+                    }
+                </div>
+                <input asp-for="Logotype" id="Logotype" type="hidden" />
+                <span class="text-danger" id="LogotypeValidationSpan"></span>
+                <div class="image-upload-buttons">
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-default">
+                                Выбрать файл
+                                <input type="file" name="LogotypeFile" id="LogotypeFile" accept=".png,.jpeg,.jpg,.bmp">
+                            </span>
+                        </label>
+                        <input type="text" class="form-control" readonly placeholder="Выберите иконку для загрузки">
+                    </div>
+                    <button class="btn btn-danger" onclick="clearLogotype()">Удалить</button>
+                </div>
+                <span asp-validation-for="Logotype" class="text-danger"></span>
+                <span asp-validation-for="LogotypeFile" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label asp-for="HeadPicture" class="@labelClass"></label>
+        <div class="col-xs-10">
+            <div class="alert alert-warning alert-dismissable" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <p>
+                    Доступна загрузка изображений только растрового формата (png, jpg, bmp)
+                    размером не более 1920x325 и объемом не превышающим 2 мб. Система автоматически отредактирует загруженное изображение по ширине и высоте.
+                </p>
+            </div>
+            <div id="HeadPictureUploadComponent" class="image-upload-component">
+                <div id="HeadPicturePreview" class="image-drop-area">
+                    @if (string.IsNullOrWhiteSpace(@Model.HeadPicture))
+                    {
+                        <img src="~/images/Cafe_default_icon.png" width="600" height="100" />
+                    }
+                    else
+                    {
+                        var imageParameters = new GetImageModel()
+                            .SetHash(Model.HeadPicture)
+                            .SetHeight(100)
+                            .SetWidth(600);
+                        <img src="@imageClient.GetImage(imageParameters)" width="600" height="100" />
+                    }
+                </div>
+                <input asp-for="HeadPicture" id="HeadPicture" type="hidden" />
+                <span class="text-danger" id="HeadPictureValidationSpan"></span>
+                <div class="image-upload-buttons">
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-default">
+                                Выбрать файл
+                                <input type="file" name="HeadPictureFile" id="HeadPictureFile" accept=".png,.jpeg,.jpg,.bmp">
+                            </span>
+                        </label>
+                        <input type="text" class="form-control" readonly placeholder="Выберите иконку для загрузки">
+                    </div>
+                    <button class="btn btn-danger" onclick="clearHeadPicture()">Удалить</button>
+                </div>
+                <span asp-validation-for="HeadPicture" class="text-danger"></span>
+                <span asp-validation-for="HeadPictureFile" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function clearImage(elementId) {
+            document.getElementById(elementId + 'Preview').innerHTML = '';
+            $('#' + elementId).val('');
+        }
+
+        function clearIcon() {
+            clearImage('CafeIcon');
+        }
+
+        function clearLogotype() {
+            clearImage('Logotype');
+        }
+
+        function clearHeadPicture() {
+            clearImage('HeadPicture');
+        }
+
+        function handleIconFileSelect(evt) {
+            handleFileSelect(evt, 'IconValidationSpan', 'CafeIcon',
+                @CafeInfoModel.kCafeIconMaxSize,
+                @CafeInfoModel.kCafeIconMaxWidth, @CafeInfoModel.kCafeIconMaxHeight,
+                16, 16,
+                32, 32);
+        }
+
+        function handleLogotypeFileSelect(evt) {
+            handleFileSelect(evt, 'LogotypeValidationSpan', 'Logotype',
+                @CafeInfoModel.kLogotypeMaxSize,
+                @CafeInfoModel.kLogotypeMaxWidth, @CafeInfoModel.LogotypeMaxHeight,
+                16, 16,
+                160, 120);
+        }
+
+        function handleHeadPictureFileSelect(evt) {
+            handleFileSelect(evt, 'HeadPictureValidationSpan', 'HeadPicture',
+                @CafeInfoModel.kHeadPictureMaxSize,
+                @CafeInfoModel.kHeadPictureMaxWidth, @CafeInfoModel.kHeadPictureMaxHeight,
+                600, 100,
+                600, 100);
+        }
+
+        document.getElementById('CafeIconFile').addEventListener('change', handleIconFileSelect, false);
+
+        document.getElementById('LogotypeFile').addEventListener('change', handleLogotypeFileSelect, false);
+
+        document.getElementById('HeadPictureFile').addEventListener('change', handleHeadPictureFileSelect, false);
+    </script>
+
+    <div class="form-group row">
+        @Html.LabelFor(m => m.WeekMenuIsActive, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.CheckBoxFor(m => m.WeekMenuIsActive)
+        </div>
+    </div>
+    <div class="form-group row">
+        @Html.LabelFor(m => m.DeferredOrder, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.CheckBoxFor(m => m.DeferredOrder)
+        </div>
+    </div>
+    <h4>Время работы</h4>
+    @Html.ValidationMessageFor(m => m.BusinessHours.Monday, "", new { @class = "text-danger" })
+    <div class="form-group row">
+        @Html.LabelFor(m => m.BusinessHours.Monday, new { @class = labelClass })
+        <div class="col-xs-10" id="mondayBusinessHours">
+            @Html.EditorFor(m => m.BusinessHours.Monday, new { htmlAttributes = new { @class = controlClass }, Prefix = "BusinessHours.Monday" })
+        </div>
+        @if (Model.BusinessHours.Monday == null || Model.BusinessHours.Monday.Count == 0)
+        {
+            @await Html.PartialAsync("_AddBusinessHoursItemLink", nameof(Model.BusinessHours.Monday))
+        }
+    </div>
+    <div class="form-group row">
+        @Html.LabelFor(m => m.BusinessHours.Tuesday, new { @class = labelClass })
+        <div class="col-xs-10" id="tuesdayBusinessHours">
+            @Html.EditorFor(m => m.BusinessHours.Tuesday, new { htmlAttributes = new { @class = controlClass }, Prefix = "BusinessHours.Tuesday" })
+        </div>
+        @if (Model.BusinessHours.Tuesday == null || Model.BusinessHours.Tuesday.Count == 0)
+        {
+            @await Html.PartialAsync("_AddBusinessHoursItemLink", nameof(Model.BusinessHours.Tuesday))
+        }
+    </div>
+    <div class="form-group row">
+        @Html.LabelFor(m => m.BusinessHours.Wednesday, new { @class = labelClass })
+        <div class="col-xs-10" id="wednesdayBusinessHours">
+            @Html.EditorFor(m => m.BusinessHours.Wednesday, new { htmlAttributes = new { @class = controlClass }, Prefix = "BusinessHours.Wednesday" })
+        </div>
+        @if (Model.BusinessHours.Wednesday == null || Model.BusinessHours.Wednesday.Count == 0)
+        {
+            @await Html.PartialAsync("_AddBusinessHoursItemLink", nameof(Model.BusinessHours.Wednesday))
+        }
+    </div>
+    <div class="form-group row">
+        @Html.LabelFor(m => m.BusinessHours.Thursday, new { @class = labelClass })
+        <div class="col-xs-10" id="thursdayBusinessHours">
+            @Html.EditorFor(m => m.BusinessHours.Thursday, new { htmlAttributes = new { @class = controlClass }, Prefix = "BusinessHours.Thursday" })
+        </div>
+        @if (Model.BusinessHours.Thursday == null || Model.BusinessHours.Thursday.Count == 0)
+        {
+            @await Html.PartialAsync("_AddBusinessHoursItemLink", nameof(Model.BusinessHours.Thursday))
+        }
+    </div>
+    <div class="form-group row">
+        @Html.LabelFor(m => m.BusinessHours.Friday, new { @class = labelClass })
+        <div class="col-xs-10" id="fridayBusinessHours">
+            @Html.EditorFor(m => m.BusinessHours.Friday, new { htmlAttributes = new { @class = controlClass }, Prefix = "BusinessHours.Friday" })
+        </div>
+        @if (Model.BusinessHours.Friday == null || Model.BusinessHours.Friday.Count == 0)
+        {
+            @await Html.PartialAsync("_AddBusinessHoursItemLink", nameof(Model.BusinessHours.Friday))
+        }
+    </div>
+    <div class="form-group row">
+        @Html.LabelFor(m => m.BusinessHours.Saturday, new { @class = labelClass })
+        <div class="col-xs-10" id="saturdayBusinessHours">
+            @Html.EditorFor(m => m.BusinessHours.Saturday, new { htmlAttributes = new { @class = controlClass }, Prefix = "BusinessHours.Saturday" })
+        </div>
+        @if (Model.BusinessHours.Saturday == null || Model.BusinessHours.Saturday.Count == 0)
+        {
+            @await Html.PartialAsync("_AddBusinessHoursItemLink", nameof(Model.BusinessHours.Saturday))
+        }
+    </div>
+    <div class="form-group row">
+        @Html.LabelFor(m => m.BusinessHours.Sunday, new { @class = labelClass })
+        <div class="col-xs-10" id="sundayBusinessHours">
+            @Html.EditorFor(m => m.BusinessHours.Sunday, new { htmlAttributes = new { @class = controlClass }, Prefix = "BusinessHours.Sunday" })
+        </div>
+        @if (Model.BusinessHours.Sunday == null || Model.BusinessHours.Sunday.Count == 0)
+        {
+            @await Html.PartialAsync("_AddBusinessHoursItemLink", nameof(Model.BusinessHours.Sunday))
+        }
+    </div>
+    <h4>Время работы на дату</h4>
+    @Html.ValidationMessageFor(m => m.BusinessHours.DatedItems, "", new { @class = "text-danger" })
+    <div class="form-group row">
+        <div id="businessHoursDatedItems" class="col-xs-offset-2 col-xs-10">
+            @Html.EditorFor(m => m.BusinessHours.DatedItems, new { htmlAttributes = new { @class = controlClass }, Prefix = "BusinessHours.DatedItems" })
+        </div>
+        <div class="col-xs-2">
+            <a href="#!" onclick="addCafeBusinessHoursDatedItem('BusinessHours.DatedItems', 'businessHoursDatedItems')">Добавить</a>
+        </div>
+    </div>
+    @if (!Model.CompanyOnly)
+    {
+        <h4>Стоимость доставки персональных заказов</h4>
+        <div class="form-group row">
+            <div class="col-xs-offset-2" id="CostOfDeliveryPersonal">
+                <div class="row">
+                    <label class="@labelClass">Цена От:</label>
+                    <label class="@labelClass">Цена До:</label>
+                    <label class="@labelClass">Доставка</label>
+                </div>
+                @Html.EditorFor(m => m.CostOfDeliveryPersonal)
+            </div>
+            <div class="col-xs-2">
+                <a asp-action="AddDeliveryCostItem" asp-controller="Cafe"
+                   asp-route-forCompanyOrders="@false"
+                   data-ajax="true"
+                   data-ajax-mode="after"
+                   data-ajax-method="post"
+                   data-ajax-update="#CostOfDeliveryPersonal">Добавить</a>
+            </div>
+            @Html.ValidationMessageFor(m => m.CostOfDeliveryPersonal, "", new { @class = "text-danger" })
+        </div>
+    }
+
+    <h4>Стоимость доставки корпоративных заказов</h4>
+    <div class="form-group row">
+        <div class="col-xs-offset-2" id="CostOfDeliveryItems">
+            <div class="row">
+                <label class="@labelClass">Цена От:</label>
+                <label class="@labelClass">Цена До:</label>
+                <label class="@labelClass">Доставка</label>
+            </div>
+            @Html.EditorFor(m => m.CostOfDeliveryCompany)
+        </div>
+        <div class="col-xs-2">
+            <a asp-action="AddDeliveryCostItem" asp-controller="Cafe" asp-route-cafeId="@Model.CafeId" asp-route-forCompanyOrders="@true"
+               data-ajax="true"
+               data-ajax-method="post"
+               data-ajax-update="#CostOfDeliveryItems"
+               data-ajax-mode="after">Добавить</a>
+        </div>
+        @Html.ValidationMessageFor(m => m.CostOfDeliveryCompany, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group row">
+        @Html.LabelFor(m => m.DailyCorpOrderSum, new { @class = labelClass })
+        <div class="col-xs-10">
+            @Html.EditorFor(m => m.DailyCorpOrderSum, new { @class = controlClass })
+            @Html.ValidationMessageFor(m => m.DailyCorpOrderSum, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group row">
+        @Html.LabelFor(m => m.OrderAbortTime, new { @class = labelClass })
+        <div class="col-xs-10">
+            <input asp-for="OrderAbortTime" asp-format="{0:hh\:mm}" type="time" class="text-box single-line timepicker">
+            @Html.ValidationMessageFor(m => m.OrderAbortTime, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <h4>Способы оплаты</h4>
+    <div class="form-group row">
+        <div class="col-xs-offset-2">
+            @foreach (var item in Model.PaymentTypes)
+            {
+                <div class="mb-2">
+                    <label>
+                        <input type="checkbox" name="@Html.NameFor(model => model.PaymentTypes[item.Key])" value="true" checked="@item.Value" />
+                        <span>@item.Key.GetDescription()</span>
+                    </label>
+                </div>
+            }
+        </div>
+        <span asp-validation-for="PaymentTypes" class="text-danger"></span>
+    </div>
+
+    <div class="form-group row">
+        <label class="@labelClass" asp-for="AverageDeliveryTime"></label>
+        <div class="col-xs-10">
+            <input asp-for="AverageDeliveryTime" class="@controlClass" placeholder="@Html.DisplayNameFor(m=>m.AverageDeliveryTime)" type="text" maxlength="3" />
+            <span asp-validation-for="AverageDeliveryTime" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="@labelClass" asp-for="MinimumOrderSum"></label>
+        <div class="col-xs-10">
+            <input asp-for="MinimumOrderSum" class="@controlClass" placeholder="@Html.DisplayNameFor(m=>m.MinimumOrderSum)" type="text" maxlength="8" />
+            <span asp-validation-for="MinimumOrderSum" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="@labelClass" asp-for="DeliveryComment"></label>
+        <div class="col-xs-10">
+            <input asp-for="DeliveryComment" class="@controlClass" placeholder="@Html.DisplayNameFor(m=>m.DeliveryComment)" />
+            <span asp-validation-for="DeliveryComment" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="@labelClass" asp-for="Regions"></label>
+        <div class="col-xs-10">
+            <input asp-for="Regions" class="@controlClass" placeholder="@Html.DisplayNameFor(m=>m.Regions)" />
+            <span asp-validation-for="Regions" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="panel panel-default">
+            <div class="panel-heading">Кухни</div>
+            <div class="panel-body" id="manage-kitchen">
+                @for (var i = 0; i < Model.SelectableKitchens.Count; i++)
+                {
+                    <div class="form-group row">
+                        <input asp-for="SelectableKitchens[i].Kitchen.Id" type="hidden" />
+                        <input asp-for="SelectableKitchens[i].Kitchen.Name" type="hidden" />
+                        <input asp-for="SelectableKitchens[i].IsSelected" />
+                        @Html.Label(Model.SelectableKitchens[i].Kitchen.Name)
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: right;">
+        <input type="submit" value="Сохранить" class="btn btn-default" />
+    </div>
+
+    <script type="text/javascript">
+        // Превью выбранного имени файла при загрузке изображения.
+        $('.image-upload-component').on('change', function (e) {
+            if (e.target.tagName.toLowerCase() !== "input" || !('type' in e.target.attributes) || e.target.attributes['type'].value.toLowerCase() !== 'file')
+                return;
+
+            // Chrome подставляет ложный путь в имя файла поэтому убираем его.
+            let fileName = e.target.value
+                .replace('C:\\fakepath\\', '')
+                .replace('C:/fakepath/', '');
+
+            $('.image-upload-buttons input[type="text"]', this).attr('value', fileName);
+        });
+
+        $('.timepicker').timepicker({
+            timeOnlyTitle: 'Выберите время',
+            timeText: 'Время',
+            hourText: 'Часы',
+            minuteText: 'Минуты',
+            secondText: 'Секунды',
+            currentText: 'Сейчас',
+            closeText: 'Закрыть'
+        });
+    </script>
+</form>

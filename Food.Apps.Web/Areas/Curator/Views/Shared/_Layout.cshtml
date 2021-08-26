@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>@ViewBag.Title - Едовоз</title>
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+    @await Html.PartialAsync("~/Views/Styles/css.cshtml")
+    @await Html.PartialAsync("~/Views/Styles/fontawesome.cshtml")
+    @await Html.PartialAsync("~/Views/Styles/jqueryui.cshtml")
+    @await Html.PartialAsync("~/Areas/Curator/Views/Styles/site-curator.cshtml")
+    @RenderSection("curatorStyles", required: false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-fixed-top navbar-inverse">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="@Url.Action("Index", "Cafe", new { area = "" })" class="navbar-brand">
+                        <img src="~/images/Logo.png" alt="Поедим" />
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        @await Html.PartialAsync("_CuratorNavBar")
+                        @await Html.PartialAsync("_LoginPartial")
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="mt-4">
+        <div class="container">
+            @await Component.InvokeAsync("GetCurationCompany")
+            @RenderBody()
+        </div>
+    </main>
+    @RenderSection("modals", required: false)
+    @await Html.PartialAsync("~/Views/Scripts/modernizr.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/jquery.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/bootstrap.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/jqueryui.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/scrollbar.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/site.cshtml")
+    @await Html.PartialAsync("~/Areas/Curator/Views/Scripts/site-curator.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/inputmask.cshtml")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

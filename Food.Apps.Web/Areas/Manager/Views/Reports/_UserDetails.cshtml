@@ -1,0 +1,161 @@
+﻿@model OrderViewModel
+
+<div class="main wide-rigth content" id="order-@Model.Id">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <div>
+                    <div class="col-xs-9">
+                        <h4>Заказ № @Html.DisplayFor(model => model.Id)</h4>
+                    </div>
+                    <div class="col-xs-3">
+                        <a target="_blank" class="document-type btn btn-link" href="@Url.RouteUrl("ManagerCafe", new { cafeId = Model.CafeId, controller = "Reports", action = "UserDetailsReport", id = Model.Id, user = Model.Creator.Id, reportExtension = ReportExtension.HTML })">
+                            <i class="fa fa-print"></i>
+                        </a>
+                        <a class="document-type btn btn-link" href="@Url.RouteUrl("ManagerCafe", new { cafeId = Model.CafeId, controller = "Reports", action = "UserDetailsReport", id = Model.Id, user = Model.Creator.Id, reportExtension = ReportExtension.XLS })">
+                            <i class="fa fa-file-excel-o"></i>
+                        </a>
+                        <a class="document-type btn btn-link " href="@Url.RouteUrl("ManagerCafe", new { cafeId = Model.CafeId, controller = "Reports", action = "UserDetailsReport", id = Model.Id, user = Model.Creator.Id, reportExtension = ReportExtension.PDF })">
+                            <i class="fa fa-file-pdf-o"></i>
+                        </a>
+                    </div>
+                    <div class="clearfix"></div>
+                    <hr />
+                    <dl class="dl-horizontal dl-striped">
+                        <dt>
+                            Время поступления
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Create)
+                        </dd>
+                        <dt>
+                            Имя клиента
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Creator.UserFullName)
+                        </dd>
+                        <dt>
+                            Телефон
+                        </dt>
+
+                        <dd>
+                            @if (string.IsNullOrEmpty(Model.PhoneNumber))
+                            {
+                                @Html.Phone(Model.OrderInfo.OrderPhone)
+                            }
+                            else
+                            {
+                                @Html.Phone(Model.PhoneNumber)
+                            }
+
+                        </dd>
+                        <dt>
+                            Тип оплаты
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.PayType)
+                        </dd>
+                        <dt>
+                            Комментарий к оплате
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.OddMoneyComment)
+                        </dd>
+                        <dt>
+                            Комментарий к заказу
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Comment)
+                        </dd>
+
+                        <dt>
+                            Стоимость
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.TotalSum) <span class="text-muted"> ₽</span>
+                        </dd>
+
+                        <dt>
+                            Доставить ко времени
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.DeliverDate)
+                        </dd>
+                        @if (Model.OrderInfo != null)
+                        {
+                            <dt>
+                                Адрес доставки
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.OrderInfo.OrderAddress)
+                            </dd>
+                            <dt>
+                                Электронный ящик
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.OrderInfo.OrderEmail)
+                            </dd>
+                        }
+                        <dt style="padding-top: 6px;">
+                            Статус
+                        </dt>
+                        <dd>
+                            @{
+                                var avaibleStatus = Model.GetAvailableOrderStatuses(User.Identity);
+                            }
+                            <div class="dropdown">
+                                <button class="btn btn-link btn-block dropdown-toggle" type="button" id="statuses-order-@Model.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" @(avaibleStatus.Count > 0 ? string.Empty : "style=pointer-events:none")>
+                                    @Model.Status.GetDescription()
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="statuses-order-@Model.Id">
+                                    @foreach (OrderStatusEnum status in avaibleStatus)
+                                    {
+                                        <li>
+                                            @Html.RouteLink(status.GetDescription(), "ManagerCafe", new { details = true, cafeId = Model.CafeId, controller = "Reports", status, action = "ChangeStatus", id = Model.Id })
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </dd>
+                        <form method="post" asp-controller="Reports" asp-action="CommentManager">
+                            <dt>
+                                Комментарий менеджера
+                            </dt>
+                            <dd>
+                                @if (Model.Status == OrderStatusEnum.Created)
+                                {
+                                    <div class="form-group green-border-focus">
+                                        @Html.TextAreaFor(model => model.ManagerComment, new {@class = "form-control", style = "resize: vertical"})
+                                    </div>
+                                    <div style="display: none">
+                                        <input asp-for="Id"/>
+                                        <input asp-for="CafeId"/>
+                                        <input asp-for="Status"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="Сохранить" class="btn btn-default"/>
+                                    </div>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(model => model.ManagerComment)
+                                }
+                            </dd>
+                        </form>
+                    </dl>
+                </div>
+                <ul class="list-group">
+                    @foreach (var orderItem in Model.OrderItems)
+                    {
+                        @await Html.PartialAsync("_OrderItem", orderItem, new ViewDataDictionary(ViewData) { { "order", Model } })
+                    }
+                </ul>
+                <hr />
+                <div class="card-actions">
+                    @Html.RouteLink("К списку заказов", "ManagerCafe", new { cafeId = Model.CafeId, controller = "Reports", action = "Index" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

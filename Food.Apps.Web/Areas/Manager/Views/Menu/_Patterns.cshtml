@@ -1,0 +1,58 @@
+﻿@model MenuPatternModel
+
+<div id="menu-patterns">
+    <div class="card">
+        <div class="card-body">
+            @if (ViewBag.Message != null)
+            {
+                <h4 class="text-success">@ViewBag.Message</h4>
+            }
+            @if (ViewBag.Error != null)
+            {
+                <h4 class="text-danger">@ViewBag.Error</h4>
+            }
+            <form ajax-url="@Url.RouteUrl("ManagerCafe", new {action = "DeleteMenuPattern", controller = "Menu"})" ajax-update="#menu-patterns" ajax-mode="replace" ajax-method="post"
+                  ajax-confirm="Вы действительно хотите удалить выбранный шаблон?" ajax-complete="eventHandlers();" id="select-pattern-form">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="PatternId"></label>
+                    <div class="row">
+                        <div class="col-xs-10">
+                            @Html.DropDownListFor(model => model.PatternId, new SelectList(Model.Patterns, "Id", "Name"), "",
+                                new
+                                {
+                                    @class = "form-control",
+                                    data_url = @Url.RouteUrl("ManagerCafe", new {controller = "Menu", action = "GetMenuByPatternId"}),
+                                    data_target = "#patterns-and-schedule-container"
+                                })
+                            @Html.ValidationMessageFor(model => model.PatternId, "", new {@class = "text-danger"})
+                        </div>
+                        <button type="submit" id="del-pattern-btn" @(Model.IsPatternSelected ? string.Empty: "disabled") class="btn btn-link col-xs-2">
+                            <i class="fa fa-times text-danger"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            @await Html.PartialAsync("_AddPatternForm", Model)
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <form asp-route="ManagerCafe" asp-route-controller="Menu" asp-route-action="UpdateSchedulesByPatterId" method="post" id="update-menu-form">
+                            @Html.HiddenFor(model => model.PatternId)
+                            <button type="button" @(Model.IsPatternSelected ? string.Empty: "disabled") class="btn btn-default" onclick="updateMenuByPtternId(this)">
+                                Применить
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-xs-4">
+                        <a href="@Url.RouteUrl("ManagerCafe", new { action = "Index", controller = "Menu" })"
+                           id="cancel-pattern-btn"
+                           class="btn btn-danger" @(Model.IsPatternSelected ? string.Empty: "disabled")>
+                            Отменить
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

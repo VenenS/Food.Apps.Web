@@ -1,0 +1,12 @@
+﻿@model long
+@{
+    Layout = null;
+}
+
+@if (Model > 0)
+{
+    <div id="new-orders-message" style="width: 100%; height: 40px; background-color: #fde983; color: #8a6d3b; border-color: #d4a441; z-index: 999; text-align: center; padding-top: 10px; position: absolute; top: 0; left: 0;">
+        <div style="text-align: center; width: 98%; float: left;">Появились новые <a asp-action="Index" asp-controller="Reports" asp-route-cafeId="@Model" asp-area="Manager">заказы</a>!</div>
+        <div onclick="CloseNewOrdersMessage('@Url.Action("StopNotifyAboutOrders", "Cafe", new { area = "Manager"})')" style="position: absolute; margin-left: 98%; font-size: 10px; padding-top: 3px;"><span class="glyphicon glyphicon-remove" ></span></div>
+    </div>
+}

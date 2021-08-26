@@ -1,0 +1,31 @@
+﻿@model CafeManagerModel
+
+@{
+    ViewBag.Title = "Удаление менеджера кафе";
+    var cafe = (CafeModel)ViewBag.Cafe ?? new CafeModel();
+}
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <h3>Вы уверены, что хотите удалить менеджера кафе @cafe.Name <strong>@(Model.User.UserFullName ?? Model.User.Email)</strong></h3>
+                <div>
+                    <hr />
+
+                    @using (Html.BeginRouteForm("AdministratorDefault", new { controller = "Cafes", action = "Delete" }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.HiddenFor(model => model.CafeId)
+                        @Html.HiddenFor(model => model.UserId)
+                        <div class="form-actions no-color">
+                            <input type="submit" value="Удалить" class="btn btn-danger" /> |
+                            @Html.RouteLink("Назад", "AdministratorDefault", new { controller = "Cafes", action = "Managers", cafeId = Model.CafeId })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

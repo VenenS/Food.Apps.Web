@@ -1,0 +1,80 @@
+﻿@using ITWebNet.Food.Site;
+@model MenuViewModel
+
+@{
+    long? cafeId = null;
+    // CleanUrlName для кафе, если отображается страница конкретного кафе.
+    // Нужно для правильной работы загрузки блюд в фильтр по категориям через Ajax-запрос.
+    string CafeUrlParam = string.Empty;
+
+    if (Model.Cafe != null)
+    {
+        cafeId = Model.Cafe.Id;
+        CafeUrlParam = $"?cafeurl={Model.Cafe.CleanUrlName}";
+    }
+
+    var isBanket = ViewData.ContainsKey("BanketMenuId");
+    var categories = Model?.Categories?.ToList();
+}
+
+<input type="hidden" value="@CafeUrlParam" id="hidCafeUrlParam" />
+
+@if (Model.Cafe != null)
+{
+    <a class="btn btn-default btn-back-to-hp" href="@Url.ActionWithoutSubdomain("Index", "Cafe")">Вернуться на главную</a>
+}
+
+<div class="left-sidebar-contents">
+    <div class="col-xs-12 sidebar-title">
+        <h4 class="group-title">Поиск</h4>
+    </div>
+    <div class="col-xs-12 left-sidebar-content">
+        <form action="@Url.Action("Filter")" data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-success="updateCategoriesBar"
+              data-ajax-update="#list" role = "search" id = "formFilter" method="post">
+            @if (cafeId != null)
+            {
+            @Html.Hidden("cafeId", cafeId)
+            }
+            @if (isBanket)
+            {
+            <input type="hidden" name="banketMenuId" id="banketMenuId" value="@ViewData["BanketMenuId"].ToString()" />
+            }
+            <div class="padded">
+                <fieldset id="search-field">
+                    <button type="submit" class="btn btn-search">
+                        <span class="fa fa-search"></span>
+                    </button>
+                    <input id="filter" name="filter" value="@ViewBag.CurrentFilter" type="search" class="form-control" placeholder="Поиск" />
+                    <span class="btn btn-reset">
+                        <i class="fa fa-times"></i>
+                    </span>
+                </fieldset>
+            </div>
+        </form>
+    </div>
+    @if (Model.Cafe != null)
+    {
+        if (isBanket)
+        {
+            <div class="col-xs-12 left-sidebar-content padded">
+                @Html.ActionLink("К меню дня", "Index", "Cafe", null, new { @class = "btn btn-default d-block" })
+            </div>
+        }
+        else
+        {
+            if (Model.Banket?.Menu != null)
+            {
+                <div class="col-xs-12 left-sidebar-content padded">
+                    @Html.ActionLink(Model.Banket.Menu.Name, "Index", "Banket", null, new { @class = "btn btn-default d-block" })
+                </div>
+            }
+        }
+    }
+
+    @if (categories != null)
+    {
+        <div class="col-xs-12">
+            @await Html.PartialAsync("_Categories", categories)
+        </div>
+    }
+</div>

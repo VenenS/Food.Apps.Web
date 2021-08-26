@@ -1,0 +1,20 @@
+﻿@model IEnumerable<TagModel>
+
+
+<form data-ajax="true" data-ajax-update="#list" data-ajax-mode="replace" data-ajax-method="GET" asp-action="Cafe" asp-controller="Filter">
+    @if (ViewBag.CafeId != null)
+    {
+    <div>
+        @Html.Hidden("cafeId", (long)ViewBag.CafeId)
+    </div>
+    }
+    <div class="row reset-controls">
+        <div class="col-xs-6 reset-title text-left text-uppercase"><strong>Кухни </strong></div>
+        <div class="col-xs-6 reset-button text-uppercase text-muted"><div class="btn btn-clear-filter">Сброс</div></div>
+    </div>
+    <div id="tags-tree" class="tags-tree">
+        <ul class="tree">
+            @await Html.PartialAsync("_TagsTree", Model)
+        </ul>
+    </div>
+</form>

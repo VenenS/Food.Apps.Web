@@ -1,0 +1,36 @@
+﻿@model CafeModel
+@{
+    AjaxOptions options = new AjaxOptions
+    {
+      HttpMethod = "POST",
+      UpdateTargetId = "cafe-" + Model.Id,
+      InsertionMode = InsertionMode.ReplaceWith,
+      LoadingElementId = "processIcon-" + Model.Id
+    };
+}
+<div class="rating">
+  <div class="row">
+    @using (Html.AjaxBeginForm("SetRating", new { id = Model.Id }, options))
+    {
+      double average = Model.GetAverageRating();
+      int current = (int)Math.Round(average, MidpointRounding.AwayFromZero);
+
+      double decPart = average - Math.Truncate(average);
+
+      for (int i = 5; i >= 1; i--)
+      {
+        bool isChecked = i == current;
+        string id = string.Format("star-{0}-{1}", Model.Id, i);
+        string halfStyle = decPart < 0.5 && isChecked ? "half" : string.Empty;
+
+            @Html.RadioButton("rating", i, isChecked, new { onclick = "$(this).closest('form').submit()", id = id, disabled=true });
+            @Html.Label(id, " ");
+      }
+    }
+    <span class="average">@if (Model.GetAverageRating() > 0) { @Model.GetAverageRating().ToString("#.0"); }</span>
+  </div>
+  <div class="row">
+    <p class="rating-comment clearfix">@Model.GetRatingMessage()</p>
+  </div>
+  <div class="wip" id="processIcon-@Model.Id"><i class="fa fa-spinner fa-pulse"></i></div>
+</div>

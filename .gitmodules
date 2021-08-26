@@ -1,0 +1,4 @@
+[submodule "Food.Services.Models"]
+	path = Food.Services.Models
+	url = git@gitlab.itwebnet.ru:food/food-services-models.git
+	branch = net-core-v2

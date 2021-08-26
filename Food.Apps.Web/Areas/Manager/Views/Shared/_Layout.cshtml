@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>@ViewBag.Title - @((ViewBag.Cafe as CafeModel)?.Name ?? "Неизвестное кафе") - Едовоз</title>
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+    @await Html.PartialAsync("~/Views/Styles/old-css.cshtml")
+    @await Html.PartialAsync("~/Views/Styles/fontawesome.cshtml")
+    @await Html.PartialAsync("~/Areas/Manager/Views/Styles/site-manager.cshtml")
+    @await Html.PartialAsync("~/Views/Styles/jqueryui.cshtml")
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-fixed-top navbar-inverse">
+            @if (User.Identity.IsAuthenticated && User.IsInRole("Manager") && !(Context.Request.Method == "POST"))
+            {
+                <div id="notification-message-space"> @await Component.InvokeAsync("CheckNewOrders") </div>
+            }
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="@Url.Action("Index", "Cafe", new {area = ""})" class="navbar-brand">
+                        <img src="~/images/Logo.png" alt="Поедим" />
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        @await Html.PartialAsync("_LoginPartial")
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="container">
+            @if (ViewBag.IsNavHidden == null || !ViewBag.IsNavHidden)
+            {
+                <div class="left-side content">
+                    @await Html.PartialAsync("_LeftNavbar")
+                </div>
+            }
+            @RenderBody()
+        </div>
+    </main>
+    @RenderSection("modals", false)
+    @await Html.PartialAsync("~/Views/Scripts/modernizr.cshtml")
+    @await Html.PartialAsync("~/Areas/Manager/Views/Scripts/jquerymanager.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/jqueryval.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/bootstrap.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/scrollbar.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/jqueryui.cshtml")
+    @await Html.PartialAsync("~/Areas/Manager/Views/Scripts/sitemanager.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/jquerysignalr.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/site.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/inputmask.cshtml")
+    <script type="text/javascript">
+        $(function () {
+            var connection = $.hubConnection();
+            var contosoChatHubProxy = connection.createHubProxy('notificationsHub');
+
+            contosoChatHubProxy.on('raiseAlert', function (url) {
+                $.ajax({
+                    xhrFields: { withCredentials: true },
+                    type: "GET",
+                    url: url
+                }).done(function (data) {
+                    $("#notification-message-space").html(data);
+                });
+            });
+
+            contosoChatHubProxy.on('alertino', function (url) {
+            });
+            connection.start()
+                .done(function () {
+                    console.log('Now connected, connection ID=' + connection.id);
+                    $('#domain').click(function () {
+                        // Call the Send method on the hub.
+                        // contosoChatHubProxy.server.alerts();
+                        contosoChatHubProxy.invoke('alerts').done(function () {
+                            console.log('Invocation of alerts succeeded');
+                        }).fail(function (error) {
+                            console.log('Invocation of alerts failed. Error: ' + error);
+                        });
+                    });
+                }).fail(function () { console.log('Could not connect'); });
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,87 @@
+﻿@using ITWebNet.Food.Site.Models
+@model ITWebNet.Food.Site.Models.CompanyOrderModel
+
+@{
+    var cafeName = ViewBag.CafeName ?? string.Empty;
+}
+
+<div class="col-xs-9 main" id="company-order-@Model.Id">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <div>
+                    @if (@Model.AvailableStatuses.Contains(OrderStatusEnum.Abort))
+                    {
+                        <a class="btn btn-default cancel-order pull-right" data-update-target="#company-order-@Model.Id"
+                           data-url="@Url.RouteUrl("CuratorDefault", new {controller = "Reports", action = "CancelOrder", id = Model.Id, cafeId = Model.CafeId, companyId = Model.Company.Id, orderType = EnumOrderType.Collective})">
+                            Отменить
+                            <i class="fa fa-times"></i>
+                        </a>
+                    }
+                    <h4>Заказ № @Html.DisplayFor(model => model.Id)</h4>
+                    <hr />
+                    <dl class="dl-horizontal dl-striped">
+                        <dt>
+                            Кафе
+                        </dt>
+                        <dd>
+                            @cafeName
+                        </dd>
+                        <dt>
+                            @*@Html.DisplayNameFor(model => model.DeliveryDate)*@
+                            Время доставки
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.DeliveryDate)
+                        </dd>
+
+                        <dt>
+                            @*@Html.DisplayNameFor(model => model.OrderAutoCloseDate)*@
+                            Время поступления
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.OrderAutoCloseDate)
+                        </dd>
+
+                        <dt>
+                            @*@Html.DisplayNameFor(model => model.OrderStatus)*@
+                            Статус
+                        </dt>
+                        <dd>
+                            @(((OrderStatusEnum)Model.OrderStatus).GetDescription())
+                        </dd>
+
+                        <dt>
+                            @*@Html.DisplayNameFor(model => model.OrderStatus)*@
+                            Стоимость
+                        </dt>
+                        <dd>
+                            @Model.TotalPrice<span class="text-muted"> ₽</span>
+                        </dd>
+                        @if (Model.Company.DeliveryAddress != null)
+                        {
+                            <dt>
+                                Адрес доставки
+                            </dt>
+                            <dd>
+                                @string.Format("г. {0}, ул. {1}, д. {2}{3}\n{4}",
+                              Model.Company.DeliveryAddress.CityName,
+                              Model.Company.DeliveryAddress.StreetName,
+                              Model.Company.DeliveryAddress.HouseNumber,
+                              Model.Company.DeliveryAddress.BuildingNumber,
+                              Model.Company.DeliveryAddress.AddressComment)
+                            </dd>
+                        }
+                    </dl>
+                    <div>
+                        @await Html.PartialAsync("_UserReports", Model.UserOrders, new ViewDataDictionary(ViewData) { { "collapseScope", "#company-order-" + Model.Id } })
+                    </div>
+                </div>
+                <hr />
+                <div class="card-actions">
+                    @Html.RouteLink("К списку заказов", new { controller = "Reports", action = "Index" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

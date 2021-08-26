@@ -1,0 +1,195 @@
+﻿@model CafeModel
+@inject ITWebNet.Food.Site.Services.Client.IContentServiceClient imageClient
+@{
+    // Определение классов элементов
+    var hasWorking = Model.WorkingTimeFrom.HasValue && Model.WorkingTimeTo.HasValue;
+    var hasMinSum = Model.MinimumSumRub.HasValue && Model.MinimumSumRub.Value > 0;
+    var hasAverageDeliveryTime = Model.AverageDeliveryTime.HasValue && Model.AverageDeliveryTime.Value > 0;
+    var hasOnlinePay = true;
+    var hasDeliveryCost = Model.CostOfDelivery != null && Model.CostOfDelivery.Count > 0;
+    var hasAddress = !string.IsNullOrWhiteSpace(Model.Address);
+    var hasPhone = !string.IsNullOrWhiteSpace(Model.Phone);
+
+    var lg = 3;
+    var md = 3;
+    var sm = 4;
+    var xs = 12;
+    var big_lg = 6;
+    var big_md = 6;
+    var big_sm = 6;
+    var phone_lg = 6;
+    var phone_md = 6;
+    var phone_sm = 6;
+    var count_small = new[] { hasWorking, hasMinSum, hasAverageDeliveryTime, hasOnlinePay }.Count(i => i);
+    var count_big = new[] { hasDeliveryCost, hasAddress || hasPhone }.Count(i => i);
+    switch (count_small)
+    {
+        case 1:
+        case 2:
+            lg = 2;
+            md = 2;
+            sm = 6;
+            big_lg = 4;
+            big_md = 5;
+            phone_lg = 4;
+            phone_md = 3;
+            break;
+        case 3:
+            lg = 2;
+            md = 4;
+            big_lg = 4;
+            phone_lg = 2;
+            break;
+        case 4:
+            sm = 3;
+            xs = 6;
+            big_sm = 7;
+            phone_sm = 5;
+            break;
+    }
+
+    var defaultClass = $"col-lg-{lg} col-md-{md} col-sm-{sm} col-xs-{xs} ml-0 mb-2";
+    var deliveryCostClass = $"col-lg-{big_lg} col-md-{big_md} col-sm-{big_sm} col-xs-12 ml-0 mb-2";
+    var addressPhoneClass = $"col-lg-{phone_lg} col-md-{phone_md} col-sm-{phone_sm} col-xs-12 ml-0 mb-2";
+
+    var imageParameters = new GetImageModel()
+        .SetHash(Model.BigImage ?? String.Empty)
+        .SetHeight(120)
+        .SetWidth(160);
+
+    var headerParameters = new GetImageModel()
+        .SetHash(Model.SmallImage)
+        .SetHeight(325)
+        .SetWidth(1920);
+}
+<div class="cafe-info"
+     style='background-image: url("@(!string.IsNullOrEmpty(Model.SmallImage) ? imageClient.GetImage(headerParameters) : Url.Content("~/images/Cafe/info-bg-default.png"))")'>
+    <div class="darkened">
+        <div class="row container">
+            <div class="col-xs-2 hidden-sm" style="padding-top: 1.6em;">
+                @if (!string.IsNullOrEmpty(Model.BigImage))
+                {
+                    <div class="card-image">
+                        <img src="@imageClient.GetImage(imageParameters)" class="img-responsive" />
+                    </div>
+                }
+                else
+                {
+                    <div class="card-image default-img">
+                    </div>
+                }
+
+            </div>
+            <div class="col-xs-10 cafe-details">
+                <div class="row">
+                    <div class="col-xs-6 cafe-name">
+                        <h3>@Model.Name </h3>
+                    </div>
+                    <div class="col-xs-6 cafe-login">
+                        @await Html.PartialAsync("_LoginPartial")
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="rating-placeholder">
+                        @await Html.PartialAsync("_Rating")
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    @if (hasWorking)
+                    {
+                        <div class="@defaultClass">
+                            <span class="text-uppercase small">Прием заказов</span><br />
+                            @if (Model.IsRest)
+                            {
+                                <i class="fa fa-clock-o"></i>@String.Format("ВЫХОДНОЙ")
+                            }
+                            else
+                            {
+                                <i class="fa fa-clock-o"></i>@String.Format("{0} - {1}", Model.WorkingTimeFrom.Value.ToShortTimeString(), Model.WorkingTimeTo.Value.ToShortTimeString())
+                            }
+                        </div>
+                    }
+
+                    @if (hasMinSum)
+                    {
+                        <div class="@defaultClass">
+                            <span class="text-uppercase small">Мин. заказ</span><br />
+                            <i class="fa fa-check-square-o"></i> @Model.MinimumSumRub ₽
+                        </div>
+                    }
+
+                    @if (hasAverageDeliveryTime)
+                    {
+                        <div class="@defaultClass">
+                            <span class="text-uppercase small">Время доставки</span><br />
+                            <i class="fa fa-car"></i> @Model.AverageDeliveryTime мин.
+                        </div>
+                    }
+
+                    <div class="@defaultClass">
+                        <span class="text-uppercase small">Оплата онлайн</span><br />
+                        @if (Model.OnlinePaymentSign.HasValue && Model.OnlinePaymentSign.Value)
+                        {
+                            <span> Есть</span>
+                        }
+                        else
+                        {
+                            <span> Нет</span>
+                        }
+                    </div>
+
+                    <div class="w-100 visible-sm-block"></div>
+
+                    @if (hasDeliveryCost)
+                    {
+                        <div class="@deliveryCostClass">
+                            <span class="text-uppercase small">Стоимость доставки заказа</span><br />
+                            @foreach (var item in Model.CostOfDelivery)
+                            {
+                                var costOfDeliveryString = new System.Text.StringBuilder();
+                                if (item.OrderPriceFrom != 0)
+                                {
+                                    costOfDeliveryString.Append($"От {item.OrderPriceFrom} ");
+                                    if (item.OrderPriceTo <= 99999)
+                                    {
+                                        costOfDeliveryString.Append($"до {item.OrderPriceTo} ");
+                                    }
+                                }
+                                else if (item.OrderPriceTo <= 99999)
+                                {
+                                    costOfDeliveryString.Append($"До {item.OrderPriceTo} ");
+                                }
+                                if (item.DeliveryPrice == 0)
+                                {
+                                    costOfDeliveryString.Append($"стоимость доставки Бесплатно");
+                                }
+                                else
+                                {
+                                    costOfDeliveryString.Append($"стоимость доставки {item.DeliveryPrice} руб.");
+                                }
+                                <span>@costOfDeliveryString</span><br />
+                            }
+                        </div>
+                    }
+
+                    @if (hasAddress || hasPhone)
+                    {
+                        <div class="@addressPhoneClass ml-md-auto ml-sm-auto">
+                            <div class="pull-right pull-sm-left text-right text-sm-left">
+                                @if (hasAddress)
+                                {
+                                    <span class="text-uppercase small">Адреc: </span>@Model.Address.Trim()<br />
+                                }
+                                @if (hasPhone)
+                                {
+                                    <span class="text-uppercase small">Телефон: </span>@Model.Phone
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

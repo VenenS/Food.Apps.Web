@@ -1,0 +1,19 @@
+﻿@model UserInfoModel
+@{
+    ViewBag.Title = "Личные данные";
+    Layout = "~/Views/Shared/_ProfileLayout.cshtml";
+}
+
+<div id="form-user-info">
+    @await Html.PartialAsync("~/Views/Profile/_Details.cshtml", Model)
+    <div class="wip" id="processIcon">
+        <i class="fa fa-spinner fa-pulse fa-3x"></i>
+    </div>
+</div>
+
+@section scripts{
+    @await Html.PartialAsync("~/Views/Scripts/jqueryval.cshtml")
+    <script>
+        setPhoneMask('#PhoneNumber', true);
+    </script>
+}

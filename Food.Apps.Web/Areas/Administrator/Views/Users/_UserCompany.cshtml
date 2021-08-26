@@ -1,0 +1,44 @@
+﻿@model ITWebNet.Food.Site.Areas.Administrator.Models.UserCompaniesViewModel
+
+@{
+    AjaxOptions editOptions = new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnSuccess = "edit_company"
+    };
+
+    AjaxOptions deleteOptions = new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnSuccess = "remove_company"
+    };
+}
+
+<div class="row form-group" id="user-company">
+    <div class="col-xs-10 control-label">@(Model.Company?.Name ?? "-----------")</div>
+    <div class="col-xs-2">
+        @Html.AjaxIconRouteLink(
+        "fa fa-edit",
+        "",
+        "AdministratorDefault",
+        new
+        {
+        controller = "Users",
+        action = "EditUserCompany",
+        userId = Model.UserId
+        },
+        editOptions,
+        new { @class = "col-xs-1" })
+
+        @if (Model.Company != null)
+        {
+            @Html.AjaxIconRouteLink(
+            "fa fa-times",
+            "",
+            "AdministratorDefault",
+            new { controller = "Users", action = "DeleteUserCompany", companyId = Model.Company.Id, userId = Model.UserId },
+            deleteOptions,
+            new { @class = "col-xs-1" })
+        }
+    </div>
+</div>

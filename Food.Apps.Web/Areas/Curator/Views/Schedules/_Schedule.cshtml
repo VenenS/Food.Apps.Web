@@ -1,0 +1,32 @@
+﻿@model ITWebNet.Food.Site.Areas.Curator.Models.ScheduleViewModel
+
+@if (ViewBag.Error != null)
+{
+    @await Html.PartialAsync("_ErrorCompany")
+}
+else
+{
+<div class="panel panel-schedule">
+    <div class="panel-heading">
+        <h4 class="no-wordwrap" title="@Model.Cafe?.Name">Кафе <strong>@Model.Cafe?.Name</strong></h4>
+    </div>
+    <div class="panel-body" style="padding: 1em;">
+        <dl>
+            <dt>Срок действия расписания</dt>
+            <dd>
+                @(Model.Schedule.BeginDate?.ToShortDateString() ?? string.Empty)
+                - @(Model.Schedule.EndDate?.ToShortDateString() ?? string.Empty)
+            </dd>
+
+            <dt>Время для заказа</dt>
+            <dd>@Model.Schedule.OrderStartTime.ToShortTimeString() - @Model.Schedule.OrderStopTime.ToShortTimeString()</dd>
+
+            <dt>Время отправления заказа</dt>
+            <dd>@Model.Schedule.OrderSendTime.ToShortTimeString()</dd>
+        </dl>
+        <hr />
+        @Html.ActionLink("Редактировать", "Edit", new { id = Model.Schedule.Id }) |
+        @Html.ActionLink("Удалить", "Delete", new { id = Model.Schedule.Id }, new { @class = "text-danger" })
+    </div>
+</div>
+}

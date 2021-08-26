@@ -1,0 +1,33 @@
+﻿<nav class="navbar navbar-inverse">
+    <div class="container">
+        @if (ViewBag.IsPerson)
+        {
+            <div class="navbar-collapse collapse" id="navbar-city">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <div id="nav-city">
+                            @if (ViewContext.HttpContext.Session.GetCurrentCity() is CityModel city)
+                            {
+                                @await Html.PartialAsync("_Geolocation", city)
+                            }
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        }
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <i class="fa fa-bars"></i>
+            </button>
+            <a href="/" class="navbar-brand">
+                <img src="~/images/Logo_v2.png" alt="Едовоз" class="hidden-xs" />
+                <span class="hidden-sm hidden-md hidden-lg">Едовоз</span>
+            </a>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-collapse-content">
+            <ul class="nav navbar-nav navbar-right">
+                <li><div id="nav-login">@await Html.PartialAsync("_LoginPartial")</div></li>
+            </ul>
+        </div>
+    </div>
+</nav>

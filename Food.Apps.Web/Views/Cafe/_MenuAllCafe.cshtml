@@ -1,0 +1,80 @@
+﻿@model Random6DishesViewModel
+
+@if (Model == null || Model.FoodCategoryWithDishes == null || Model.FoodCategoryWithDishes.Count() == 0)
+{
+<div class="card margined-top">
+    <div class="card-body">
+        <div class="card-content">
+            <h4>По вашему запросу не найдено ни одного блюда. Уточните критерии запроса.</h4>
+        </div>
+    </div>
+    <img class="img-responsive card-image" src="~/images/Dish/no_dish.jpg">
+</div>
+}
+else
+{
+    <div class="tab-content">
+        @foreach (var item in Model.FoodCategoryWithDishes)
+        {
+            // Добавление div'ов для отображения блюд при включении фильтров категорий.
+            // Все данные будут загружены через ajax-запрос при выборе фильтра.
+            <div class="category card-content tab-pane fade" id="category-@item.Category.Id">
+            </div>
+        }
+        @* div для вывода всех блюд (значение фильтра "Все блюда"). *@
+        <div id="category-all" class="category card-content tab-pane active fade in">
+            @foreach (var item in Model.FoodCategoryWithDishes)
+            {
+                string CatId = item.Category.Id.ToString();
+                string DivRestId = $"RestOfCat{CatId}";
+                <div data-category="#category-@item.Category.Id">
+                    <div class="category-content">
+                        <h4>
+                            <a onclick="changeDirectionCollapsed($(this))" class="toggle-group"
+                               role="button" data-toggle="collapse"
+                               data-target="#category_@item.Category.Id,#rest_@item.Category.Id,
+                               #wait_rest_@item.Category.Id" aria-expanded="true"
+                               aria-controls="category_@item.Category.Id">
+                                <i class="fa fa-expander"></i>
+                            </a>
+                            @Html.DisplayFor(model => item.Category.Name)
+                        </h4>
+                        <div class="row collapse in" id="category_@item.Category.Id" aria-expanded="true" >
+                            @foreach (var dish in item.Dishes)
+                            {
+                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-xxs-12 dish-container">
+                                    @await Html.PartialAsync("~/Views/Cafe/_Dish.cshtml", dish)
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="rest-of-category collapse in" id="wait_rest_@item.Category.Id" aria-expanded="true" >
+                        @* Див с остальными блюдами категории. При нажатии кнопки "Показать ещё +N" его содержимое будет заменяться загруженными блюдами. А пока блюда грузятся, пользователь будет видеть надпись "Пожалуйста, подождите..." *@
+                        <div style="display:none" data-category="catrest-@item.Category.Id" class="row rest-content" id="@DivRestId">
+                            Пожалуйста, подождите...
+                        </div>
+                    </div>
+                    <div class="btn-show-rest collapse in" id="rest_@item.Category.Id" aria-expanded="true" >
+                        @* ViewBag.RestButtonState устанавливается при выводе блюд через фильтр. При этом блюда показываются сразу все и кнопка "Показать ещё +N" не нужна. *@
+                        @if (item.CountOfDishes > Model.CountOfDishesMain && ViewBag.RestButtonState == null)
+                        {
+                            string buttonText = $"Показать ещё +{(item.CountOfDishes - Model.CountOfDishesMain).ToString()}";
+                            <form action="@Url.Action("ShowTheRest", "Cafe", new { categoryId = item.Category.Id })"
+                                  data-ajax="true" data-ajax-update="#@DivRestId" data-ajax-method="POST" data-ajax-mode="replace">
+                                @foreach (var dish in item.Dishes)
+                                {
+                                <input type="hidden" name="dishIds" value="@dish.Id.ToString()" />
+                                }
+                                <input class="btn btn-more" type="submit" data-category="catbtn1-@item.Category.Id"
+                                       onclick="showRestHideBtns(@item.Category.Id, false);" value="@buttonText" />
+                            </form>
+                            // Кнопка отображения уже загруженных дополнительных блюд
+                            <input type="button" data-category="catbtn2-@item.Category.Id" style="display:none" value="@buttonText" onclick="showRestHideBtns(@item.Category.Id, true);" />
+                        }
+                        <br /><br />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

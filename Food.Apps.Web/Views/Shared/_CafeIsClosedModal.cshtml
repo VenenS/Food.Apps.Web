@@ -1,0 +1,44 @@
+﻿<div class="modal fade" id="cafeIsClosedModal" tabindex="-1" role="dialog" aria-labelledby="cafeIsClosedModal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="cafeIsClosedModal-label">В данный момент кафе не принимает заказы</h4>
+      </div>
+      <div class="modal-body">
+        <p>Извините, но кафе сейчас не принимает заказы</p>
+        <span>
+            @if (ViewBag.Cafe != null)
+            {
+                if (ViewBag.Cafe.IsRest)
+                {
+                    @String.Format("Заказы не принимаются: {0}", "ВЫХОДНОЙ")
+                }
+                else
+                {
+                    @String.Format("Заказы принимаются с {0} до {1}", ViewBag.Cafe.WorkingTimeFrom.TimeOfDay.ToString(@"hh\:mm"), ViewBag.Cafe.WorkingTimeTo.TimeOfDay.ToString(@"hh\:mm"))
+                }
+            }
+
+        </span>
+          @if(ViewBag.Cafe != null && ViewBag.Cafe.DeferredOrder && ViewBag.Cafe.CafeType == CafeType.PersonOnly)
+          {
+              TempData["preOrder"] = true;
+              string linkDay = "/?preOrder=true";
+              if ((TimeSpan)ViewBag.Cafe.WorkingTimeTo.TimeOfDay < DateTime.Now.TimeOfDay)
+              {
+                  linkDay += $"&d={DateTime.Now.AddDays(1).Date.ToShortDateString()}";
+              }
+              <p>
+                  Но вы можете оформить <a href="@linkDay">предварительный заказ</a>
+              </p>
+          }
+        <p><a href="/">Вернуться на главную</a></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+

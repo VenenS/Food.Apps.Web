@@ -1,0 +1,9 @@
+﻿@model List<OrderViewModel>
+
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        @await Html.PartialAsync("_UserReportsItem", item)
+    }
+}

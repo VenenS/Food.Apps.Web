@@ -1,0 +1,61 @@
+﻿@model MenuModel
+@{
+    ViewBag.Title = "Меню";
+}
+
+<script>
+    window.__unobtrusive_validation_disabled = true;
+</script>
+
+<div class="main wide-rigth content" id="manager-menu" data-preview='@(Model.Patterns.IsPatternSelected ? "true": "false")'>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="card transparent">
+                @await Html.PartialAsync("_Filter", Model.Filter)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            @await Html.PartialAsync("_AvailableDishes", Model.AvailableDishes)
+        </div>
+        <div id="patterns-and-schedule-container" class="col-xs-6">
+            @await Html.PartialAsync("_PatternsAndSchedule", Tuple.Create(Model.Patterns, Model.Schedule))
+        </div>
+        <div id="remove-action" class="hidden menu-action">
+            <div class="col-xs-2 remove-action">
+                <a role="button" class="btn btn-danger btn-sm pull-left">
+                    <i class="fa fa-angle-double-left"></i>
+                </a>
+            </div>
+        </div>
+        <div id="add-action" class="hidden menu-action">
+            <div class="col-xs-2 add-action">
+                <a role="button" class="btn btn-default btn-sm pull-right">
+                    <i class="fa fa-angle-double-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="wip" id="processIcon">
+            <i class="fa fa-spinner fa-pulse fa-3x"></i>
+        </div>
+    </div>
+</div>
+
+@section modals {
+    @{
+        @Html.RenderPartialAsync("ApproveModal");
+    }
+}
+
+@section scripts {
+    @await Html.PartialAsync("~/Views/Scripts/jqueryval.cshtml")
+    <script>
+        (function () {
+            window.addEventListener('DOMContentLoaded', function () {
+                eventHandlers();
+                addListeners();
+            });
+        }());
+    </script>
+}

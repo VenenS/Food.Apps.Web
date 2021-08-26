@@ -1,0 +1,27 @@
+﻿@model OrderHistoryListViewModel
+@{
+    double currentPeriodTotalSum = 0;
+}
+
+@{
+    if (Model.Message != null)
+    { 
+        <div class="text-@Model.Message.Type">@Model.Message.Text</div>
+    }
+
+    foreach (var item in Model.OrderHistoryList)
+    {
+        currentPeriodTotalSum += item.Status != OrderStatusEnum.Abort ? item.TotalSum : 0;
+    }
+    <h4>Общая сумма заказов в указанный период: @currentPeriodTotalSum руб.</h4>
+}
+<div>
+    @foreach (var item in Model.OrderHistoryList)
+    {
+        @await Html.PartialAsync("_HistoryItem", item)
+    }
+</div>
+
+<div class="wip" id="id-processIcon">
+    <i class="fa fa-3x fa-spinner fa-pulse"></i>
+</div>

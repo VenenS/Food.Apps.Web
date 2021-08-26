@@ -1,0 +1,133 @@
+﻿@using ITWebNet.Food.Site.Models
+@model ITWebNet.Food.Site.Models.OrderViewModel
+
+@{
+    var cafeName = ViewBag.CafeName ?? string.Empty;
+}
+
+<div class="col-xs-9" id="order-@Model.Id">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <div>
+                    @if (@Model.AvailableStatuses.Contains(OrderStatusEnum.Abort))
+                    {
+                        <a class="btn btn-default cancel-order pull-right" data-update-target="#order-@Model.Id"
+                           data-url="@Url.RouteUrl("CuratorDefault", new {controller = "Reports", action = "CancelOrder", id = Model.Id, cafeId = Model.CafeId, companyId = TempData["CompanyId"], orderType = EnumOrderType.Individual})">
+                            Отменить
+                            <i class="fa fa-times"></i>
+                        </a>
+                    }
+                    <h4>Заказ № @Html.DisplayFor(model => model.Id)</h4>
+
+                    <hr/>
+                    <dl class="dl-horizontal dl-striped">
+                        <dt>
+                            Кафе
+                        </dt>
+                        <dd>
+                            @cafeName
+                        </dd>
+                        <dt>
+                            Время поступления
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Create)
+                        </dd>
+                        <dt>
+                            Имя клиента
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Creator.UserFullName)
+                        </dd>
+                        <dt>
+                            Телефон
+                        </dt>
+
+                        <dd>
+                            @if (string.IsNullOrEmpty(Model.PhoneNumber))
+                            {
+                                @Html.Phone(Model.OrderInfo.OrderPhone)
+                            }
+                            else
+                            {
+                                @Html.Phone(Model.PhoneNumber)
+                            }
+
+                        </dd>
+                        <dt>
+                            Комментарий к оплате
+                        </dt>
+
+                        <dd>
+                            @Html.DisplayFor(model => model.OddMoneyComment)
+                        </dd>
+                        <dt>
+                            Комментарий к заказу
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Comment)
+                        </dd>
+
+                        <dt>
+                            Стоимость
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.TotalSum) <span class="text-muted"> ₽</span>
+                        </dd>
+
+                        <dt>
+                            Дата доставки
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.DeliverDate)
+                        </dd>
+                        @if (Model.OrderInfo != null)
+                        {
+                            <dt>
+                                Адрес доставки
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.OrderInfo.OrderAddress)
+                            </dd>
+                            <dt>
+                                Электронный ящик
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.OrderInfo.OrderEmail)
+                            </dd>
+                        }
+                        <dt>
+                            Статус
+                        </dt>
+                        <dd>
+                            @(((OrderStatusEnum) Model.Status).GetDescription())
+                        </dd>
+
+                    </dl>
+                </div>
+                <ul class="list-group">
+                    @foreach (var orderItem in Model.OrderItems)
+                    {
+                        <li class="list-group-item">
+                            <span class="badge">@orderItem.DishCount @DeclensionHelper.GetNoun(orderItem.DishCount, "порция", "порции", "порций")</span>
+                            <span class="badge">@orderItem.TotalPrice руб</span>
+                            <h5 class="list-group-item-heading">@orderItem.DishName</h5>
+                            @if (!string.IsNullOrWhiteSpace(orderItem.Comment))
+                {
+                                <p class="list-group-item-text">
+                                    <strong>Комментарий к блюду:</strong>
+                                    @orderItem.Comment
+                                </p>
+                            }
+                        </li>
+                    }
+                </ul>
+                <hr />
+                <div class="card-actions">
+                    @Html.RouteLink("К списку заказов", new { controller = "Reports", action = "Index" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

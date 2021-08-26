@@ -1,0 +1,54 @@
+﻿@import "../../Content/Less/variables.less";
+
+.rating {
+  line-height: @s-primary-padding-double;
+  margin-bottom: @s-primary-padding;
+
+  form {
+    margin: 0 auto;
+  }
+
+  .average {
+    padding-left: @s-primary-padding;
+    color: @c-brand-primary;
+  }
+
+  .rating-comment {
+    font-size: 9px;
+    color: @c-gray-text;
+    margin: 0;
+  }
+
+  input {
+    display: none;
+  }
+
+  label {
+    font-family: FontAwesome;
+    font-size: medium;
+    font-weight: normal;
+    font-style: normal;
+    cursor: pointer;
+    float: right;
+    &:before {
+      content: "\f006";
+      color: #777777;
+    }
+    &.half:before {
+      content: "\f123";
+      color: darken(@c-brand-secondary, 10%);
+    }
+  }
+
+  input:checked + label:before,
+  input:checked ~ label:before {
+    content: "\f005";
+    color: @c-brand-secondary;
+  }
+
+  input + label:hover:before,
+  input + label:hover ~ label:before {
+    content: "\f005";
+      color: darken(@c-brand-secondary, 10%);
+  }
+}

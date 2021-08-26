@@ -1,0 +1,30 @@
+﻿@model DeliveryAddressViewModel
+@{
+    var addr = ViewContext.HttpContext.Session.GetCurrentDeliveryAddress();
+    var selectedAddress =
+        Model.CompanyAddresses.FirstOrDefault(x => x.GetAddressString(true) == ViewContext.HttpContext.Session.GetCurrentDeliveryAddress())
+            ?? Model.CompanyAddresses.FirstOrDefault();
+}
+
+<div id="company-delivery-address">
+    <div class="form-group">
+        @Html.LabelFor(model => model.CompanyName)
+        @Html.DisplayFor(model => model.CompanyName, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CompanyAddresses) <span class="text-danger">*</span>
+
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="delivery-address-btn" data-toggle="dropdown">
+                <span data-full-address="@selectedAddress.GetAddressString(true)">@selectedAddress.GetAddressString()</span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="delivery-address-btn">
+                @foreach (var item in Model.CompanyAddresses.OrderBy(x => x.GetAddressString()))
+                {
+                    <li role="presentation"><a role="presentation" tabindex="-1" data-full-address="@(item.GetAddressString(true))">@item.GetAddressString()</a></li>
+                }
+            </ul>
+        </div>
+
+    </div>
+</div>

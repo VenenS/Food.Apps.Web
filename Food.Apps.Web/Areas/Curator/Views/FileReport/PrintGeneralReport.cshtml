@@ -1,0 +1,152 @@
+﻿@model ReportDataModel
+
+@{
+    Layout = null;
+}
+
+
+
+<!--
+    Отчет для сортировки
+    По времени
+    По статусам
+    По сумме заказа
+    По номеру заказа
+    По названию кафе
+    -->
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Отчет</title>
+</head>
+<body>
+    @if (Model != null)
+    {
+        var addressList = new List<string>();
+        <h2 align="center">Отчет</h2>
+
+        <p align="center">с <strong>@Model.StartDate.ToShortDateString()</strong> по <strong>@Model.EndDate.ToShortDateString()</strong></p>
+        <p align="center">на общую сумму <strong>@Model.TotalSumm</strong> рублей</p>
+
+        <table border="0" width="100%">
+            @foreach (var order in Model.OrdersData)
+            {
+                @foreach (var itemOrder in order.Orders)
+                {
+                    @foreach (var orderData in itemOrder.Orders)
+                    {
+                        @if (String.IsNullOrEmpty(orderData.Order.OrderInfo.OrderAddress))
+                        {
+                            orderData.Order.OrderInfo.OrderAddress = "Без адреса";
+                        }
+                        addressList.Add(orderData.Order.OrderInfo.OrderAddress);
+                    }
+                }
+                var address = addressList.Distinct();
+
+
+                <tr>
+                    <th colspan="4" align="left">
+                        <br />
+                        <h3>
+                            Заказ № <strong>@order.CompanyOrder.Id</strong>
+                        </h3>
+                        <hr size="3" color="#000000" />
+                    </th>
+                </tr>
+
+                <tr align="center">
+                    <th>Дата заказа</th>
+                    <th>Кафе</th>
+                    <th>Стоимость заказов</th>
+                    <th>Статус</th>
+                </tr>
+                <tr align="center">
+                    <td>
+                        @(order.CompanyOrder.CreateDate == null ? String.Empty : order.CompanyOrder.CreateDate.Value.ToShortDateString())
+                    </td>
+                    <td>
+                        @order.CompanyOrder.Cafe.FullName
+                    </td>
+                    <td>
+                        @order.TotalPrice
+                    </td>
+                    <td>
+                        @order.OrderStatusReport
+                    </td>
+                </tr>
+                @foreach (var deliveryAddress in address)
+                {
+                    <tr>
+                        <th colspan="4" align="left">
+                            <br />
+                            <h3>
+                                Адрес <strong>@deliveryAddress</strong>
+                            </h3>
+                            <hr size="3" color="#000000" />
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <td colspan="5">
+                            <p align="left">Заказы сотрудников:</p>
+                            <table width="100%" border="1" style="border-collapse: collapse; border: 2px solid #000000;">
+                                <tr align="center">
+                                    <th>№ заказа</th>
+                                    <th>Время поступления</th>
+                                    <th>Имя клиента</th>
+                                    <th>Телефон</th>
+                                    <th>Стоимость заказа</th>
+                                    <th>Статус</th>
+                                </tr>
+
+                                @foreach (var userOrderData in order.Orders)
+                                {
+                                    foreach (var orderData in userOrderData.Orders)
+                                    {
+                                        if (orderData.Order.OrderInfo.OrderAddress == deliveryAddress)
+                                        {
+                                            <tr align="center">
+                                                <td>
+                                                    @orderData.Order.Id
+                                                </td>
+                                                <td>
+                                                    @orderData.Order.Create.ToShortDateString() @orderData.Order.Create.ToShortTimeString()
+                                                </td>
+                                                <td>
+                                                    @orderData.User.UserFullName
+                                                </td>
+                                                <td>
+                                                    @Html.Phone(orderData.Order.PhoneNumber)
+                                                </td>
+                                                <td>
+                                                    @orderData.TotalPrice
+                                                </td>
+                                                <td>
+                                                    @orderData.OrderStatusReport
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </table>
+                        </td>
+                    </tr>
+                }
+                addressList.Clear();
+            }
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-danger">Ошибка при формировании отчета</div>
+    }
+</body>
+</html>
+
+<script>
+    setTimeout(function () {
+        window.print();
+    }, 1000)
+</script>

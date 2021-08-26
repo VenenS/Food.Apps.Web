@@ -1,0 +1,6 @@
+﻿@model IEnumerable<DishModel>
+
+@foreach (var dish in Model)
+{
+    @await Html.PartialAsync("_Dish", dish)
+}

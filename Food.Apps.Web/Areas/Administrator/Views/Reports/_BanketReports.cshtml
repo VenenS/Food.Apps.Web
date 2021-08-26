@@ -1,0 +1,52 @@
+﻿@model List<BanketModel>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <b>Банкетные заказы</b>
+    </div>
+    <table class="table table-striped table-hover table-bordered" id="banket-orders">
+        <thead>
+        <tr>
+            <th>№ заказа</th>
+            <th>Название компании</th>
+            <th>Название меню</th>
+            <th>Дата проведения</th>
+            <th>Общая стоимость</th>
+        </tr>
+        </thead>
+        <tbody class="selectable">
+        @foreach (var item in Model)
+        {
+            <tr class="selectable-item" data-banket-id="@item.Id">
+                <td>
+                    <a href="@Url.RouteUrl("AdministratorReports", new {cafeId = item.CafeId, controller = "Reports", action = "Details", id = item.Id, orderType = EnumOrderType.Banket})">@item.Id</a>
+                </td>
+                <td>
+                    <span>@item.Company.Name</span>
+                </td>
+                <td>
+                    <span class="wrap-word-td">@item.Menu.Name</span>
+                </td>
+                <td>
+                    <span>@item.EventDate.ToShortDateString()</span>
+                </td>
+                <td>
+                    <span>
+                        @item.TotalSum<span class="text-muted"> ₽</span>
+                    </span>
+                </td>
+                <td>
+                    <a class="collapsed @(!ViewData.ContainsKey("filter-data") ? "expand-order" : string.Empty)" data-load="true" role="button" data-toggle="collapse" data-target="#banket-order-@item.Id" aria-expanded="false" aria-controls="banket-order-@item.Id">
+                        <i class="fa fa-expander"></i>
+                    </a>
+                </td>
+            </tr>
+            <tr class="cancel-select collapse" id="banket-order-@item.Id">
+                <td colspan="5">
+                    @await Html.PartialAsync("_UserReports", item.Orders.Select(c => new OrderViewModel(c)).ToList(), new ViewDataDictionary(ViewData) {{"collapseScope", "#banket-order-" + item.Id}, {"banketOrder", true}})
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

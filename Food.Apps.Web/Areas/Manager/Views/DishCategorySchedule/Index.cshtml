@@ -1,0 +1,223 @@
+﻿@using ITWebNet.Food.Site.Areas.Manager.Models.DishCategorySchedule
+
+@model DishCategorySchedulePageViewModel
+
+@{
+    ViewBag.Title = "Расписание категории";
+
+    string labelClass = "control-label col-xs-2";
+}
+
+<div class="main wide-rigth content">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <a href="@Url.RouteUrl("ManagerCafe", new { action = "Index", controller = "Dishes", cafeId = Model.CafeId })" class="btn btn-info mb-2">К блюдам</a>
+
+            @if (Model.Message != null)
+            {
+                <partial name="_Message" model="Model.Message" />
+            }
+
+            <form method="post" class="form-horizontal" asp-action="Index" asp-controller="DishCategorySchedule">
+
+                <input type="hidden" asp-for="CategoryId" />
+
+                <h4>Расписание на неделю</h4>
+                @Html.ValidationMessageFor(m => m.BusinessHours.Monday, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(m => m.BusinessHours.Monday, new { @class = labelClass })
+                    <div class="col-xs-8" id="mondayBusinessHours">
+                        @if (Model.BusinessHours.Monday != null && Model.BusinessHours.Monday.Count > 0)
+                        {
+                            ViewData["Prefix"] = "BusinessHours.Monday";
+                            foreach (var item in Model.BusinessHours.Monday)
+                            {
+                                <partial name="EditorTemplates/BusinessHoursItemModel" model="item" view-data="ViewData" />
+                            }
+                        }
+                    </div>
+                    @if (Model.BusinessHours.Monday == null || Model.BusinessHours.Monday.Count == 0)
+                    {
+                        @await Html.PartialAsync("_AddBusinessHoursItemLink", nameof(Model.BusinessHours.Monday))
+                    }
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.BusinessHours.Tuesday, new { @class = labelClass })
+                    <div class="col-xs-8" id="tuesdayBusinessHours">
+                        @if (Model.BusinessHours.Tuesday != null && Model.BusinessHours.Tuesday.Count > 0)
+                        {
+                            ViewData["Prefix"] = "BusinessHours.Tuesday";
+                            foreach (var item in Model.BusinessHours.Tuesday)
+                            {
+                                <partial name="EditorTemplates/BusinessHoursItemModel" model="item" view-data="ViewData" />
+                            }
+                        }
+                    </div>
+                    @if (Model.BusinessHours.Tuesday == null || Model.BusinessHours.Tuesday.Count == 0)
+                    {
+                        @await Html.PartialAsync("_AddBusinessHoursItemLink", nameof(Model.BusinessHours.Tuesday))
+                    }
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.BusinessHours.Wednesday, new { @class = labelClass })
+                    <div class="col-xs-8" id="wednesdayBusinessHours">
+                        @if (Model.BusinessHours.Wednesday != null && Model.BusinessHours.Wednesday.Count > 0)
+                        {
+                            ViewData["Prefix"] = "BusinessHours.Wednesday";
+                            foreach (var item in Model.BusinessHours.Wednesday)
+                            {
+                                <partial name="EditorTemplates/BusinessHoursItemModel" model="item" view-data="ViewData" />
+                            }
+                        }
+                    </div>
+                    @if (Model.BusinessHours.Wednesday == null || Model.BusinessHours.Wednesday.Count == 0)
+                    {
+                        @await Html.PartialAsync("_AddBusinessHoursItemLink", nameof(Model.BusinessHours.Wednesday))
+                    }
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.BusinessHours.Thursday, new { @class = labelClass })
+                    <div class="col-xs-8" id="thursdayBusinessHours">
+                        @if (Model.BusinessHours.Thursday != null && Model.BusinessHours.Thursday.Count > 0)
+                        {
+                            ViewData["Prefix"] = "BusinessHours.Thursday";
+                            foreach (var item in Model.BusinessHours.Thursday)
+                            {
+                                <partial name="EditorTemplates/BusinessHoursItemModel" model="item" view-data="ViewData" />
+                            }
+                        }
+                    </div>
+                    @if (Model.BusinessHours.Thursday == null || Model.BusinessHours.Thursday.Count == 0)
+                    {
+                        @await Html.PartialAsync("_AddBusinessHoursItemLink", nameof(Model.BusinessHours.Thursday))
+                    }
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.BusinessHours.Friday, new { @class = labelClass })
+                    <div class="col-xs-8" id="fridayBusinessHours">
+                        @if (Model.BusinessHours.Friday != null && Model.BusinessHours.Friday.Count > 0)
+                        {
+                            ViewData["Prefix"] = "BusinessHours.Friday";
+                            foreach (var item in Model.BusinessHours.Friday)
+                            {
+                                <partial name="EditorTemplates/BusinessHoursItemModel" model="item" view-data="ViewData" />
+                            }
+                        }
+                    </div>
+                    @if (Model.BusinessHours.Friday == null || Model.BusinessHours.Friday.Count == 0)
+                    {
+                        @await Html.PartialAsync("_AddBusinessHoursItemLink", nameof(Model.BusinessHours.Friday))
+                    }
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.BusinessHours.Saturday, new { @class = labelClass })
+                    <div class="col-xs-8" id="saturdayBusinessHours">
+                        @if (Model.BusinessHours.Saturday != null && Model.BusinessHours.Saturday.Count > 0)
+                        {
+                            ViewData["Prefix"] = "BusinessHours.Saturday";
+                            foreach (var item in Model.BusinessHours.Saturday)
+                            {
+                                <partial name="EditorTemplates/BusinessHoursItemModel" model="item" view-data="ViewData" />
+                            }
+                        }
+                    </div>
+                    @if (Model.BusinessHours.Saturday == null || Model.BusinessHours.Saturday.Count == 0)
+                    {
+                        @await Html.PartialAsync("_AddBusinessHoursItemLink", nameof(Model.BusinessHours.Saturday))
+                    }
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.BusinessHours.Sunday, new { @class = labelClass })
+                    <div class="col-xs-8" id="sundayBusinessHours">
+                        @if (Model.BusinessHours.Sunday != null && Model.BusinessHours.Sunday.Count > 0)
+                        {
+                            ViewData["Prefix"] = "BusinessHours.Sunday";
+                            foreach (var item in Model.BusinessHours.Sunday)
+                            {
+                                <partial name="EditorTemplates/BusinessHoursItemModel" model="item" view-data="ViewData" />
+                            }
+                        }
+                    </div>
+                    @if (Model.BusinessHours.Sunday == null || Model.BusinessHours.Sunday.Count == 0)
+                    {
+                        @await Html.PartialAsync("_AddBusinessHoursItemLink", nameof(Model.BusinessHours.Sunday))
+                    }
+                </div>
+                <h4>Расписание на дату</h4>
+                @Html.ValidationMessageFor(m => m.BusinessHours.DatedItems, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <div id="businessHoursDatedItems" class="col-xs-offset-2 col-xs-10">
+                        @if (Model.BusinessHours.DatedItems != null && Model.BusinessHours.DatedItems.Count > 0)
+                        {
+                            ViewData["Prefix"] = "BusinessHours.DatedItems";
+                            foreach (var item in Model.BusinessHours.DatedItems)
+                            {
+                                <partial name="EditorTemplates/BusinessHoursDatedItemModel" model="item" view-data="ViewData" />
+                            }
+                        }
+                    </div>
+                    <div class="col-xs-2">
+                        <a href="#!" onclick="addBusinessHoursDatedItem('BusinessHours.DatedItems', 'businessHoursDatedItems')">Добавить</a>
+                    </div>
+                </div>
+
+                <div class="text-right">
+                    <input type="submit" value="Сохранить" class="btn btn-default" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function addBusinessHoursItem(prefix, target) {
+        $.ajax({
+            cache: false,
+            success: function (s) {
+                $("#" + target).append(s);
+            },
+            url: "@Url.Action("AddBusinessHoursItem", "DishCategorySchedule")" + "?prefix=" + prefix
+        });
+
+        return false;
+    }
+
+    function addBusinessHoursDatedItem(prefix, target) {
+        $.ajax({
+            cache: false,
+            success: function (s) {
+                $("#" + target).append(s);
+            },
+            url: "@Url.Action("AddBusinessHoursDatedItem", "DishCategorySchedule")" + "?prefix=" + prefix
+        });
+
+        return false;
+    }
+
+    function removeCafeBusinessHoursItem(index, day) {
+        $("input[value=" + index + "]").parent().remove();
+        $.ajax({
+            method: 'POST',
+            url: "@Url.Action("GetLinkAddBusinessHoursItem")",
+            data: {
+                day: day
+            },
+            success: function (res) {
+                $('#' + day.toLowerCase() + 'BusinessHours').parents('.form-group').append(res);
+            }
+        });
+
+        return false;
+    }
+
+    function removeCafeBusinessHoursDatedItem(index) {
+        $('#work-data-' + index).remove();
+        return false;
+    }
+
+    function afterAddBusinessHours(el) {
+        $(el).parent().remove();
+    }
+
+</script>
+

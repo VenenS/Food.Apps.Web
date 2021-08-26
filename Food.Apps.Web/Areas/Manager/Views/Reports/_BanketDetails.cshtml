@@ -1,0 +1,59 @@
+﻿@model BanketModel
+@{
+    var isBanketReturlUrl = ViewBag.ReturnUrl != null;
+}
+
+<div class="main wide-rigth content" id="banket-order-@Model.Id">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <div>
+                    <h4>Заказ № @Html.DisplayFor(model => model.Id)</h4>
+                    <hr/>
+                    <dl class="dl-horizontal dl-striped">
+                        <dt>
+                            Имя компании
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Company.Name)
+                        </dd>
+                        <dt>
+                            Дата проведения банкета
+                        </dt>
+                        <dd>
+                            @Model.EventDate.ToShortDateString()
+                        </dd>
+                        <dt>
+                            Дата начала заказа
+                        </dt>
+                        <dd>
+                            @Model.OrderStartDate.ToShortDateString()
+                        </dd>
+                        <dt>
+                            Дата окончания заказа
+                        </dt>
+                        <dd>
+                            @Model.OrderEndDate.ToShortDateString()
+                        </dd>
+                        <dt>
+                            Стоимость
+                        </dt>
+                        <dd>
+                            @Model.TotalSum<span class="text-muted"> ₽</span>
+                        </dd>
+                    </dl>
+                    <div>
+                        @await Html.PartialAsync("_UserReports", Model.Orders.Select(c => new OrderViewModel(c)).ToList(), 
+                            new ViewDataDictionary(ViewData) {{"collapseScope", "#banket-order-" + Model.Id}, {"banketOrder", true}})
+                    </div>
+                </div>
+                <hr/>
+                <div class="card-actions">
+                    @(isBanketReturlUrl ?
+                          Html.RouteLink("К списку банкетов", "ManagerCafe", new {controller = "Bankets", action = "Index"})
+                          : Html.RouteLink("К списку заказов", "ManagerCafe", new {cafeId = Model.CafeId, controller = "Reports", action = "Index"}))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

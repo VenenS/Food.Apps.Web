@@ -1,0 +1,30 @@
+﻿@model ITWebNet.Food.Core.DataContracts.Manager.CompanyOrderScheduleModel
+
+@{ 
+    ViewBag.Title = "Удаление";
+}
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                @if ((Model.BeginDate == null || Model.BeginDate.Value.Date <= DateTime.Now.Date) && (Model.EndDate == null || Model.EndDate.Value.Date >= DateTime.Now.Date))
+                {
+                    <h4>Внимание! Удаляется активное расписание! Заказы на даты с @DateTime.Now.ToString("dd.MM.yyyy") по @(Model.EndDate != null ? Html.Raw(Model.EndDate.Value.ToString("dd.MM.yyyy")) : Html.Raw("&#8734;")) будут отменены.</h4>
+                }
+                <h4>Вы уверены,a что хотите удалить данное расписание?</h4>
+                <div>
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-actions no-color">
+                            <input type="submit" value="Удалить" class="btn btn-danger" /> |
+                            @Html.ActionLink("Назад к списку", "Index")
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

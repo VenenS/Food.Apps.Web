@@ -1,0 +1,172 @@
+﻿@model CafeModel
+@{
+    int countOfCostOfDeliveryEntries = Model.CostOfDelivery.Count();
+}
+<div class="card cafe-description">
+    <div class="card-header">
+        <div class="row">
+            <a role="button" class="col-xs-6 collapsed" data-toggle="collapse" data-target="#cafe-additional-info" aria-expanded="false" aria-controls="cafe-additional-info">
+                <h4>
+                    <i class="fa fa-expander"></i>
+                    @Html.DisplayFor(m => m.Name)
+                </h4>
+            </a>
+            <div class="col-xs-2 short-info">
+                <ul class="list-inline text-center">
+                    @if (Model.OnlinePaymentSign.HasValue && Model.OnlinePaymentSign.Value)
+            {
+                        <li>
+                            <i class="fa fa-2x fa-cc-visa colored" title="Безналичная оплата"></i>
+                        </li>
+                        <li>
+                            <i class="fa fa-2x fa-cc-mastercard" title="Безналичная оплата"></i>
+                        </li>
+                    }
+                    <li>
+                        <i class="fa fa-2x fa-money" title="Оплата наличными"></i>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-xs-4 short-info">
+                @Html.Label("Режим работы:")
+                <i class="fa fa-clock-o" title="Время работы"></i>
+                @if (Model.WorkingTimeFrom.HasValue && Model.WorkingTimeTo.HasValue)
+                {
+                    string workTime = string.Format("{0} - {1}", Model.WorkingTimeFrom.Value.ToString("HH:mm"), Model.WorkingTimeTo.Value.ToString("HH:mm"));
+                    <strong>
+                        @workTime
+                    </strong>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="card-body collapse" id="cafe-additional-info">
+        <div class="card-content">
+            <div class="row">
+                <div class="col-xs-3">
+                    <div class="card-image placeholder">
+                        <img src="~/images/Cafe/@Model.Id/logo.png" class="img-responsive" />
+                    </div>
+                    <div>
+                        <p>
+                            @await Html.PartialAsync("_Rating")
+                        </p>
+                    </div>
+                    <div>
+                        <span class="text-muted small">Способы оплаты</span>
+                        <ul class="list-inline">
+                            @if (Model.OnlinePaymentSign.HasValue && Model.OnlinePaymentSign.Value)
+                            {
+                                <li>
+                                    <i class="fa fa-2x fa-cc-visa colored" title="Безналичная оплата"></i>
+                                </li>
+                                <li>
+                                    <i class="fa fa-2x fa-cc-mastercard" title="Безналичная оплата"></i>
+                                </li>
+                            }
+                            <li>
+                                <i class="fa fa-2x fa-money" title="Оплата наличными"></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xs-8 col-xs-offset-1">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="col-xs-12 text-muted small">Мин. сумма заказа</div>
+                            @if (Model.MinimumSumRub.HasValue)
+                            {
+                                <div class="col-xs-12">
+                                    <strong>
+                                        @Html.DisplayFor(m => m.MinimumSumRub) <i class="fa fa-rub text-muted"></i>
+                                    </strong>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="col-xs-12 text-muted small">Время доставки</div>
+                            @if (Model.AverageDeliveryTime.HasValue)
+                            {
+                                <div class="col-xs-12">
+                                    <strong>
+                                        @Html.DisplayFor(m => m.AverageDeliveryTime) мин
+                                    </strong>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-xs-4">
+                            <span class="text-muted small">Время приема заказов</span>
+                            @if (Model.WorkingTimeFrom.HasValue && Model.WorkingTimeTo.HasValue)
+                            {
+                                string workTime = string.Format("{0} - {1}", Model.WorkingTimeFrom.Value.ToString("HH:mm"), Model.WorkingTimeTo.Value.ToString("HH:mm"));
+                                <p>
+                                    <strong>
+                                        @workTime
+                                    </strong>
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    @if (countOfCostOfDeliveryEntries != 0)
+                    {
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="text-muted small">Стоимость доставки</div>
+                                <div class="row">
+                                    <div class="col-xs-6">@Html.Label("Сумма заказа")</div>
+                                    <div class="col-xs-3">@Html.Label("Доставка")</div>
+                                    @foreach (var item in Model.CostOfDelivery)
+                                    {
+                                        string deliveryPrice = (item.DeliveryPrice.Equals(0)) ? "Бесплатно" : Convert.ToString(item.DeliveryPrice) + " ₽";
+                                        double orderPriceTo = item.OrderPriceTo + 1;
+
+                                        if ((item.OrderPriceFrom == 0) && (item.OrderPriceTo >= 99999))
+                                        {
+                                            <div class="row">
+                                                <div class="col-xs-6">Любая сумма заказа</div>
+                                                <div class="col-xs-3">@deliveryPrice</div>
+                                            </div>
+                                        }
+                                        else if (item.OrderPriceFrom == 0)
+                                        {
+                                            <div class="row">
+                                                <div class="col-xs-6">до @orderPriceTo ₽</div>
+                                                <div class="col-xs-3">@deliveryPrice</div>
+                                            </div>
+                                        }
+                                        else if (item.OrderPriceTo >= 99999)
+                                        {
+                                            <div class="row">
+                                                <div class="col-xs-6">от @item.OrderPriceFrom ₽</div>
+                                                <div class="col-xs-3">@deliveryPrice</div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="row">
+                                                <div class="col-xs-6">от @item.OrderPriceFrom ₽ до @orderPriceTo  ₽</div>
+                                                <div class="col-xs-3">@deliveryPrice</div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="row" style="margin-top: 1em">
+                        <div class="col-xs-12">
+                            <div><b>Дополнительная информация</b></div>
+                            <span class="multiline">
+                                @Html.DisplayFor(m => m.Description)
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="card-actions">
+            @await Html.PartialAsync("_NavCafeOld")
+        </div>
+    </div>
+</div>

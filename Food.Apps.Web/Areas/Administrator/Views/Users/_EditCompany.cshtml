@@ -1,0 +1,55 @@
+﻿@model ITWebNet.Food.Site.Areas.Administrator.Models.UserCompaniesViewModel
+
+@{
+    AjaxOptions deleteCompanyOptions = new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnSuccess = "remove_company"
+    };
+
+    var saveOptions = new AjaxOptions
+    {
+        HttpMethod = "POST",
+        OnSuccess = "save_company"
+    };
+}
+
+@using (Html.AjaxBeginRouteForm("AdministratorDefault", new { controller = "Users", action = "SaveUserCompany" }, saveOptions, new { id = "user-company" }))
+{
+    @Html.HiddenFor(m => m.Company.Id)
+    @Html.HiddenFor(m => m.Company.Name)
+    @Html.HiddenFor(m => m.UserId)
+    <div class="form-group row">
+        <div class="col-xs-10 dropup" data-toggle="dropdown">
+            <span class="dropdown-toggle" type="button" id="user-company-btn" data-toggle="dropdown">
+                <span id="CompanyName" name="CompanyName">@(Model.Company?.Name ?? "-----------")</span>
+                <i class="fa fa-angle-up"></i>
+            </span>
+            <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="user-company-btn">
+                <li role="presentation">
+                    @foreach (var item in Model.AvailableCompanies)
+                    {
+                        <input type="hidden" value="@item.Id" />
+                        <a href="#" onClick="editCompany($(this))">@item.Name</a>
+                    }
+                </li>
+            </ul>
+        </div>
+        <div class="col-xs-2">
+            <button type="submit" class="btn btn-link" title="Сохранить">
+                <i class="fa fa-floppy-o text-success"></i>
+            </button>
+            @if (Model.Company != null)
+            {
+                @Html.AjaxIconRouteLink(
+                    "fa fa-times",
+                    "",
+                    "AdministratorDefault",
+                    new { controller = "Users", action = "DeleteUserCompany", companyId = Model.Company.Id, userId = Model.UserId },
+                    deleteCompanyOptions,
+                    new { @class = "btn btn-link text-danger col-xs-1" })
+            }
+        </div>
+    </div>
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+}

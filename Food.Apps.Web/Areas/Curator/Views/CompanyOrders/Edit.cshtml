@@ -1,0 +1,84 @@
+﻿@model Food.Apps.Web.Areas.Curator.Models.CompanyOrders.EditCompanyOrderViewModel
+@{
+    ViewBag.Title = "Редактирование корпоративного заказа";
+}
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <form asp-controller="CompanyOrders" asp-action="Edit" class="form-horizontal">
+                    <div>@Html.ActionLink("Назад", "Index", "", htmlAttributes: new { @class = "btn btn-info" })</div>
+                    <h4>Редактирование корпоративного заказа</h4>
+                    <hr />
+
+                    <input type="hidden" name="id" value="@Model.Id">
+
+                    @if (Model.AfterPost) {
+                        if (ViewContext.ViewData.ModelState.IsValid) {
+                            <div class="text-center col-xs-8 alert alert-success" role="alert">
+                                Корпоративный заказ успешно отредактирован.
+                                <a asp-action="Index" asp-controller="CompanyOrders" class="alert-link">
+                                    Вернуться к списку заказов
+                                </a>
+                            </div>
+                        } else {
+                            <div asp-validation-summary="All" class="text-center col-xs-7 alert alert-danger" role="alert"></div>
+                        }
+                    }
+
+                    <div class="form-group row">
+                        <div class="col-md-3 pr-2 text-right">
+                            <label class="control-label">Кафе</label>
+                        </div>
+                        <div class="col-md-9" style="padding-top: 7px">@Model.CafeName</div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 pr-2 text-right">
+                            <label class="control-label">Дата заказа</label>
+                        </div>
+                        <div class="col-md-9" style="padding-top: 7px">@Model.OrderDate.ToString("D")</div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 pr-2 text-right">
+                            <label class="control-label">Время открытия заказа</label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group" id="timepicker">
+                                <input asp-for="OrderStartTime" asp-format="{0:hh\:mm}" type="time" class="form-control timepicker" required />
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 pr-2 text-right">
+                            <label class="control-label">Время закрытия заказа</label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input asp-for="OrderEndTime" asp-format="{0:hh\:mm}" type="time" class="form-control timepicker" required />
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3 pr-2 text-right">
+                            <label class="control-label">Время доставки</label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input asp-for="OrderDeliveryTime" asp-format="{0:hh\:mm}" type="time" class="form-control timepicker" required />
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-offset-3">
+                            <input type="submit" value="Сохранить" class="btn btn-default" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

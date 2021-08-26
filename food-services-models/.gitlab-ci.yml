@@ -1,0 +1,14 @@
+variables:
+  GIT_STRATEGY: fetch
+  GIT_SUBMODULE_STRATEGY: recursive
+
+stages:
+  - build
+
+build:
+  stage: build
+  before_script:
+    - git submodule update --recursive --remote
+  script:
+    - NuGet restore -Verbosity quiet
+    - MSBuild -verbosity:quiet

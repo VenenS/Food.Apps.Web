@@ -1,0 +1,152 @@
+﻿@using ITWebNet.Food.Site.Models
+@model ITWebNet.Food.Site.Models.ReportViewFilter
+
+<div class="card" style="margin-bottom: 20px;">
+    <form asp-action="GetFilterFile" asp-controller="FileReport" asp-route-companyId="@Model.Company.Id">
+        @Html.HiddenFor(m => m.IsCompany)
+        @Html.HiddenFor(m => m.IsCustomer)
+        <div class="card-content">
+            <div class="row" style="margin-bottom: 20px;">
+                @*<div class="col-xs-6">
+                        <div class="input-group">
+                            @Html.EditorFor(model => model.SearchQuery.SearchString, new { htmlAttributes = new { @class = "form-control", type = "search", placeholder = "Поиск" } })
+                            <span class="input-group-addon">
+                                <i class="fa fa-filter"></i>
+                            </span>
+                        </div>
+                    </div>*@
+                <div class="col-xs-12 row">
+                    <div class="input-daterange input-group col-xs-9" id="datepicker">
+                        <input id="Start" type="date" class="form-control" asp-for="Start" asp-format="{0:yyyy-MM-dd}" required />
+                        <span class="input-group-addon">-</span>
+                        <input id="End" type="date" class="form-control" asp-for="End" asp-format="{0:yyyy-MM-dd}" required />
+                    </div>
+                    <div class="input-group col-xs-3" style="width:100%;">
+                        <input onclick="$('#validate-message-start').html('')" type="submit" value="Выбрать" class="btn btn-default pull-right" />
+                    </div>
+                    @Html.ValidationMessageFor(m => m.Start, "", new { @class = "text-danger", @id = "validate-message-start" })
+                </div>
+            </div>
+            <div class="row">
+                @*<div class="col-xs-4">
+                        <span><strong>Поиск по:</strong></span>
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(model => model.SearchQuery.Type, SearchType.SearchByName)
+                                @SearchType.SearchByName.GetDescription()
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(model => model.SearchQuery.Type, SearchType.SearchByPhone)
+                                @SearchType.SearchByPhone.GetDescription()
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(model => model.SearchQuery.Type, SearchType.SearchByOrderNumber)
+                                @SearchType.SearchByOrderNumber.GetDescription()
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(model => model.SearchQuery.Type, SearchType.SearchByDish)
+                                @SearchType.SearchByDish.GetDescription()
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(model => model.SearchQuery.Type, SearchType.SearchByCafe)
+                                @SearchType.SearchByCafe.GetDescription()
+                            </label>
+                        </div>
+                    </div>*@
+                <div class="col-xs-5">
+                    <span><strong>Сортировка</strong></span>
+                    <div class="col-xs-12">
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByDeliveryDate)
+                                <span class="food-radio-text">@SortType.OrderByDeliveryDate.GetDescription()</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByDate, new { @onchange = "HiddenRadioButtonFileReport()" })
+                                <span class="food-radio-text">@SortType.OrderByDate.GetDescription()</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByStatus, new { @onchange = "HiddenRadioButtonFileReport()" })
+                                <span class="food-radio-text">@SortType.OrderByStatus.GetDescription()</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByPrice, new { @onchange = "HiddenRadioButtonFileReport()" })
+                                <span class="food-radio-text">@SortType.OrderByPrice.GetDescription()</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByOrderNumber, new { @onchange = "HiddenRadioButtonFileReport()" })
+                                <span class="food-radio-text">@SortType.OrderByOrderNumber.GetDescription()</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByCafeName, new { @onchange = "HiddenRadioButtonFileReport()" })
+                                <span class="food-radio-text">@SortType.OrderByCafeName.GetDescription()</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByEmployeeName, new { @onchange = "ShowRadioButtonPrintFileReport()" })
+                                <span class="food-radio-text">@SortType.OrderByEmployeeName.GetDescription()</span>
+                            </label>
+                            @Html.DropDownListFor(model => model.UserId, Model.Users, new { @id = "employeeNames", @class = "hidden" })
+                        </div>
+                        <div class="radio">
+                            <label class="food-radio">
+                                @Html.RadioButtonFor(model => model.SortType, SortType.OrderByAllEmployee, new { @onchange = "HiddenRadioButtonFileReport()" })
+                                <span class="food-radio-text">@SortType.OrderByAllEmployee.GetDescription()</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-5">
+                    <span><strong>Статус</strong></span>
+                    <div class="col-xs-12">
+                        @foreach (OrderStatusEnum item in Model.AvailableStatuses)
+                        {
+                            <div class="checkbox">
+                                <label class="food-checkbox">
+                                    <input type="checkbox" name="@Html.NameFor(model => model.Statuses)" value="@item" checked="@(Model.Statuses?.Contains(item)?? false)" />
+                                    <span class="food-checkbox-text">@item.GetDescription().Replace("Заказ ", string.Empty)</span>
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <span><strong>Действия</strong></span>
+                    <div class="col-xs-12">
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(model => model.ActionReportType, ActionReportType.ActionPrint)
+                                <i class="fa fa-print"></i>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(model => model.ActionReportType, ActionReportType.ActionGetXLSX)
+                                <i class="fa fa-file-excel-o"></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

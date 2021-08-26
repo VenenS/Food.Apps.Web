@@ -1,0 +1,31 @@
+﻿@model ITWebNet.Food.Site.Models.OrderViewModel
+
+
+<td colspan="8">
+    @if (!string.IsNullOrWhiteSpace(Model.Comment))
+    {
+        <p class="order-comment">
+            <strong>Комментарий пользователя:</strong> @Model.Comment
+        </p>
+    }
+    <ul class="list-group">
+        @foreach (var orderItem in Model.OrderItems)
+        {
+            <li class="list-group-item">
+                <span class="badge">@(orderItem.DishBasePrice*orderItem.DishCount) руб.</span>
+                <span class="badge">=</span>
+                <span class="badge">@orderItem.DishBasePrice руб.</span>
+                <span class="badge">x</span>
+                <span class="badge">@orderItem.DishCount @DeclensionHelper.GetNoun(orderItem.DishCount, "порция", "порции", "порций")</span>
+                <h5 class="list-group-item-heading">@orderItem.DishName</h5>
+                @if (!string.IsNullOrWhiteSpace(orderItem.Comment))
+                {
+                    <p class="list-group-item-text">
+                        <strong>Комментарий к блюду:</strong>
+                        @orderItem.Comment
+                    </p>
+                }
+            </li>
+        }
+    </ul>
+</td>

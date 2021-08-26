@@ -1,0 +1,175 @@
+﻿@model CafeModel
+
+<li class="list-group-item sortable-item" id="cafe-@Model.Id" @ViewBag.BackroundColor>
+    <div class="edit-dish">
+        <form asp-action="EditCafe" asp-controller="Cafes" asp-area="AdministratorDefault" 
+              data-ajax="true" data-ajax-method="post" data-ajax-success="saveCafe">
+            @Html.HiddenFor(model => model.AverageDeliveryTime)
+            @Html.HiddenFor(model => model.CafeRatingCount)
+            @Html.HiddenFor(model => model.CafeRatingSumm)
+            @Html.HiddenFor(model => model.CostOfDelivery)
+            @Html.HiddenFor(model => model.DeliveryPriceRub)
+            @Html.HiddenFor(model => model.Description)
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.MinimumSumRub)
+            @Html.HiddenFor(model => model.ShortDescription)
+            @Html.HiddenFor(model => model.Uuid)
+            @Html.HiddenFor(model => model.WorkingTimeFrom)
+            @Html.HiddenFor(model => model.WorkingTimeTo)
+            @Html.HiddenFor(model => model.BigImage)
+            @Html.HiddenFor(model => model.SmallImage)
+
+            <div class="row">
+                
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <input asp-for="Name" class="form-control" placeholder="Название" />
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <input asp-for="FullName" class="form-control" placeholder="Полное название" />
+                        @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="form-group">
+                        @Html.DropDownListFor(model => model.CityId,
+                            new SelectList(ViewBag.Cities, "Id", "Name"),
+                            "Выберите город из списка", new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <!--Кнопки_begin-->
+                <div class="form-group col-md-3" style="text-align: center;">
+
+                    <a href="#cafe-@Model.Id-extend" class="btn btn-link collapsed btn-collapse" data-toggle="collapse" title="Развернуть">
+                        <i class="fa fa-expander"></i>
+                    </a>
+
+                    <button type="submit" class="btn btn-link" title="Сохранить">
+                        <i class="fa fa-floppy-o text-success"></i>
+                    </button>
+
+                    <a class="fa text-danger fa-times"
+                       data-ajax="true"
+                       data-ajax-method="get"
+                       data-ajax-url="/cafes/removeCafe?cafeId=@Model.Id"
+                       data-ajax-confirm="Удалить?"
+                       data-ajax-update="#cafe-@Model.Id"
+                       data-ajax-mode="replace-with">
+                    </a>
+
+
+                </div>
+                <!--Кнопки_end-->
+            </div>
+
+            <div id="cafe-@Model.Id-extend" class="collapse row" style="padding-top: 2.5em">
+                <hr />
+                <div class="row mb-3">
+                    <div class="col-xs-8 mb-3">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CleanUrlName)
+                            <input asp-for="CleanUrlName" class="form-control" placeholder="URL название" />
+                            @Html.ValidationMessageFor(model => model.CleanUrlName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-xs-8 mb-3">
+                        <div class="form-group">
+                            @{
+                                var cafeTypes = new SelectList(
+                                    Food.Apps.Web.Tools.EnumUtilities.DescribeValues<CafeType>(),
+                                    "Key",
+                                    "Value"
+                                );
+                            }
+                            @Html.LabelFor(model => model.CafeType)
+                            <select asp-for="CafeType" asp-items="@cafeTypes" class="form-control"></select>
+                            @Html.ValidationMessageFor(model => model.CafeType, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-xs-8">
+                        <div class="form-group">
+                            @Html.EditorFor(e => e.IsActive)
+                            <label for="IsActive" style="vertical-align: top;">Активно</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div class="mb-2 form-group">
+                            @if (Model.Id < 1)
+                            {
+                                <a>Менеджеры кафе</a>
+                            }
+                            else
+                            {
+                                @Html.RouteLink("Менеджеры кафе",
+                                    "AdministratorDefault",
+                                    new { cafeId = Model.Id, 
+                                        controller = "Cafes", 
+                                        action = "Managers" })
+                            }
+                        </div>
+
+                        <div class="mb-2 form-group">
+                            @if (Model.Id < 1)
+                            {
+                                <a>Заказы кафе</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.RouteUrl("AdministratorDefault",
+                                                       new { cafeId = Model.Id, 
+                                                           controller = "Reports", 
+                                                           action = "Index" })">
+                                    Заказы кафе
+                                </a>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-xs-4 text-right">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <input type="submit" value="Сохранить" class="btn btn-default" title="Сохранить" />
+                            </div>
+                            <div class="form-group">
+                                <a class="btn btn-danger"
+                                   data-ajax="true"
+                                   data-ajax-method="get"
+                                   data-ajax-url="/cafes/removeCafe?cafeId=@Model.Id"
+                                   data-ajax-confirm="Удалить?"
+                                   data-ajax-update="#cafe-@Model.Id"
+                                   data-ajax-mode="replace-with">
+                                    Удалить
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (!ViewContext.ModelState.IsValid || ViewBag.Message != null) {
+                    <div class="row form-group mt-3">
+                        <div class="col-xs-8">
+                            @{ var alertColor = ViewContext.ModelState.IsValid ? "alert-success" : "alert-danger"; }
+                            <div class="alert @alertColor">
+                                <div asp-validation-summary="All"></div>
+                                @ViewBag.Message
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="wip" id="process-@Model.Id">
+                <i class="fa fa-spinner fa-pulse fa-3x"></i>
+            </div>
+        </form>
+    </div>
+</li>

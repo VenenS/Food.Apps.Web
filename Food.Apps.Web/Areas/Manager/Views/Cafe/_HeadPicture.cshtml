@@ -1,0 +1,12 @@
+﻿@model ITWebNet.Food.Site.Areas.Manager.Models.CafeInfoModel
+@inject ITWebNet.Food.Site.Services.Client.IContentServiceClient imageClient
+@{
+    var parameters = new ITWebNet.Food.Site.Models.GetImageModel()
+        .SetHash(Model.HeadPicture)
+        .SetWidth(1920)
+        .SetHeight(325);
+}
+@Html.HiddenFor(model => model.HeadPicture)
+
+@Html.ValidationMessageFor(model => model.HeadPicture,"", new { @class="text-danger" })
+<img class="constrained-cafe-header-img" src="@(!string.IsNullOrEmpty(Model.HeadPicture) ? imageClient.GetImage(parameters) : Url.Content("~/images/Cafe/info-bg-default.png"))" />

@@ -1,0 +1,25 @@
+﻿@model CartMultiCafeViewModel
+<div id="sidebar-cart-totals">
+    <div class="row cart-totals group-title">
+        @if (Model != null)
+        {
+            foreach (long key in Model.CafeCarts.Keys)
+            {
+                CartViewModel nextCart = Model.CafeCarts[key];
+
+                <!--Открывать в банкете только заказ этого кафе из корзины мультикафе-->
+                if (Model.Type == EnumCartType.Banket && (Model.CurrentCafeId ?? -1) != key) { continue; }
+
+                if (nextCart.Cafe != null && nextCart.Count > 0)
+                {
+                    <p>Сумма заказа @nextCart.Cafe.Name</p>
+                    <h3 style="margin: 0;">@nextCart.TotalPrice <span class="text-muted"> ₽</span></h3>
+                    if (Model.Type != EnumCartType.Banket)
+                    {
+                        @await Html.PartialAsync("_SideBarDeliveryCost", nextCart.DeliveryPriceInfo)
+                    }
+                }
+            }
+        }
+    </div>
+</div>

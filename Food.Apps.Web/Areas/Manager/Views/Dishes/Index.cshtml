@@ -1,0 +1,182 @@
+﻿@model CategoryCollectionModel
+
+@{
+    ViewBag.Title = "Блюда";
+    var cafeId = Model.CafeId;
+    var ActiveCategories = Model.GetActive();
+    var InactiveCategories = Model.GetInactive();
+    var SystemCategories = Model.GetSystemCategories();
+    var removeCat = ActiveCategories.FirstOrDefault(c => c.Name.ToLower().Contains("удаленные блюда") || c.Name.ToLower().Contains("блюда удаленных категорий"));
+    var removeCatId = removeCat != null ? "#cat-" + removeCat.Id : "#cat--1";
+
+    string changeIndexUrl = Url.RouteUrl("ManagerCafe", new
+    {
+        cafeId = cafeId,
+        controller = "Dishes",
+        action = "ChangeCatIndex"
+    });
+    string addCategoryUrl = Url.RouteUrl("ManagerCafe", new
+    {
+        cafeId = cafeId,
+        controller = "Dishes",
+        action = "AddCategory"
+    });
+    string removeCategoryUrl = Url.RouteUrl("ManagerCafe", new
+    {
+        cafeId = cafeId,
+        controller = "Dishes",
+        action = "RemoveCategory"
+    });
+    string changeDishIndexUrl = Url.RouteUrl("ManagerCafe", new
+    {
+        cafeId = cafeId,
+        controller = "Dishes",
+        action = "ChangeDishIndex"
+    });
+    string UpdateDishIndexInSecondCategory = Url.RouteUrl("ManagerCafe", new
+    {
+        cafeId = cafeId,
+        controller = "Dishes",
+        action = "UpdateDishIndexInSecondCategory"
+    });
+    string UpdateDishIndexInFirstCategory = Url.RouteUrl("ManagerCafe", new
+    {
+        cafeId = cafeId,
+        controller = "Dishes",
+        action = "UpdateDishIndexInFirstCategory"
+    });
+}
+<div class="main wide-rigth content" id="manager-dishes">
+    @await Html.PartialAsync("_Filter", Model.Filter)
+    <input type="hidden" id="remove-cat-id" value="@removeCatId" />
+    <div class="card sortable-panels" id="active-categories" data-change-url="@changeIndexUrl" data-add-url="@addCategoryUrl" data-change-dish-url="@changeDishIndexUrl" data-add-dish-url="@UpdateDishIndexInSecondCategory" data-update-dish-index-url="@UpdateDishIndexInFirstCategory">
+        <div class="card-body">
+            <div class="card-content">
+                @for (int i = 0; i < ActiveCategories.Count; i++)
+                {
+                    var item = ActiveCategories[i];
+                    <div class="panel panel-default manager-category sortable" data-category="@item.Id" data-index="@i" data-source-index="@item.Index" role="tab" data-category-name="@item.Name">
+                        <div class="panel-heading display-flex space-between" id="heading-@item.Id">
+                            <h4>
+                                <a href="#cat-@item.Id" class="" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="cat-@item.Id">
+                                    <i class="fa fa-expander"></i>
+                                    @item.Name
+                                </a>
+                            </h4>
+                            <span>
+                                <a href="@Url.Action("Index", "DishCategorySchedule", new { dishCategoryId = item.Id })" class="btn btn-info schedule mr-4">Расписание</a>
+
+                                <a asp-action="LoadDishes" asp-controller="Dishes" asp-route-categoryId="@item.Id" asp-route-cafeId="@cafeId"
+                                   class="pull-right" title="Обновить"
+                                   data-ajax="true"
+                                   data-ajax-update="cat-@item.Id"
+                                   data-ajax-mode="replace">
+                                    <i class="fa fa-refresh text-primary"></i>
+                                </a>
+                                <a asp-action="Add" asp-controller="Dishes" asp-route-categoryId="@item.Id" asp-route-cafeId="@cafeId"
+                                   class="pull-right" title="Добавить блюдо">
+                                    <i class="fa fa-plus text-success"></i>
+                                </a>
+                            </span>
+                        </div>
+                        <ul class="list-group collapse in" id="cat-@item.Id" aria-describedby="heading-@item.Id">
+                            @for(var j = 0; j < item.Dishes.Count; j++)
+                            {
+                                item.Dishes[j].DishIndex = j;
+                            }
+                            @await Html.PartialAsync("_DishesList", item.Dishes)
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="card" id="sistem-categories">
+        <div class="card-body">
+            <h4>Системные категории</h4>
+            <div class="card-content">
+                @for (int i = 0; i < SystemCategories.Count; i++)
+                {
+                    var item = SystemCategories[i];
+                    AjaxOptions options = new AjaxOptions
+                    {
+                        UpdateTargetId = $"cat-{item.Id}",
+                        InsertionMode = InsertionMode.InsertAfter,
+                        HttpMethod = "GET"
+                    };
+                    <div class="panel panel-default manager-category sortable" data-category="@item.Id" data-index="-1" role="tab" data-category-name="@item.Name">
+                        <div class="panel-heading" id="heading-@item.Id">
+                            <h4>
+                                <a href="#cat-@item.Id" class="collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="cat-@item.Id">
+                                    <i class="fa fa-expander"></i>
+                                    @item.Name
+                                </a>
+                            </h4>
+                        </div>
+                        <ul class="list-group collapse" id="cat-@item.Id" aria-describedby="heading-@item.Id">
+                            @foreach (var dish in item.Dishes)
+                            {
+                                @await Html.PartialAsync("_Dish", dish)
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="card sortable-panels" id="inactive-categories" data-remove-url="@removeCategoryUrl">
+        <div class="card-body">
+            <h4>Неподключенные категории</h4>
+            <div class="card-content">
+                @for (int i = 0; i < InactiveCategories.Count; i++)
+                {
+                    var item = InactiveCategories[i];
+                    AjaxOptions options = new AjaxOptions
+                    {
+                        UpdateTargetId = $"cat-{item.Id}",
+                        InsertionMode = InsertionMode.InsertAfter,
+                        HttpMethod = "GET"
+                    };
+                    <div class="panel panel-default manager-category sortable" data-category="@item.Id" data-index="-1" role="tab">
+                        <div class="panel-heading" id="heading-@item.Id">
+                            <h4>
+                                <a href="#cat-@item.Id" class="collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="cat-@item.Id">
+                                    <i class="fa fa-expander"></i>
+                                    @item.Name
+                                </a>
+                                <a asp-action="LoadDishes" asp-controller="Dishes" asp-route-categoryId="@item.Id" asp-route-cafeId="@cafeId"
+                                   class="pull-right" title ="Обновить"
+                                   data-ajax="true"
+                                   data-ajax-update="cat-@item.Id"
+                                   data-ajax-mode="replace">
+                                   <i class="fa fa-refresh text-primary"></i>
+                                </a>
+                                <a asp-action="Add" asp-controller="Dishes" asp-route-categoryId="@item.Id" asp-route-cafeId="@cafeId"
+                                   class="pull-right" title ="Добавить блюдо">
+                                   <i class="fa fa-plus text-success"></i>
+                                </a>
+                            </h4>
+                        </div>
+                        <ul class="list-group collapse" id="cat-@item.Id" aria-describedby="heading-@item.Id">
+                            @foreach (var dish in item.Dishes)
+                            {
+                                @await Html.PartialAsync("_Dish", dish)
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="wip" id="processIcon">
+        <i class="fa fa-spinner fa-pulse fa-3x"></i>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        (function() {
+            managerMenu();
+        }())
+    </script>
+}

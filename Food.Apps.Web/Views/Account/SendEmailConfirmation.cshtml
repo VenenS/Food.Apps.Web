@@ -1,0 +1,49 @@
+﻿@model EmailConfirmationModel
+
+@{ ViewBag.Title = "Запрос на подтверждение регистрации"; }
+
+
+<div class="centered">
+    <div class="col-md-6 col-xs-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-content">
+                    <div id="mailConfirmation">
+                        <form asp-action="SendEmailConfirmation" asp-controller="Account" asp-antiforgery="true">
+                            @if (ViewBag.ResultMessage != null)
+                            {
+                                <div class="alert alert-success alert-dismissible" role="alert">
+                                    <p>@ViewBag.ResultMessage</p>
+                                    <a asp-action="Login" asp-controller="Account" class="btn btn-link">Вернуться на страницу входа</a>
+                                </div>
+                            }
+                            else
+                            {
+                                <p>Введите адрес почты, указанный при регистрации на сайте.</p>
+                                
+                                <div asp-validation-summary="ModelOnly"></div>
+                                <div class="form-group">
+                                    <label asp-for="Email" class="sr-only"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                                        <input asp-for="Email" class="form-control" placeholder="Email" />
+                                    </div>
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="submit" value="Отправить" class="btn btn-default" />
+                                </div>
+                            }
+                        </form>
+                    </div>
+                    <div class="wip" id="processIcon"><i class="fa fa-spinner fa-pulse fa-3x"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    @Html.RenderPartialAsync("~/Scripts/jqueryval")
+}

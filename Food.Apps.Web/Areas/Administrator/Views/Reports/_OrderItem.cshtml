@@ -1,0 +1,27 @@
+﻿@using ITWebNet.Food.Site.Helpers
+@model OrderItemModel
+
+@{
+    var order = ViewData["order"] as OrderViewModel;
+    var options = new AjaxOptions()
+    {
+        UpdateTargetId = "order-item-" + @Model?.Id,
+        InsertionMode = InsertionMode.ReplaceWith
+    };
+}
+
+
+@if (Model != null)
+{
+    <li class="list-group-item" id="order-item-@Model.Id">
+        <span class="badge">@Model.DishCount @DeclensionHelper.GetNoun(Model.DishCount, "порция", "порции", "порций")</span>
+        <h5 class="list-group-item-heading">@Model.DishName</h5>
+        @if (!string.IsNullOrWhiteSpace(Model.Comment))
+        {
+            <p class="list-group-item-text">
+                <strong>Комментарий к блюду:</strong>
+                @Model.Comment
+            </p>
+        }
+    </li>
+}

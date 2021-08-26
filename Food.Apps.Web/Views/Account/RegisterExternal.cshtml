@@ -1,0 +1,24 @@
+﻿        @*//TODO: Авторизация через соцсети. Удалить
+@model RegisterExternalModel
+
+@{ ViewBag.Title = "Регистрация"; }
+
+<div class="centered">
+    <div class="col-md-6 col-xs-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-content">
+                    <p>
+                        Вы успешно прошли проверку подлинности с <strong>@ViewBag.LoginProvider</strong>.<br />
+                        Пожалуйста, введите Ваш E-mail ниже и нажмите кнопку "Зарегистрироваться", чтобы закончить процесс регистрации.
+                    </p>
+                    <div id="registerExternalForm">
+                        @await Html.PartialAsync("_RegisterExternal", Model)
+                    </div>
+                    <div class="wip" id="processIcon"><i class="fa fa-spinner fa-pulse fa-3x"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.RenderPartialAsync("~/Scripts/jqueryval")*@

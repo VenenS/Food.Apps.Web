@@ -1,0 +1,100 @@
+﻿@{
+    var isSubdomain = ViewContext.RouteData.Values.ContainsKey("name");
+    var isPerson = ViewBag.IsPerson;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @if (isPerson)
+    {
+        <title>@ViewBag.Title - Доставка еды в городе @ViewContext.HttpContext.Session.GetCurrentCity()?.Name - Служба доставки еды Едовоз</title>
+    }
+    else
+    {
+        <title>@ViewBag.Title - Доставка еды в офис - Служба доставки еды Едовоз</title>
+    }
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+    @await Html.PartialAsync("~/Views/Styles/fontawesome.cshtml")
+    @await Html.PartialAsync("~/Views/Styles/css.cshtml")
+    @await Html.PartialAsync("~/Views/Styles/scrollbar.cshtml")
+    @await Html.PartialAsync("~/Views/Styles/jqueryui.cshtml")
+</head>
+<body>
+    <header>
+        @if (User.Identity.IsAuthenticated && User.IsInRole("Manager") && !(ViewContext.HttpContext.Request.Method == "POST"))
+        {
+            <div id="notification-message-space"> @await Component.InvokeAsync("CheckNewOrders") </div>
+        }
+        @{
+            var city = ViewContext.HttpContext.Session.GetCurrentCity();
+        }
+        @if (isSubdomain && ViewContext.HttpContext.Response.StatusCode != 404 && ((city != null && ViewBag.Cafe.CityId == city.Id) || city == null))
+        {
+            @await Html.PartialAsync("_CafeInfo", (CafeModel)ViewBag.Cafe)
+        }
+        else
+        {
+            @await Html.PartialAsync("_Header")
+        }
+    </header>
+    <main>
+        <div class="container">
+            @RenderBody()
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            @await Html.PartialAsync("_Footer")
+        </div>
+    </footer>
+    @RenderSection("modals", required: false)
+    @await Html.PartialAsync("~/Views/Scripts/modernizr.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/jquery.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/bootstrap.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/jqueryui.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/scrollbar.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/jquerysignalr.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/site.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/inputmask.cshtml")
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        $(function () {
+            var connection = $.hubConnection();
+            var contosoChatHubProxy = connection.createHubProxy('notificationsHub');
+
+            contosoChatHubProxy.on('raiseAlert', function (url) {
+                $.ajax({
+                    xhrFields: { withCredentials: true },
+                    type: "GET",
+                    url: url
+                }).done(function (data) {
+                    $("#notification-message-space").html(data);
+                });
+            });
+
+            contosoChatHubProxy.on('alertino', function (url) {
+            });
+            connection.start()
+                .done(function () {
+                    console.log('Now connected, connection ID=' + connection.id);
+                    $('#domain').click(function () {
+                        // Call the Send method on the hub.
+                        // contosoChatHubProxy.server.alerts();
+                        contosoChatHubProxy.invoke('alerts').done(function () {
+                            console.log('Invocation of alerts succeeded');
+                        }).fail(function (error) {
+                            console.log('Invocation of alerts failed. Error: ' + error);
+                        });
+                    });
+                }).fail(function () { console.log('Could not connect'); });
+        });
+    </script>
+    @if (isPerson && (!isSubdomain || (isSubdomain && ViewContext.HttpContext.Response.StatusCode == 404)))
+    {
+        @await Html.PartialAsync("~/Views/Scripts/geolocation.cshtml")
+        @await Html.PartialAsync("_ChoiceCity", new List<RegionModel>())
+    }
+</body>
+</html>

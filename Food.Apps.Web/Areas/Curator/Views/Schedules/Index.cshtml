@@ -1,0 +1,25 @@
+﻿@model IEnumerable<ITWebNet.Food.Site.Areas.Curator.Models.ScheduleViewModel>
+
+@{
+    ViewBag.Title = "Расписания";
+}
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <p>
+                    <a href=@Url.Action("Create") class="btn btn-success"><i class="fa fa-plus"> </i> Добавить расписание</a>
+                </p>
+                <div class="row">
+                    @foreach (var item in Model.OrderBy(m => m.Schedule.CafeId))
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                            @await Html.PartialAsync("_Schedule", item)
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

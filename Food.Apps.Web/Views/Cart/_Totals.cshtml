@@ -1,0 +1,34 @@
+﻿@model CartMultiCafeViewModel
+
+@if (Model != null)
+{
+    foreach (long key in Model.CafeCarts.Keys)
+    {
+        <div class="order-totals">
+        @{
+            var cafeCart = Model.CafeCarts[key];
+            string discount = cafeCart.ClientDiscount > 0 ?
+                String.Format("Ваша скидка {0}%", cafeCart.ClientDiscount) : string.Empty;
+            string deliveryCost = cafeCart.DeliveryPriceInfo.PriceForOneOrder > 0 ?
+                  String.Format("{0:##} рублей", cafeCart.DeliveryPriceInfo.PriceForOneOrder) : "бесплатно";
+          }
+        
+        @if (cafeCart.Count > 0)
+        {
+            if (cafeCart.TotalPrice < cafeCart.Cafe.MinimumSumRub)
+            {
+                var distinction = cafeCart.Cafe.MinimumSumRub.Value - cafeCart.TotalPrice;
+                <div class="alert alert-danger" role="alert">
+                    Вам не хватает @distinction.ToString("0.##") <span class="text-muted"> ₽</span> для оформления заказа
+                </div>
+            }
+            <p>
+                Общая сумма заказа: @cafeCart.TotalPrice.ToString("0.##") рублей @discount
+            </p>
+            <p>
+                Доставка: @deliveryCost
+            </p>
+        }
+        </div>
+    }
+}

@@ -1,0 +1,78 @@
+﻿@model BanketModel
+
+@{
+    ViewBag.Title = "Создание банкета";
+    var labelClass = "col-xs-2 control-label";
+    ViewContext.ClientValidationEnabled = false;
+}
+
+<div class="main wide-rigth content">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3>Создание банкета</h3>
+            <form asp-action="Create" asp-controller="Bankets" method="post" class="form-horizontal">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row form-group">
+                    <div class="col-xs-2 text-right pr-3">
+                        <label class="control-label" asp-for="CompanyId"></label>
+                    </div>
+                    <div class="col-xs-9">
+                        <select asp-for="CompanyId"
+                                asp-items="@(new SelectList(ViewBag.Companies, "Id", "Name"))"
+                                class="form-control">
+                            <option value="" selected disabled>–Выберите компанию–</option>
+                        </select>
+                        <span asp-validation-for="CompanyId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-xs-2 text-right pr-3">
+                        <label class="control-label" asp-for="MenuId"></label>
+                    </div>
+                    <div class="col-xs-9">
+                        <select asp-for="MenuId"
+                                asp-items="@(new SelectList(ViewBag.Menus, "Id", "Name"))"
+                                class="form-control">
+                            <option value="" selected disabled>–Выберите меню–</option>
+                        </select>
+                        <span asp-validation-for="MenuId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-xs-2 text-right pr-3">
+                        <label for="OrderStartDate" class="control-label">Период заказа</label>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="input-group input-daterange">
+                            <input type="date" asp-for="OrderStartDate" asp-format="{0:yyyy-MM-dd}" class="form-control" required />
+                            <span class="input-group-addon">-</span>
+                            <input type="date" asp-for="OrderEndDate" asp-format="{0:yyyy-MM-dd}" class="form-control" required />
+                        </div>
+                        <span asp-validation-for="OrderStartDate" class="text-danger"></span>
+                        <span asp-validation-for="OrderEndDate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-xs-2 text-right pr-3">
+                        <label asp-for="EventDate" class="control-label"></label>
+                    </div>
+                    <div class="col-xs-2">
+                        <div class="input-daterange">
+                            <input asp-for="EventDate" asp-format="{0:yyyy-MM-dd}" type="date" class="form-control" required />
+                        </div>
+                        <span asp-validation-for="EventDate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-xs-offset-2">
+                        <input type="submit" value="Добавить" class="btn btn-default" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @await Html.PartialAsync("~/Views/Scripts/jqueryval.cshtml")
+}

@@ -1,0 +1,31 @@
+﻿@model ITWebNet.Food.Core.DataContracts.Common.CompanyCuratorModel
+
+@{
+    ViewBag.Title = "Удаление куратора компании";
+    var company = (CompanyModel)ViewBag.Company ?? new CompanyModel();
+}
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <h3>Вы уверены, что хотите удалить куратора компании @company.Name <strong>@(Model.User.UserFullName ?? Model.User.Email)</strong></h3>
+                <div>
+                    <hr />
+
+                    @using (Html.BeginRouteForm("AdministratorDefault", new { controller = "Companies", action = "DeleteCurator" }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.HiddenFor(model => model.CompanyId)
+                        @Html.HiddenFor(model => model.UserId)
+                        <div class="form-actions no-color">
+                            <input type="submit" value="Удалить" class="btn btn-danger" /> |
+                            @Html.RouteLink("Назад к списку", "AdministratorDefault", new { companyId = company.Id, controller = "Companies", action = "Curators" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

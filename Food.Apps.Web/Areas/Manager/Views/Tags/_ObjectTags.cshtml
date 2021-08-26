@@ -1,0 +1,43 @@
+﻿@model TagsModel
+@{
+    AjaxOptions options = new AjaxOptions()
+    {
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "POST",
+        UpdateTargetId = "destTagGrid"
+    };
+}
+<div class="card">
+    <div class="card-body">
+        <div class="card-content">
+            <h4>Выбранные теги</h4>
+            <div class="form-group tags" id="object-tags">
+                @foreach (var item in Model.ObjectTags)
+                {
+                    <div class="row">
+                        @if (Model.ObjectType != ObjectTypesEnum.ANOTHER_TYPE)
+                        {
+                            <div class="col-xs-3">
+                                @Html.AjaxRouteLink(
+                                          "«",
+                                          "ManagerCafe",
+                                          new { controller = "Tags", action = "RemoveTag", id = Model.Id, tagId = item.Id, objectType = Model.ObjectType },
+                                          options,
+                                          new { @class = "btn btn-default" })
+                            </div>
+                                <div class="col-xs-8">
+                                    @item.Name
+                                </div>
+                        }
+                        else
+                        {
+                            <div class="col-xs-9 col-xs-offset-3">
+                                @item.Name
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

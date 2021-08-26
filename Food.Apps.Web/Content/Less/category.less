@@ -1,0 +1,97 @@
+﻿@import "../../Content/Less/variables.less";
+
+.tree {
+    margin: 0;
+    padding: @s-primary-padding-double;
+    list-style: none;
+    position: relative;
+    min-height: 0.1px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    li {
+        a {
+            text-decoration: none;
+            color: currentColor;
+            width: 100%;
+            display: block;
+        }
+
+        &:hover {
+            cursor: pointer;
+            text-decoration: none;
+        }
+    }
+}
+
+
+.sub-category {
+    display: inline-block;
+    border: 1px solid @c-border;
+    .border-radius(5px);
+    padding: 5px 10px;
+    line-height: 1;
+    font-weight: 400;
+    margin: 0 5px 5px 0;
+
+    &.active {
+        background-color: darken(@c-background, 15%);
+    }
+}
+
+#category-anchors {
+    padding: 0;
+
+    ul {
+        list-style: none;
+        padding-left: 0;
+        line-height: 3.5;
+        margin-bottom: 0;
+
+        a {
+            padding-left: 3.05em;
+            display: block;
+            line-height: 2.5;
+            margin: 0;
+
+            &:link, &:hover, &:active, &:focus {
+                text-decoration: none;
+                color: currentColor;
+            }
+        }
+    }
+
+    span.radio-category {
+        display: inline-block;
+        position: absolute;
+        margin-top: 7px;
+        font-size: 0.8em;
+        text-align: center;
+        left: 1.2em;
+        width: 20px;
+        height: 20px;
+        color: white;
+        background-color: white;
+        border-radius: 50%;
+        box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+
+    li.active span.radio-category {
+        display: inline-block;
+        position: absolute;
+        margin-top: 7px;
+        padding-top: 5px;
+        left: 1.2em;
+        width: 20px;
+        height: 20px;
+        color: @c-content-background;
+        background-color: rgb(111,155,6);
+        border-radius: 50%;
+        box-shadow: 0 0 3px rgba(0,0,0,0.2);
+    }
+
+    .sidebar-title {
+        margin: @s-primary-margin-double 0;
+    }
+}

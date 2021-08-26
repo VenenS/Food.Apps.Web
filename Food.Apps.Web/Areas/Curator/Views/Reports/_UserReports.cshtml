@@ -1,0 +1,50 @@
+﻿@using OrderModel = ITWebNet.Food.Site.Models.OrderViewModel
+@model List<OrderModel>
+@{
+    bool isNested = ViewData["collapseScope"] != null;
+    string panelHeading;
+    string panelId;
+    IEnumerable<OrderModel> data;
+
+    if (isNested)
+    {
+        panelHeading = "Заказы сотрудников";
+        panelId = string.Empty;
+        data = Model.Where(item => item.CompanyOrderId.HasValue);
+    }
+    else
+    {
+        panelHeading = "Заказы физических лиц";
+        panelId = "user-orders";
+        data = Model.Where(item => !item.CompanyOrderId.HasValue);
+    }
+}
+<td colspan="7">
+    <div @panelId>
+        <div>
+            <b>@panelHeading</b>
+        </div>
+        <table class="table table-striped table-bordered table-head-center" id="user-orders">
+            <thead>
+                <tr>
+                    <th>№ заказа</th>
+                    <th>Время поступления</th>
+                    @if (!data.Any(o => o.CompanyOrderId.HasValue))
+                    {
+                        <th>Время доставки</th>
+                    }
+                    <th>Имя клиента</th>
+                    <th>Телефон</th>
+                    <th>Стоимость заказа</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in data)
+            {
+                @await Html.PartialAsync("_UserReportsItem", item)
+            }
+
+        </table>
+    </div>
+</td>

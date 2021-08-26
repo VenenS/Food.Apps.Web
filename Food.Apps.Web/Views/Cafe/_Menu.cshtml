@@ -1,0 +1,45 @@
+﻿@model Dictionary<FoodCategoryModel, List<FoodDishModel>>
+
+@if (Model == null || Model.Count() == 0)
+{
+<div class="card margined-top">
+    <div class="card-body">
+        <div class="card-content">
+            <h4>По вашему запросу не найдено ни одного блюда. Уточните критерии запроса.</h4>
+        </div>
+    </div>
+    <img class="img-responsive card-image" src="~/images/Dish/no_dish.jpg">
+</div>
+}
+else
+{
+    <div class="tab-content">
+        @foreach (var item in Model)
+        {
+            <div class="category card-content tab-pane fade" id="category-@item.Key.Id">
+                <div class="category-content"></div></div>
+        }
+        <div id="category-all" class="category card-content tab-pane active fade in">
+            @foreach (var item in Model)
+            {
+                <div data-category="#category-@item.Key.Id">
+                    <div class="category-content">
+                    <h4>
+                        @Html.DisplayFor(model => item.Key.Name)
+                    </h4>
+                        <div class="row">
+                            @foreach (var dish in item.Value)
+                            {
+
+                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 col-xxs-12 dish-container">
+                                    @await Html.PartialAsync("~/Views/Cafe/_Dish.cshtml", dish)
+                                </div>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

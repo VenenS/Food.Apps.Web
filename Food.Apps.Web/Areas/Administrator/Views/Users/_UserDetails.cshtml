@@ -1,0 +1,153 @@
+﻿@model ITWebNet.Food.Site.Areas.Administrator.Models.EditUserViewModel
+
+@{
+    var labelClass = "control-label col-xs-4 col-xs-offset-1";
+    var editorClass = "form-control col-xs-7";
+    var validationClass = "text-danger";
+
+    AjaxOptions options = new AjaxOptions()
+    {
+    };
+
+    AjaxOptions addUserCompanyOptions = new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnSuccess = "add_company"
+    };
+
+    AjaxOptions addDiscountOptions = new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnSuccess = "add_discount"
+    };
+}
+
+<div class="modal fade" id="userDetailsModal" tabindex="-1" role="dialog" aria-labelledby="userDetails-label" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content modal-content--edit-user">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="userDetails-label">Редактирование пользователя</h4>
+            </div>
+            <div class="row">
+                <form asp-action="EditUser" asp-controller="Users" asp-area="AdministratorDefault" data-ajax="true" data-ajax-method="post" data-ajax-success="editUserCallback" class="form-horizontal col-xs-7">
+                    @Html.HiddenFor(m => m.User.Id)
+                    @Html.HiddenFor(m => m.User.DisplayName)
+                    @Html.HiddenFor(m => m.User.IsDeleted)
+                    @Html.HiddenFor(m => m.User.Lockout)
+                    @Html.HiddenFor(m => m.User.Name)
+                    @Html.HiddenFor(m => m.User.DeliveryAddressId)
+                    @Html.HiddenFor(m => m.User.Password)
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <label asp-for="User.EmailAdress" class="@labelClass"></label>
+                        <input asp-for="User.EmailAdress" class="@editorClass" />
+                        @Html.ValidationMessageFor(m => m.User.EmailAdress, "", new { @class = validationClass })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.User.FullName, new { @class = labelClass })
+                        <input asp-for="User.FullName" class="@editorClass" />
+                        @Html.ValidationMessageFor(m => m.User.FullName, "", new { @class = validationClass })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.User.UserFirstName, new { @class = labelClass })
+                        <input asp-for="User.UserFirstName" class="@validationClass" />
+                        @Html.ValidationMessageFor(m => m.User.UserFirstName, "", new { @class = validationClass })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.User.UserSurname, new { @class = labelClass })
+                        <input asp-for="User.UserSurname" class="@editorClass" />
+                        @Html.ValidationMessageFor(m => m.User.UserFirstName, "", new { @class = validationClass })
+                    </div>
+                    <div class="form-group">
+                        <label class="@labelClass">Телефон</label>
+                        <input asp-for="User.PhoneNumber" class="@editorClass" />
+                        @Html.ValidationMessageFor(m => m.User.PhoneNumber, "", new { @class = validationClass })
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-offset-5 col-xs-7">
+                            <button type="submit" class="btn btn-default">Редактировать</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="col-xs-4">
+                    <div class="cox-xs-12">
+                        <h4>Компания пользователя</h4>
+                        @if (Model.UserCompany.Company != null)
+                        {
+                            @await Html.PartialAsync("_UserCompany", Model.UserCompany)
+                        }
+                        else
+                        {
+                            @await Html.PartialAsync("_AddCompany", Model.User.Id)
+                        }
+                    </div>
+                    <div class="col-xs-12">
+                        <h4>Действующие скидки</h4>
+                        <div class="row form-group">
+                            <label class="col-xs-7">Кафе</label>
+                            <label class="col-xs-5">Скидка, %</label>
+                        </div>
+                        <div id="user-discounts">
+                            @foreach (var d in Model.UserDiscounts)
+                            {
+                                @await Html.PartialAsync("_UserDiscount", d)
+                            }
+                        </div>
+                    </div>
+                    @Html.AjaxRouteLink(
+                                   "Добавить скидку",
+                                   "AdministratorDefault",
+                                   new { controller = "Users", action = "AddUserDiscount", userId = Model.User.Id },
+                                   addDiscountOptions,
+                                   null)
+                    <script>
+                        function add_discount(res) {
+                            $('#user-discounts').append(res);
+                        }
+
+                        function remove_discount() {
+                            $(this).parents('.user-discount').remove();
+                        }
+
+                        function save_discount(res) {
+                            $(this).replaceWith(res);
+                        }
+
+                        function edit_discount(res) {
+                            $(this).parents('.user-discount').replaceWith(res);
+                        }
+
+                        function add_company(res) {
+                            $('#user-companies').append(res);
+                        }
+
+                        function remove_company(res) {
+                            $(this).parents('#user-company').replaceWith(res);
+                        }
+
+                        function edit_company(res) {
+                            $(this).parents('#user-company').replaceWith(res);
+                        }
+
+                        function save_company(res) {
+                            $(this).replaceWith(res);
+                        }
+
+                        function editCompany(link) {
+                            var val = $(link).text();
+                            var id = $(link).prev().val();
+                            var form = $(link).closest('form');
+                            form.find("#user-company-btn span").text(val);
+                            form.find('#Company_Id').val(id);
+                            form.find('#Company_Name').val(val);
+                        }
+
+                        setPhoneMask('#User_PhoneNumber', true);
+                    </script>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

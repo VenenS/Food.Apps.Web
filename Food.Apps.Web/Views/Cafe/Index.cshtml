@@ -1,0 +1,25 @@
+﻿@model CafeListViewModel
+@{
+    ViewBag.Title = "Кафе";
+}
+
+@await Html.PartialAsync("_Navigator")
+
+<div class="row">
+    <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 left-sidebar">
+        <div class="fixed-sidebar" data-spy="affix" data-offset-top="140">
+            @await Html.PartialAsync("_LeftSideBar", new MenuViewModel())
+        </div>
+    </div>
+    <div id="list" class="col-lg-6 col-md-8 col-sm-8 col-xs-12 main">
+        @await Html.PartialAsync("_List", Model)
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 side-bar">
+        <div class="fixed-cart" data-spy="affix" data-offset-top="140">
+            @await Html.PartialAsync("_SideBar")
+        </div>
+    </div>
+    @await Html.PartialAsync("MessageModal")
+</div>
+
+

@@ -1,0 +1,186 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Services\Tag.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="bundleconfig.json" />
+    <Content Remove="compilerconfig.json" />
+    <Content Remove="packages.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Content\Less\buttons.less" />
+    <None Remove="Content\Less\cards.less" />
+    <None Remove="Content\Less\cart.less" />
+    <None Remove="Content\Less\category.less" />
+    <None Remove="Content\Less\common.less" />
+    <None Remove="Content\Less\datatables.site.less" />
+    <None Remove="Content\Less\grid.less" />
+    <None Remove="Content\Less\icons.less" />
+    <None Remove="Content\Less\login.less" />
+    <None Remove="Content\Less\media-query.less" />
+    <None Remove="Content\Less\navigator.less" />
+    <None Remove="Content\Less\profile.less" />
+    <None Remove="Content\Less\radio-check-buttons.less" />
+    <None Remove="Content\Less\rating.less" />
+    <None Remove="Content\Less\site-admin.less" />
+    <None Remove="Content\Less\site-curator.less" />
+    <None Remove="Content\Less\site-manager.less" />
+    <None Remove="Content\Less\site.less" />
+    <None Remove="Content\Less\variables.less" />
+    <None Remove="wwwroot\fonts\PTSansBold\PTSansBold.eot" />
+    <None Remove="wwwroot\fonts\PTSansBold\PTSansBold.ttf" />
+    <None Remove="wwwroot\fonts\PTSansBold\PTSansBold.woff" />
+    <None Remove="wwwroot\fonts\PTSansItalic\PTSansItalic.eot" />
+    <None Remove="wwwroot\fonts\PTSansItalic\PTSansItalic.ttf" />
+    <None Remove="wwwroot\fonts\PTSansItalic\PTSansItalic.woff" />
+    <None Remove="wwwroot\fonts\PTSansRegular\PTSansRegular.eot" />
+    <None Remove="wwwroot\fonts\PTSansRegular\PTSansRegular.ttf" />
+    <None Remove="wwwroot\fonts\PTSansRegular\PTSansRegular.woff" />
+    <None Remove="wwwroot\images\Background\1.png" />
+    <None Remove="wwwroot\images\Background\2.png" />
+    <None Remove="wwwroot\images\Background\3.png" />
+    <None Remove="wwwroot\images\Background\4.png" />
+    <None Remove="wwwroot\images\Cafe\default.png" />
+    <None Remove="wwwroot\images\Cafe\info-bg-default.png" />
+    <None Remove="wwwroot\images\Dish\default.png" />
+    <None Remove="wwwroot\images\TopCafe\1.png" />
+    <None Remove="wwwroot\images\TopCafe\10.png" />
+    <None Remove="wwwroot\images\TopCafe\2.png" />
+    <None Remove="wwwroot\images\TopCafe\3.png" />
+    <None Remove="wwwroot\images\TopCafe\4.png" />
+    <None Remove="wwwroot\images\TopCafe\5.png" />
+    <None Remove="wwwroot\images\TopCafe\6.png" />
+    <None Remove="wwwroot\images\TopCafe\7.png" />
+    <None Remove="wwwroot\images\TopCafe\8.png" />
+    <None Remove="wwwroot\images\TopCafe\9.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="bundleconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Content\Less\buttons.less" />
+    <Content Include="Content\Less\cards.less" />
+    <Content Include="Content\Less\cart.less" />
+    <Content Include="Content\Less\category.less" />
+    <Content Include="Content\Less\common.less" />
+    <Content Include="Content\Less\datatables.site.less" />
+    <Content Include="Content\Less\grid.less" />
+    <Content Include="Content\Less\icons.less" />
+    <Content Include="Content\Less\login.less" />
+    <Content Include="Content\Less\media-query.less" />
+    <Content Include="Content\Less\navigator.less" />
+    <Content Include="Content\Less\profile.less" />
+    <Content Include="Content\Less\radio-check-buttons.less" />
+    <Content Include="Content\Less\rating.less" />
+    <Content Include="Content\Less\site-admin.less" />
+    <Content Include="Content\Less\site-curator.less" />
+    <Content Include="Content\Less\site-manager.less" />
+    <Content Include="Content\Less\site.less" />
+    <Content Include="Content\Less\variables.less" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
+    <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
+    <PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.6.1" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.7.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="bundleconfig.json" />
+    <None Include="compilerconfig.json" />
+    <None Include="packages.config" />
+    <None Include="Services\Tag.cs" />
+    <None Include="wwwroot\images\Background\background.png" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\food-services-models\Food.Services.Models.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Update="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Update="Areas\Curator\Views\web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Update="Areas\Manager\Views\web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Update="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Update="NLog.default.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Update="wwwroot\css\datatables.site.min.css">
+      <DependentUpon>datatables.site.css</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\css\site-admin.min.css">
+      <DependentUpon>site-admin.css</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\css\site-curator.min.css">
+      <DependentUpon>site-curator.css</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\css\site-manager.min.css">
+      <DependentUpon>site-manager.css</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\css\site.min.css">
+      <DependentUpon>site.css</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\css\user-styles.css">
+      <DependentUpon>user-styles.less</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\css\user-styles.min.css">
+      <DependentUpon>user-styles.css</DependentUpon>
+    </Content>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
+    <None Update="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+
+</Project>

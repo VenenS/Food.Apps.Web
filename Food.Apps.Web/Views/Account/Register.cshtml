@@ -1,0 +1,33 @@
+﻿@model RegisterModel
+
+@{
+    ViewBag.Title = "Регистрация";
+}
+
+<div class="centered">
+    <div class="col-md-6 col-xs-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="text-center">@Html.ActionLink("Войдите", "Login") или Зарегистрируйтесь</h4>
+                <hr />
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="registerForm">
+                                @await Html.PartialAsync("_Register", Model)
+                            </div>
+                        </div>
+                        <div class="wip" id="processIcon"><i class="fa fa-spinner fa-pulse fa-3x"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.PartialAsync("~/Views/Scripts/jqueryval.cshtml")
+
+@section scripts{
+    <script>
+        setPhoneMask('#PhoneNumber', true);
+    </script>
+}

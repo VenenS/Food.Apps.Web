@@ -1,0 +1,70 @@
+variables:
+  GIT_STRATEGY: fetch
+  GIT_SUBMODULE_STRATEGY: recursive
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  before_script:
+  - git submodule update --recursive --remote
+  script:
+  - dotnet restore
+  - dotnet build
+
+deploy:netcore:
+  stage: deploy
+  environment:
+    name: NetCore
+  before_script:
+    - git submodule update --recursive --remote
+  script:
+    - dotnet --info
+    - '"%MSBUILD%" -version'
+    - dotnet restore
+    - '"%MSBUILD%" -verbosity:quiet -p:AllowUntrustedCertificate=true -p:EnableMSDeployAppOffline=true -p:Configuration=Development -p:DeployOnBuild=true -p:PublishProfile=NetCore -p:UserName=%PUBLISHER_USERNAME% -p:Password=%PUBLISHER_PASSWORD%'
+  variables:
+    # MSBuild >=16 нету в PATH (или старый приоритетнее), поэтому
+    # используем абсолютный путь.
+    MSBUILD: "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/MSBuild/Current/Bin/MSBuild.exe"
+  only:
+    - net-core-v2
+
+#.deploy: &deploy
+#  stage: deploy
+#  before_script:
+#    - git submodule update --recursive --remote
+#  script:
+#    - NuGet restore -Verbosity quiet
+#    - MSBuild -verbosity:quiet -p:AllowUntrustedCertificate=true -p:Configuration=%CI_ENVIRONMENT_NAME% -p:DeployOnBuild=true -p:Password=%PUBLISHER_PASSWORD% -p:PublishProfile=%CI_ENVIRONMENT_NAME% -p:UserName=%PUBLISHER_USERNAME%
+
+#deploy:development:
+#  <<: *deploy
+#  environment:
+#    name: Development
+#  only:
+#    - development
+
+#deploy:testing:
+#  <<: *deploy
+#  environment:
+#    name: Testing
+#  only:
+#    - testing
+
+#deploy:staging:
+#  <<: *deploy
+#  environment:
+#    name: Staging
+#  only:
+#    - staging
+
+#deploy:production:
+#  <<: *deploy
+#  environment:
+#    name: Production
+#  only:
+#    - production
+#  when: manual

@@ -1,0 +1,60 @@
+﻿@{
+    var area = ViewContext.RouteData.DataTokens["area"];
+
+    string backUrl = "/";
+    if (!User.IsInRole("Admin"))
+    {
+        backUrl = Url.RouteUrl(routeName: "SubdomainRoute", routeValues: new RouteValueDictionary(new { action = "Index", controller = "Cafe", name = "" }), subdomain: true);
+    }
+
+    if (!string.IsNullOrEmpty(area?.ToString()) && (string) area == "Administrator")
+    {
+        Layout = "~/Areas/Administrator/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<div class="row pt-3">
+    <div class="col-xs-12 col-md-3 pr-4 pt-1 pb-1">
+        <a href="@backUrl" class="btn btn-default pull-right pull-xs-left">
+        @if (!User.IsInRole("Admin"))
+        {
+            @: К меню
+        }
+        else
+        {
+            @: На главную
+        }
+        </a>
+    </div>
+    <div class="col-md-6 col-xs-12">
+        <div class="card pr-4">
+            <div class="card-header">
+                <ul class="nav nav-tabs nav-justified">
+                    <li role="presentation" class="@Html.Active("Index", "Profile")">
+                        @Html.ActionLink("Профиль", "Index", "Profile", null, new {@class = "btn btn-tag-select"})
+                    </li>
+                    <li role="presentation" class="@Html.Active("Security", "Profile")">
+                        @Html.ActionLink("Безопасность", "Security", "Profile", null, new {@class = "btn btn-tag-select"})
+                    </li>
+                    @if (!User.IsInRole("Admin"))
+                    {
+                        <li role="presentation" class="@Html.Active("Index", "Orders")">
+                            @Html.ActionLink("История заказов", "Index", "Orders", null, new {@class = "btn btn-tag-select"})
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="card-content">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", false)
+}

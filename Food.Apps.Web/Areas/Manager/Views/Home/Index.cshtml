@@ -1,0 +1,9 @@
+﻿@model List<CafeModel>
+@{
+    ViewBag.Title = "Доступные кафе";
+    ViewBag.IsNavHidden = true;
+}
+
+<div class="content main offset-left">
+    @await Html.PartialAsync("_List", Model)
+</div>

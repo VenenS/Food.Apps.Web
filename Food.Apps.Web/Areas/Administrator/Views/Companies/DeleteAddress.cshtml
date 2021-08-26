@@ -1,0 +1,31 @@
+﻿@model DeliveryAddressModel
+@{
+    ViewBag.Title = "Удаление адреса";
+    var companyId = ViewBag.CompanyId ?? ViewContext.RouteData.Values["id"];
+}
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <h3>Вы уверены, что хотите удалить адрес:</h3>
+                <p>
+                    @(Model.DisplayType == DisplayAddressType.Display ? Model.RawAddress : Model.GetAddressString())
+                </p>
+                <div>
+                    <hr/>
+
+                    @using (Html.BeginForm("DeleteAddress", "Companies", new { companyId, Area = "AdministratorDefault" }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.CompanyAddressId)
+
+                        <div class="form-actions no-color">
+                            <input type="submit" value="Удалить" class="btn btn-danger"/> |
+                            @Html.ActionLink("Назад", "Edit", "Companies", new { id = companyId, Area = "AdministratorDefault" }, null)
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

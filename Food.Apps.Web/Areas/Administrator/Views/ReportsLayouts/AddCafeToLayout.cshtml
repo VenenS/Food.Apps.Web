@@ -1,0 +1,37 @@
+﻿@model List<ITWebNet.Food.Core.DataContracts.Manager.LayoutToCafeModel>
+@{
+    ViewBag.Title = "Привязать кафе к шаблону";
+    var selectList = Model.Select(c =>
+         new Tuple<long, string>(c.CafeId, c.CafeName)).ToList();
+}
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <h4>Добавление кафе для шаблона @Model.FirstOrDefault().Xslt.Name</h4>
+                <div claass="row">
+                    @Html.RouteLink("Назад к списку", "AdministratorDefault", new { controller = "ReportsLayouts", action = "LayoutToCafes", layoutId = Model.FirstOrDefault().Xslt.Id }, new { @class = "btn btn-link" })
+                    
+                </div>
+                @using (Html.BeginRouteForm("AdministratorDefault", new { controller = "ReportsLayouts", action = "AddCafeConfirm" }, FormMethod.Post))
+                {
+                    @Html.HiddenFor(e=>e.FirstOrDefault().Xslt.Id)
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        @*@Html.LabelFor(c => c.FirstOrDefault().)*@
+                        <p>Выберите кафе</p>
+                        <div class="col-xs-5">
+                            @Html.DropDownList("cafeId", new SelectList(selectList, "Item1", "Item2"), new { @class = "form-control" })
+                            
+                        </div>
+                    </div>
+                    <div class="form-actions no-color">
+                        <input type="submit" value="Добавить" class="btn btn-default" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,19 @@
+﻿@model string
+
+@{
+    ViewBag.Title = "Сообщение";
+}
+
+<div class="main wide-rigth content" id="dishes-alert" data-url="@Url.RouteUrl("ManagerCafe", new {controller = "Dishes", action = "Index"})">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                @if (!string.IsNullOrEmpty(Model))
+                {
+                    <span>@Model</span>
+                }
+            </div>
+            <p>@Html.RouteLink("OK", "ManagerCafe", new {controller = "Dishes", action = "Index"}, new {@class = "btn btn-default"})</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,240 @@
+﻿.card {
+  -ms-flex: 0 1 100%;
+  -webkit-flex: 0 1 100%;
+  flex: 0 1 100%;
+  display: flex;
+  position: relative;
+  background-color: #fff;
+  padding: 1em;
+  border: 1px solid #d9d9d9;
+  flex-direction: column;
+}
+.card-image {
+  -ms-flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
+  flex: 0 1 auto;
+  display: flex;
+  overflow: hidden;
+}
+.card-image.default-img {
+  background-image: url(../../images/default.png);
+  background-position: center center;
+  background-size: contain;
+  background-repeat: space;
+}
+.card-content {
+  /*display: flex;*/
+  -ms-flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
+  flex: 0 1 auto;
+  display: flex;
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  flex-direction: column;
+  padding-left: 1em;
+}
+.card-header {
+  -ms-flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
+  flex: 0 1 auto;
+  display: flex;
+  font-size: 16px;
+}
+.card-header .row {
+  align-items: center;
+}
+.card-body {
+  -ms-flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+.card-body.collapse {
+  display: none;
+}
+.card-body.collapse.in {
+  display: flex;
+}
+.card-title {
+  max-height: 2em;
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  line-height: 1em;
+  color: #222;
+  padding-bottom: 2%;
+  word-break: break-word;
+}
+.card-footer {
+  -ms-flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
+  flex: 0 1 auto;
+  display: flex;
+}
+.card-actions {
+  -ms-flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
+  flex: 0 1 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.card.transparent,
+.card.transparent [class*=card-] {
+  background-color: transparent;
+  border-color: transparent;
+}
+.card.cafe {
+  height: 317px;
+}
+.card.dish {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border: 1px solid #d9d9d9;
+  background-color: #fafaf8;
+  margin-right: 0.5em;
+  margin-left: 0.5em;
+  margin-bottom: 1em;
+  padding: 0;
+}
+@media (min-width: 481px) {
+  .card.dish {
+    max-height: 342px;
+    min-height: 342px;
+  }
+}
+@media only screen and (max-width: 480px) {
+  .card.dish {
+    height: auto !important;
+  }
+  .card.dish .card-content {
+    width: 50%;
+    flex-basis: auto !important;
+  }
+}
+.card.dish .cafe-logo {
+  width: 100%;
+}
+.card.dish .card-title {
+  max-height: 5em;
+}
+.card.dish .card-image {
+  height: 145px;
+  display: flex;
+  justify-content: center;
+}
+.card.dish:hover {
+  border-color: #ac2925;
+}
+.card.dish .dish-detail {
+  padding: 1em;
+  position: absolute;
+  top: 0;
+  z-index: 2000;
+  background: #fafaf8;
+  min-height: 300px;
+  width: 300px;
+  box-shadow: 0 0 7px #555;
+  -moz-box-shadow: 0 0 7px #555;
+  -webkit-box-shadow: 0 0 7px #555;
+  display: none;
+  right: 180px;
+}
+.card.dish .dish-detail .card-image {
+  height: 230px;
+  width: 272px;
+  margin-bottom: 10px;
+}
+.card.cafe .card-image {
+  height: 160px;
+}
+.card.cafe.is-closed {
+  color: gray;
+}
+.card.cafe.is-closed img {
+  -webkit-filter: grayscale(0.75);
+  filter: grayscale(0.75);
+}
+.card .corner {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  border-top: solid 30px #80b00c;
+  border-right: solid 30px #80b00c;
+  border-bottom: solid 30px transparent;
+  border-left: solid 30px transparent;
+  z-index: 99;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.card .corner .discount {
+  color: #fff;
+  font-weight: bold;
+  position: absolute;
+  right: -31px;
+  top: -31px;
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.block {
+  -ms-flex: 0 1 100%;
+  -webkit-flex: 0 1 100%;
+  flex: 0 1 100%;
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  background-color: #fff;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border: 1px solid #d9d9d9;
+  padding: 1em;
+  margin-bottom: 0.5em;
+  height: 150px;
+}
+.block .card-image {
+  height: 120px;
+}
+.block .cafe-actions {
+  align-items: center;
+  justify-content: space-between;
+}
+.block .cafe-actions > .rating-placeholder {
+  padding-top: 0.8em;
+}
+.block .cafe-actions > .rating-placeholder > .rating,
+.block .cafe-actions .button-placeholder > a {
+  margin: auto;
+}
+.block .block-content {
+  padding-left: 1em;
+  height: 100%;
+}
+.cafe-description {
+  width: 100%;
+}
+.cafelogo {
+  height: 32px;
+  width: 32px;
+  margin: 5px;
+}
+.dish-container:nth-child(3n+1) .dish-detail {
+  left: 180px;
+}

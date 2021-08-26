@@ -1,0 +1,7 @@
+﻿@model CompanyModel
+
+<div class="card transparent col-xs-3 mr-5">
+    <a href="@Url.RouteUrl("CuratorDefault", new { controller = "Reports", action = "Index" })" class="label label-default no-wordwrap" title="@Model.FullName">
+        @Model.FullName
+    </a>
+</div>

@@ -1,0 +1,27 @@
+﻿@model OrderHistoryViewModel
+@{
+    var selectedAddress = Model.DeliveryAddress.CompanyAddresses.FirstOrDefault(x => x.Id == Model.DeliveryAddressNow);
+}
+
+<div id="company-delivery-address">
+    <div class="form-group">
+        @Html.LabelFor(model => model.DeliveryAddress.CompanyName)
+        @Html.DisplayFor(model => model.DeliveryAddress.CompanyName, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.DeliveryAddress.CompanyAddresses) <span class="text-danger">*</span>
+
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="delivery-address-btn" data-toggle="dropdown">
+                <span data-full-address="@selectedAddress.GetAddressString(true)">@selectedAddress.GetAddressString()</span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="delivery-address-btn">
+                @foreach (var item in Model.DeliveryAddress.CompanyAddresses)
+                {
+                    <li role="presentation"><a role="presentation" tabindex="-1" data-full-address="@(item.GetAddressString(true))" onclick="ChangeAddress(@Model.Id, @item.Id)">@item.GetAddressString()</a></li>
+                }
+            </ul>
+        </div>
+
+    </div>
+</div>

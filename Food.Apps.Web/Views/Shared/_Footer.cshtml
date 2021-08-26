@@ -1,0 +1,50 @@
+﻿@{
+    var backLink = Url.RouteUrl(routeName: "SubdomainRoute", routeValues: new RouteValueDictionary(new { action = "Index", controller = "Cafe", name = "" }), subdomain: true);
+}
+
+<div class="row">
+    <div class="col-sm-3 col-xs-12 footer-logo">
+        <a href="@backLink"><img src="~/images/Logo_v3.png" /></a>
+    </div>
+    <div class="col-sm-3 col-xs-6 flex-column">
+        <h4>О нас</h4>
+        <a href="@(ViewContext.HttpContext.Response.StatusCode != 404
+        ? Url.Action("About", "Info")
+        : Url.RouteUrl(routeName: "SubdomainRoute",
+        routeValues: new RouteValueDictionary(new { action = "About", controller = "Info", name = "" }),
+        subdomain: true))">О компании</a>
+        <a href="@(ViewContext.HttpContext.Response.StatusCode != 404
+        ? Url.Action("Contact", "Info")
+        : Url.RouteUrl(routeName: "SubdomainRoute",
+        routeValues: new RouteValueDictionary(new { action = "Contact", controller = "Info", name = "" }),
+        subdomain: true))">Контактная информация</a>
+    </div>
+    <div class="col-sm-3 col-xs-6 flex-column">
+        <h4>Информация</h4>
+        <a href="@(ViewContext.HttpContext.Response.StatusCode != 404
+        ? Url.Action("Agreement", "Info")
+        : Url.RouteUrl(routeName: "SubdomainRoute",
+        routeValues: new RouteValueDictionary(new { action = "Agreement", controller = "Info", name = "" }),
+        subdomain: true))">Пользовательское соглашение</a> <!--Находиться в _AgreementModal.cshtml-->
+        <a href="@(ViewContext.HttpContext.Response.StatusCode != 404
+        ? Url.Action("Partner", "Info")
+        : Url.RouteUrl(routeName: "SubdomainRoute",
+        routeValues: new RouteValueDictionary(new { action = "Partner", controller = "Info", name = "" }),
+        subdomain: true))">Партнерам</a>
+        @*<a href="@Url.Action("ReferralProgramShortDescription", "Info")">Реферальная программа</a>*@
+    </div>
+    <div class="col-sm-3 col-xs-12 flex-column">
+        <h4>Обратная связь</h4>
+        <a href="@(ViewContext.HttpContext.Response.StatusCode != 404
+        ? Url.Action("Feedback", "Info", new { returnUrl = ViewContext.HttpContext.Request.Path.ToUriComponent()})
+        : Url.RouteUrl(routeName: "SubdomainRoute",
+        routeValues: new RouteValueDictionary(new { action = "Feedback", controller = "Info", name = "",
+            returnUrl = ViewContext.HttpContext.Request.Path.ToUriComponent() }),
+        subdomain: true))">Вопросы, отзывы и предложения</a>
+    </div>
+</div>
+<div class="row footer-copyright">
+    <div class="col-xs-12">
+        <a href="http://www.itwebnet.ru" class="text-center" target="_blank">Разработка ITWebNet 2015-@DateTime.Now.Year <i class="fa fa-copyright"></i></a>
+    </div>
+</div>

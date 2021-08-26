@@ -1,0 +1,6 @@
+﻿@*@if (!User.Identity.IsAnonymous())
+{
+    <div style="text-align:center;">
+        <span>Баллы: <strong id="id-total-points">@Html.Action("GetTotalPoints", "Cafe")</strong></span>
+    </div>
+}*@

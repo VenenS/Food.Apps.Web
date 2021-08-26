@@ -1,0 +1,44 @@
+﻿@using ITWebNet.Food.Core.DataContracts.Admin
+@model CafeManagerModel
+
+@{
+    ViewBag.Title = "Добавление менеджера к кафе";
+    var listUsers = (List<UserAdminModel>) ViewBag.Users ?? new List<UserAdminModel>();
+    var selectList = listUsers.Select(c =>
+        new Tuple<long, string>(c.Id, !string.IsNullOrEmpty(c.UserFullName) ? c.UserFullName : c.Email))
+        .OrderBy(c => c.Item2).ToList();
+}
+
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <h4>Добавление менеджера к кафе</h4>
+                @if (TempData.ContainsKey("Message"))
+                {
+                    <div class="alert alert-danger">
+                        @TempData["Message"]
+                    </div>
+                }
+                <div claass="row">
+                    @Html.RouteLink("Назад", "AdministratorDefault", new {controller = "Cafes", action = "Managers", cafeId = Model.CafeId}, new { @class = "btn btn-link" })
+                </div>
+                @using (Html.BeginRouteForm("AdministratorDefault", new {controller = "Cafes", action = "AddManager"}, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.CafeId);
+                    <div class="form-group">
+                        @Html.LabelFor(c => c.UserId)
+                        <div class="col-xs-5">
+                            @Html.DropDownListFor(c => c.UserId, new SelectList(selectList, "Item1", "Item2"), new {@class = "form-control"})
+                            @Html.ValidationMessageFor(c => c.UserId, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+                    <div class="form-actions no-color">
+                        <input type="submit" value="Добавить" class="btn btn-default"/>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

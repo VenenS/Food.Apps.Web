@@ -1,0 +1,176 @@
+﻿@{
+    bool isAuthorized = User.Identity.IsAuthenticated;
+    string name = ViewContext.HttpContext.Response.StatusCode == 404 ? "" : ViewContext.RouteData.Values["name"] as string;
+
+    string profileUrl = ViewContext.HttpContext.Response.StatusCode != 404
+        ? Url.Action("Login", "Account",
+        new
+        {
+            returnUrl = ViewContext.HttpContext.Request.Path,
+            area = ""
+        })
+        : Url.RouteUrl(routeName: "SubdomainRoute",
+            routeValues: new RouteValueDictionary(
+                new
+                {
+                    action = "Login",
+                    controller = "Account",
+                    name = "",
+                    area = "",
+                    returnUrl = ViewContext.HttpContext.Request.Path
+                }), subdomain: true);
+
+    string userName = "Войти";
+    string UrlRegister = ViewContext.HttpContext.Response.StatusCode != 404
+        ? Url.Action("Register", "Account",
+        new
+        {
+            returnUrl = ViewContext.HttpContext.Request.Path,
+            area = ""
+        })
+        : Url.RouteUrl(routeName: "SubdomainRoute",
+            routeValues: new RouteValueDictionary(
+                new
+                {
+                    action = "Register",
+                    controller = "Account",
+                    name = "",
+                    area = "",
+                    returnUrl = ViewContext.HttpContext.Request.Path
+                }), subdomain: true);
+
+    string UrlLogout = ViewContext.HttpContext.Response.StatusCode != 404
+        ? Url.Action("Logout", "Account", new { area = "" })
+        : Url.RouteUrl(routeName: "SubdomainRoute",
+            routeValues: new RouteValueDictionary(
+                new
+                {
+                    action = "Logout",
+                    controller = "Account",
+                    name = "",
+                    area = "",
+                }), subdomain: true);
+
+    string NameRegister = "Регистрация";
+
+    if (isAuthorized)
+    {
+        profileUrl = Url.RouteUrl(routeName: "SubdomainRoute",
+            routeValues: new RouteValueDictionary(
+                new
+                {
+                    action = "Index",
+                    controller = "Profile",
+                    name = "",
+                    area = "",
+                }), subdomain: false);
+
+        if (User.IsInRole("Manager") && profileUrl.Contains("/manager/profile"))
+        {
+            profileUrl = profileUrl.Replace("/manager", "");
+        }
+
+        if (!string.IsNullOrEmpty(User.Identity.GetUserFullName()))
+        {
+            userName = User.Identity.GetUserFullName();
+        }
+        else
+        {
+            userName = User.Identity.Name;
+        }
+    }
+}
+<div class="btn-group">
+    @if (!isAuthorized)
+    {
+        <p id="login-links">
+            <a href="@profileUrl">@userName</a> / <a href="@UrlRegister">@NameRegister</a>
+        </p>
+    }
+    @if (isAuthorized)
+    {
+        <a class="btn btn-link nav-user-name" href="@profileUrl">@userName</a>
+        <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="@profileUrl">Профиль</a>
+            </li>
+            <li>
+                <a href="@Url.RouteUrl(routeName: "SubdomainRoute",
+                                 routeValues: new  RouteValueDictionary(
+                                     new
+                                     {
+                                         action = "Security",
+                                         controller = "Profile",
+                                         name = "", area=""
+                                     }), subdomain: true)">Безопасность</a>
+            </li>
+            @if (!User.IsInRole("Admin"))
+            {
+                <li>
+                    <a href="@Url.RouteUrl(routeName: "SubdomainRoute",
+                                     routeValues: new  RouteValueDictionary(
+                                         new
+                                         {
+                                             action = "Index",
+                                             controller = "Orders",
+                                             name= "", area=""
+                                         }), subdomain: true)">История заказов</a>
+                </li>
+            }
+            @if (User.IsInRole("Admin"))
+            {
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a href="@Url.RouteUrl(routeName: "AdministratorDefault",
+						             routeValues: new  RouteValueDictionary(
+						                 new
+						                 {
+						                     action = "Index",
+						                     controller = "Info",
+						                     name= "",
+						                     area = "Administrator"
+						                 }), subdomain: true)" title="Администрирование">Администрирование</a>
+                </li>
+            }
+            @if (User.IsInRole("Manager"))
+            {
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a href="@Url.RouteUrl(routeName: "SubdomainRoute",
+                                     routeValues: new  RouteValueDictionary(
+                                         new
+                                         {
+                                             action = "Index",
+                                             controller = "Home",
+                                             name = "",
+                                             area = "Manager",
+                                             cafeId = ""
+                                         }), subdomain: true)" title="Управление">Управление</a>
+                </li>
+            }
+            @if (User.IsInRole("Consolidator"))
+            {
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a href="@Url.RouteUrl(routeName: "SubdomainRoute",
+                                     routeValues: new  RouteValueDictionary(
+                                         new
+                                         {
+                                             action = "Index",
+                                             controller = "Reports",
+                                             area = "Curator",
+                                             name = ""
+                                         }), subdomain: true)" title="Куратор">Куратор</a>
+                </li>
+            }
+            <li role="separator" class="divider"></li>
+            <li>
+                <a href="@UrlLogout">Выйти</a>
+            </li>
+        </ul>
+    }
+</div>

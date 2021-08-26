@@ -1,0 +1,31 @@
+﻿@import "../../Content/Less/variables.less";
+
+.paginate_button {
+    background: @c-background !important;
+    border: none !important;
+
+    &:hover, &:active, &:focus {
+        background: @c-background !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    &.active a {
+        background-color: @c-btn-default-bg;
+        border-color: @c-border;
+
+        &:active, &:focus, &:hover, &:link {
+            background-color: @c-btn-default-bg;
+            border-color: @c-border;
+        }
+    }
+}
+
+table.dataTable tbody > tr.selected,
+table.dataTable.display tbody > tr.selected > .sorting_1 {
+    background-color: @c-btn-default-bg !important;
+}
+
+.dt-buttons a {
+    margin-right: 10px;
+}

@@ -1,0 +1,107 @@
+﻿@model ITWebNet.Food.Core.DataContracts.Manager.XSLTModel
+@{
+    SelectList sl = new SelectList(new[]{
+        new SelectListItem{ Text="true", Value="Общий"},
+        new SelectListItem{ Text="false", Value="Для указанных кафе"}
+        }, "Text", "Value");
+    AjaxOptions options = new AjaxOptions
+    {
+        HttpMethod = "POST",
+        OnSuccess = "saveLayout"
+    };
+
+    AjaxOptions optionsDelete = new AjaxOptions
+    {
+        UpdateTargetId = $"layout-{Model.Id}",
+        InsertionMode = InsertionMode.ReplaceWith,
+        Confirm = "Удалить шаблон?"
+    };
+}
+
+    <li class="list-group-item sortable-item" id="layout-@Model.Id" @ViewBag.BackroundColor>
+        <div class="edit-dish">
+            @using (Html.AjaxBeginRouteForm("AdministratorDefault",
+                 new { controller = "ReportsLayouts", 
+                     action = "EditLayout" }, options))
+            {
+                @Html.HiddenFor(e=>e.Id);
+            <div class="row">
+
+                <div class="form-group col-xs-4">
+                    <input asp-for="Name" class="form-control" maxlength="50" placeholder="Название"/>
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-xs-4">
+                    <input asp-for="Description" class="form-control" maxlength="50" placeholder="Описание"/>
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+
+                @*<div class="form-group col-xs-3">
+                    <p>Предпросмотр</p>
+                    @Html.RouteLink("Предпросмотр", "ReportsLayouts", new { layoutId = Model.Id, controller = "ReportsLayouts", action = "Show" }, new { @class = "btn btn-link", @_target = "blank" }))
+                </div>*@
+            <div class="form-group col-xs-2" style="text-align: center;">
+
+                <a href="#layout-@Model.Id-extend" class="btn btn-link collapsed btn-collapse" data-toggle="collapse" title="Развернуть">
+                    <i class="fa fa-expander"></i>
+                </a>
+
+                <button type="submit" class="btn btn-link" title="Сохранить">
+                    <i class="fa fa-floppy-o text-success"></i>
+                </button>
+                <a href="@Url.Action("RemoveLayout", "ReportsLayouts", new { layoutId = Model.Id })" class="btn btn-link">
+                    <i class="fa text-danger fa-times"></i>
+                </a>
+                
+            </div>
+                <div id="layout-@Model.Id-extend" class="collapse row" style="padding-top: 2.5em; padding-bottom: 1em;">
+                    <hr />
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Transformation)
+                                @Html.TextAreaFor(model => model.Transformation, 20, 150, new { @class = "form-control", placeholder = Html.DisplayNameFor(model => model.Transformation) })
+                                @Html.ValidationMessageFor(model => model.Transformation, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                @*@Html.EditorFor(e => e.IsCommon)*@
+                                @Html.LabelFor(model => model.IsCommon)
+                                <div class="col-xs-4">
+                                    @Html.DropDownListFor(model => model.IsCommon, sl, new { @class = "form-control" })
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            @if (Model.IsCommon == false)
+                            {
+                                @Html.RouteLink("Отчет для кафе", 
+                                    "AdministratorDefault", 
+                                    new { layoutId = Model.Id, 
+                                        controller = "ReportsLayouts", 
+                                        action = "LayoutToCafes" }, 
+                                    new { @class = "btn btn-link" })
+                            }
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <input type="submit" value="Сохранить" class="btn btn-default" title="Сохранить" />
+                                </div>
+                                <div class="form-group">
+                                    <a href="@Url.Action("RemoveLayout", "ReportsLayouts", new { layoutId = Model.Id })" class="btn btn-danger">Удалить</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            }
+    </div>
+</li>

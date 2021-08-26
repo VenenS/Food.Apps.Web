@@ -1,0 +1,349 @@
+﻿@model DeliveryInfoViewModel
+@{
+    int i = 0;
+    //double totalPoints = Double.Parse(Html.Action("GetTotalPoints", "Cafe").ToString().Replace(".", ","));
+    //bool AllowPaymentByPoints = bool.Parse(Html.Action("GetAllowPaymentByPoints", "Cart").ToHtmlString());
+
+    bool preOrderParam = false;
+    if (ViewContext.HttpContext.Request.Query.ContainsKey("preOrder"))
+    {
+        preOrderParam = bool.Parse(ViewContext.HttpContext.Request.Query["preOrder"]);
+    }
+}
+
+<div id="id-delivery-info">
+    @using (Html.BeginForm("Index", "Cart", new
+    { preOrder = preOrderParam }, FormMethod.Post, null,
+new { id = "delivery-form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(model => model.IsCompanyOrder)
+
+        <div>
+            @{
+                CartMultiCafeViewModel cartMulti = CartMultiCafeViewModel.Load(ViewContext.HttpContext.Session);
+                foreach (long key in cartMulti.CafeCarts.Keys)
+                {
+                    CartViewModel cafeCart = cartMulti.CafeCarts[key];
+                    if (cafeCart.Cafe != null)
+                    {
+                        <h4 class="text-center">Кафе "<strong>@cafeCart.Cafe.Name</strong>"</h4>
+                    }
+                }
+            }
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4> Введите Ваши данные</h4>
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-xs-12">
+                    @Html.LabelFor(model => model.PhoneNumber) <span class="text-danger">*</span>
+                    <input asp-for="PhoneNumber" class="form-control" placeholder="Контактный телефон для связи" , autocomplete="on" />
+                    @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                    <input type="hidden" data-val="true" data-val-regex="Код оператора должен начинаться с 9. Номер телефона должен содержать 10 цифр" data-val-regex-pattern="^\+7\s\(9([0-9]{2})\)\s([0-9]{3})\s[0-9]{4}$" id="PhoneNumber" name="PhoneNumber" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    @Html.LabelFor(model => model.Email)
+                    <input asp-for="Email" class="form-control" placeholder="Адрес электронной почты для отправки чека и уведомления о статусе заказа" />
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+
+            @* @if (AllowPaymentByPoints)
+                        {
+                            <div class="form-group">
+                                @Html.CheckBox("paidPoints", new {@onchange = "checkPaidPoints(this, " + @totalPoints + ")"})
+                                @Html.Label("Оплатить баллами")
+                                @Html.ValidationMessage("paidPoints", "", new {@class = "text-danger", @id = "paid-points-message"})
+                            </div>
+                        }
+                        else
+                        {
+                <div class="form-group">
+                    @Html.Label("В этом кафе оплата баллами не доступна", new { @class = "text-info" })
+                </div>
+                        }*@
+
+            @if (Model.IsCompanyOrder)
+            {
+                <div class="row">
+                    @Html.HiddenFor(model => model.Address.DeliveryAddress, new { Value = Model.Address.CompanyAddresses.FirstOrDefault().GetAddressString(true) })
+                    @await Html.PartialAsync("_DeliveryAddress", Model.Address)
+                    @*Логика здесь простая. Подготовлена почва на тот случай если для юриков потребуется новый способ оплаты заказа.
+                    На данный момент эта логика скрыта т.к. она не требуется.
+                    Но передается дальше значение безнала, для дальнейших операций.
+                    Т.е. юрик при подтв. заказа не видит способ расчета,*@
+                    //Но он есть.
+                    <div class="col-md-6 mb-2" style="display: none">
+                        @Html.Label("", "Способ оплаты заказа", new { @class = "labelClass" })
+                    </div>
+                    <div class="col-md-4 mb-2" style="display: none">
+                        @*Для реализации дополнительных способов оплаты для юриков убрать input ниже и подставить нужное свое*@
+                        <input asp-for="PayTypeLegalEntity" class="form-control" value="СashlessPay" />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <input asp-for="Address.DeliveryAddress" class="form-control" type="hidden"/>
+                <div class="row">
+                    <div class="col-xs-12">
+                        @Html.LabelFor(model => model.Address.Street)
+                        <input asp-for="Address.Street" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-3 mr-1">
+                        @Html.LabelFor(model => model.Address.House)
+                        <input asp-for="Address.House" class="form-control" />
+                    </div>
+                    <div class="col-xs-3 mr-1">
+                        @Html.LabelFor(model => model.Address.Building)
+                        <input asp-for="Address.Building" class="form-control" />
+                    </div>
+                    <div class="col-xs-3 mr-1">
+                        @Html.LabelFor(model => model.Address.Flat)
+                        <input asp-for="Address.Flat" class="form-control" />
+                    </div>
+                    <div class="col-xs-3">
+                        @Html.LabelFor(model => model.Address.Office)
+                        <input asp-for="Address.Office" class="form-control" style="width: 102.5%"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-4 mr-1">
+                        @Html.LabelFor(model => model.Address.Entrance)
+                        <input asp-for="Address.Entrance" class="form-control" />
+                    </div>
+                    <div class="col-xs-4 mr-1">
+                        @Html.LabelFor(model => model.Address.Storey)
+                        <input asp-for="Address.Storey" class="form-control" />
+                    </div>
+                    <div class="col-xs-4">
+                        @Html.LabelFor(model => model.Address.Intercom)
+                        <input asp-for="Address.Intercom" class="form-control" style="width: 104.5%"/>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                @Html.LabelFor(model => model.OrderComment)
+                <input asp-for="OrderComment" class="form-control" placeholder="Ваши пожелания к составу блюд, условиям доставки, комплектации" />
+                @Html.ValidationMessageFor(model => model.OrderComment, "", new { @class = "text-danger" })
+            </div>
+            @*TODO: Проверить почему здесь 3 поля. SmsUser_BeforeChange кажется лишним *@
+
+            @* Если для компании разрешена отправка СМС-оповещений, надо дать возможность пользователю включить и отключать их *@
+            @if (Model.SmsEnabledCompany)
+            {
+                <div class="form-group">
+                    @Html.CheckBoxFor(model => model.SmsEnabledUser)
+                    @Html.LabelFor(model => model.SmsEnabledUser)
+                </div>
+            }
+            else
+            {
+                @* Отправка СМС-оповещений отключена для компании. Для сохранения пользовательской настройки нужно сделать hidden-контрол *@
+                @Html.HiddenFor(model => model.SmsEnabledUser)
+            }
+            @* Предыдущее состояния флага СМС-оповещений пользователя. Нужно, чтобы понять, поменял пользователь этот флаг или нет *@
+            @Html.HiddenFor(model => model.SmsUser_BeforeChange)
+            @if (!Model.IsCompanyOrder)
+            {
+                Dictionary<string, string> listTime;
+                List<DateTime> listDate = new List<DateTime>();
+                foreach (long key in cartMulti.CafeCarts.Keys)
+                {
+                    CartViewModel cafeCart = cartMulti.CafeCarts[key];
+                    if (cafeCart.Cafe != null)
+                    {
+                        {
+                            foreach (var kvp in cafeCart.DeliveryPriceInfoByDates)
+                            {
+                                if (kvp.Key == DateTime.Today)
+                                {
+                                    listTime = new Dictionary<string, string>();
+                                    listTime.Add("-1", "Как можно скорее");
+                                    DateTime d1 = DateTime.Now;
+                                    if (d1.Minute % 15 != 0)
+                                    {
+                                        d1 = d1.AddMinutes(15 - (d1.Minute % 15));
+                                    }
+                                    DateTime dTo = @cafeCart.Cafe.WorkingTimeTo.Value;
+                                    <div></div>
+                                    while (d1.AddMinutes(0) <= dTo.AddMinutes(-30))
+                                    {
+                                        d1 = d1.AddMinutes(15);
+                                        var from = d1.ToString("HH:mm");
+                                        var to = d1.AddMinutes(30).ToString("HH:mm");
+                                        listTime.Add(from, string.Format("{0} - {1}", from, to));
+                                    }
+                                    <div class="row pt-1">
+                                        <div class="col-md-6">
+                                            @{
+                                                string fromCafe = string.Empty;
+                                                if (cartMulti.CafeCarts.Count > 1)
+                                                {
+                                                    fromCafe = $"из кафе \"{cafeCart.Cafe.Name}\" ";
+                                                }
+                                            }
+                                            @Html.Label("", $"Время доставки {fromCafe}{kvp.Key.ToString("dd.MM")}", new { @class = "labelClass" })
+                                            <input type="hidden" name="date_@i" value="@kvp.Key.ToShortDateString()" data-cafe-id="@cafeCart.Cafe.Id" />
+                                            <input type="hidden" name="totalPrice" value="@cafeCart.TotalPrice" />
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            @{
+                                                var selectList = new SelectList(listTime, "Key", "Value");
+                                                if (selectList.FirstOrDefault(
+                                                    item =>
+                                                        item.Value == kvp.Key.ToString("HH:mm")
+                                                    ) is SelectListItem selectListItem)
+                                                {
+                                                    selectListItem.Selected = true;
+                                                }
+                                                else
+                                                {
+                                                    selectList.First().Selected = true;
+                                                }
+                                            }
+                                            @Html.DropDownList("time" + @i, selectList, new { @onchange = "hiddenDropDownList(this, " + i.ToString() + ")", @class = "form-control delivery-order-time", id = @i, data_val = "false" })
+                                            <label id="deliveryTimeLabel_@i" class="labelClass pull-right mb-2" style="display:none"></label>
+                                        </div>
+
+                                        <div class="col-md-1 ml-1 mb-2">
+                                            <input type="button" id="Clear_@i" value="Сбросить" class="btn btn-default" onclick="showDropDownList(@i)" style="display: none" />
+                                        </div>
+                                    </div>
+
+                                    i++;
+                                }
+                                else
+                                {
+                                    listTime = new Dictionary<string, string>();
+                                    listTime.Add("-1", "Как можно скорее");
+                                    DateTime d1 = kvp.Key;
+                                    int day = (int)DateTime.Today.DayOfWeek;
+                                    if ((int)d1.DayOfWeek > day)
+                                    {
+                                        day = (int)d1.DayOfWeek - day;
+                                    }
+                                    else
+                                    {
+                                        day = 7 - day + (int)d1.DayOfWeek;
+                                    }
+
+                                    DateTime dFrom = d1.Date.Add(cafeCart.Cafe.WorkingHours[day % 7][0].OpeningTime.TimeOfDay);
+
+                                    DateTime dFrom2 = dFrom;
+
+                                    DateTime dTo = d1.Date.Add(cafeCart.Cafe.WorkingHours[day % 7][0].ClosingTime.TimeOfDay);
+
+                                    while (dFrom.AddMinutes(0) <= dTo.AddMinutes(-30))
+                                    {
+                                        dFrom = dFrom.AddMinutes(15);
+                                        var from = dFrom.ToString("HH:mm");
+                                        var to = dFrom.AddMinutes(30).ToString("HH:mm");
+                                        listTime.Add(from, string.Format("{0} - {1}", from, to));
+                                    }
+
+                                    <div class="row pt-1">
+                                        <div class="col-md-6">
+                                            @{
+                                                string fromCafe = string.Empty;
+                                                if (cartMulti.CafeCarts.Count > 1)
+                                                {
+                                                    fromCafe = $"из кафе \"{cafeCart.Cafe.Name}\" ";
+                                                }
+                                            }
+                                            @Html.Label("", $"Время доставки {fromCafe}{kvp.Key.ToString("dd.MM")}", new { @class = "labelClass" })
+                                            <input type="hidden" name="date_@i" value="@dFrom2.ToShortDateString()" data-cafe-id="@cafeCart.Cafe.Id" />
+                                            @*day - номер дня недели со смещением*@
+                                            <input type="hidden" name="cafe_open_@i" value="@cafeCart.Cafe.WorkingHours[day]?[0]?.OpeningTime.ToString("HH:mm")" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            @{
+                                                var selectList = new SelectList(listTime, "Key", "Value");
+                                                if (selectList.FirstOrDefault(
+                                                    item =>
+                                                    item.Value == kvp.Key.ToString("HH:mm")
+                                                    ) is SelectListItem selectListItem)
+                                                {
+                                                    selectListItem.Selected = true;
+                                                }
+                                                else
+                                                {
+                                                    selectList.First().Selected = true;
+                                                }
+                                            }
+                                            @Html.DropDownList("time" + @i, selectList, new { @onchange = "hiddenDropDownList(this, id)", @class = "form-control delivery-order-time", id = @i, data_val = "false" })
+                                            <label id="deliveryTimeLabel_@i" class="labelClass pull-right"></label>
+                                        </div>
+                                        <div class="col-md-1 ml-1">
+                                            <input type="button" id="Clear_@i" value="Сбросить" class="btn btn-default" onclick="showDropDownList(@i)" style="display:none" />
+                                        </div>
+
+                                    </div>
+                                    i++;
+                                }
+                            }
+                        }
+                    }
+                }
+                <div class="row pt-1">
+                    <div class="col-md-6 mb-2">
+                        @Html.Label("", "Способ оплаты заказа", new { @class = "labelClass" })
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <select asp-for="PayType" asp-items="Html.GetEnumSelectList<EnumOrderPayType>()" class="form-control" onchange="hiddenMoneyComment($(this))"></select>
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-md-6 hidden-money-comment hidden-money-comment-label mb-2">
+                        @Html.LabelFor(m => m.MoneyComment, new { @class = "labelClass" })
+                    </div>
+                    <div class="col-md-4 hidden-money-comment hidden-money-comment-label mb-2">
+                        <input asp-for="MoneyComment" class="form-control" placeholder="в рублях" />
+                        @Html.ValidationMessageFor(model => model.MoneyComment, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row pt-1">
+                    <div class="col-md-6 mb-2"></div>
+                    <div class="col-md-4 mb-2">
+                        <label class="hidden-money-comment">
+                            @Html.CheckBoxFor(model => model.NoChange,new{ @onchange = "hiddenMoneyCommentLabel($(this))", id="noChange" })
+                            Без сдачи
+                        </label>
+                    </div>
+                </div>
+            }
+            <div class="small">
+                <p>
+                    <span class="text-danger">*</span> — обязательные для заполнения поля
+                </p>
+            </div>
+            <div class="form-group">
+                <label for="ConfirmAgreement">
+                    @Html.CheckBoxFor(model => model.ConfirmAgreement, new { id = "confirmAgreement" })
+                    Согласен с условиями
+                    <a href="#userAgreement" data-toggle="modal">Пользовательского Соглашения</a>
+                    <!--Находиться в _AgreementModal.cshtml-->
+                </label>
+                <p>
+                    @Html.ValidationMessageFor(model => model.ConfirmAgreement, "", new { @class = "text-danger" })
+                </p>
+            </div>
+        </div>
+    }
+</div>
+
+@section scripts {
+    @await Html.PartialAsync("~/Scripts/jqueryval")
+}

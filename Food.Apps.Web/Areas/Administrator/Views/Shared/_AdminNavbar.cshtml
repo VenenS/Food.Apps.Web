@@ -1,0 +1,28 @@
+﻿<div id="admin-menu" class="btn-group">
+    <a href="#" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Администрирование   
+    </a>
+    <ul class="dropdown-menu">
+        <li role="presentation">
+            @Html.RouteLink("Информация", "AdministratorDefault", new { controller = "Info", action = "Index" })
+        </li>
+        <li role="presentation">
+            @Html.RouteLink("Пользователи", "AdministratorDefault", new { controller = "Users", action = "Index" })
+        </li>
+        <li role="presentation">
+            @Html.RouteLink("Кафе", "AdministratorDefault", new { controller = "Cafes", action = "Index" })
+        </li>
+        <li role="presentation">
+            @Html.RouteLink("Компании", "AdministratorDefault", new { controller = "Companies", action = "Index" })
+        </li>
+        <li role="presentation">
+            @Html.RouteLink("Категории блюд", "AdministratorDefault", new { controller = "Categories", action = "Index" })
+        </li>
+        <li role="presentation">
+            @Html.RouteLink("Шаблоны отчетов", "AdministratorDefault", new { controller = "ReportsLayouts", action = "Index" })
+        </li>
+        <li role="presentation">
+            @Html.RouteLink("Заказы сегодня", "AdministratorDefault", new { controller = "CompanyOrders", action = "Index" })
+        </li>
+    </ul>
+</div>

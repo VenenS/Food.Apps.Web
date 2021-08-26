@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>@ViewBag.Title - Едовоз</title>
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+    @await Html.PartialAsync("~/Views/Styles/css.cshtml")
+    @await Html.PartialAsync("~/Views/Styles/fontawesome.cshtml")
+    @await Html.PartialAsync("~/Views/Styles/jqueryui.cshtml")
+    @await Html.PartialAsync("~/Areas/Administrator/Views/Styles/site-admin.cshtml")
+    @RenderSection("adminStyles", false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-fixed-top navbar-inverse">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="@Url.Action("Index", "Info", new {area = "Administrator"})" class="navbar-brand">
+                        <img src="~/images/Logo.png" alt="Поедим" />
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            @await Html.PartialAsync("_AdminNavbar")
+                        </li>
+                        <li>
+                            <div id="nav-login">
+                                @await Html.PartialAsync("_Login")
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="container">
+            @if (ViewBag.Cafe != null)
+            {
+                var cafe = ViewBag.Cafe as CafeModel;
+                <div class="row centered">
+                    <h3>@cafe.Name</h3>
+                </div>
+            }
+            @RenderBody()
+        </div>
+    </main>
+    @RenderSection("modals", false)
+    @await Html.PartialAsync("~/Views/Scripts/modernizr.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/jquery.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/bootstrap.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/jqueryui.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/site.cshtml")
+    @await Html.PartialAsync("~/Areas/Administrator/Views/Scripts/site-admin.cshtml")
+    @await Html.PartialAsync("~/Views/Scripts/inputmask.cshtml")
+    @RenderSection("scripts", false)
+</body>
+</html>

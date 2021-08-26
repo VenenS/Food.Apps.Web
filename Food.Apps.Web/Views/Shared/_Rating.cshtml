@@ -1,0 +1,40 @@
+﻿@model CafeModel
+@{
+    string dataAjaxBegin = "";
+    if(User.Identity.IsAnonymous())
+    {
+        dataAjaxBegin = "#ShowMessageModal";
+    }
+
+    bool companyOnly = ViewData.ContainsKey("companyOnly") && (bool)ViewData["companyOnly"];
+}
+<div class="rating" id="rating-@Model.Id">
+    <div class="row">
+        <form data-ajax="true" data-ajax-method="POST" data-ajax-update="#rating-@Model.Id" data-ajax-mode="replace" data-ajax-loading="processIcon-@Model.Id"
+             data-ajax-begin="@dataAjaxBegin" action="@Url.Action("SetRating", "Cafe", new { id = Model.Id, companyOnly = companyOnly })" >
+            @{
+                double average = Model.GetAverageRating();
+                int current = (int)Math.Round(average * 2) / 2;
+
+                double decPart = average - Math.Truncate(average);
+                string halfStyle = string.Empty;
+                for (int i = 5; i >= 1; i--)
+                {
+                    bool isChecked = i == current;
+                    bool nextIsChecked = (i - 1) == current;
+                    string id = string.Format("star-{0}-{1}", Model.Id, i);
+                    halfStyle = decPart >= 0.25 && decPart <= 0.75 && decPart != 0.0 && nextIsChecked ? "half" : string.Empty;
+
+                    @Html.RadioButton("rating", i, isChecked, new { onclick = "$(this).closest('form').submit()", id = id });
+                    @Html.Label(id, " ", new { @class = halfStyle });
+                }
+            }
+        </form>
+    </div>
+    <div class="row">
+        <p class="rating-comment clearfix">@Model.GetRatingMessage()</p>
+    </div>
+    <div class="wip" id="processIcon-@Model.Id">
+        <i class="fa fa-spinner fa-pulse"></i>
+    </div>
+</div>

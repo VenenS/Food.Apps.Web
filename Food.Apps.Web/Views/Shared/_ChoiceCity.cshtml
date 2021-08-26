@@ -1,0 +1,25 @@
+﻿@model List<RegionModel>
+
+<div class="modal fade" id="choiceCityModal" tabindex="-1" aria-labelledby="choiceCityModal-label" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="choiceCityModal-label">Выберите город</h4>
+            </div>
+            <div class="modal-body" id="messageModal-body">
+                @await Html.PartialAsync("_CityList", Model) 
+            </div>
+            <div class="modal-footer pin-bottom-parrent" style="background: inherit;">
+                <div class="">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Введите название города" oninput="filterCity()" id="city-search-string">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" onclick="filterCity()"><i class="fa fa-search" aria-hidden="true"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

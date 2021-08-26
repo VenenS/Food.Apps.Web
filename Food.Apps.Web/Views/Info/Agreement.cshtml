@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Пользовательское соглашение";
+}
+
+<div class="main content full-width">
+    <div class="card eula">
+        <div class="card-body">
+            <div class="card-content">
+                @await Html.PartialAsync("_Agreement")
+            </div>
+        </div>
+    </div>
+</div>

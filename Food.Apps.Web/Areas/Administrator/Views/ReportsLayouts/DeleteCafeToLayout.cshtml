@@ -1,0 +1,31 @@
+﻿@model ITWebNet.Food.Core.DataContracts.Manager.LayoutToCafeModel
+@{
+    ViewBag.Title = "Удаление привязки шаблона к кафе";
+}
+<div class="content main full-width">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-content">
+                <h3>Вы уверены, что хотите удалить привязку шаблона "@Model.Xslt.Name" к кафе "@Model.CafeName"</h3>
+                <div>
+                    <hr />
+
+                    @using (Html.BeginRouteForm("AdministratorDefault", new { controller = "ReportsLayouts", action = "Delete" }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.HiddenFor(model => model.Id)
+                        @Html.HiddenFor(model => model.Xslt.Id)
+                        @Html.HiddenFor(model => model.CafeId)
+
+                        <div class="form-actions no-color">
+                            <input type="submit" value="Удалить" class="btn btn-danger" /> |
+                            @Html.RouteLink("Назад к списку", "AdministratorDefault", new { controller = "ReportsLayouts", action = "LayoutToCafes", layoutId = Model.Xslt.Id })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

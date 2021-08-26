@@ -1,0 +1,88 @@
+﻿@model MenuViewModel
+@{
+    ViewBag.Title = $"{ViewBag.Cafe.Name}";
+    CafeModel cafe = ViewBag.Cafe;
+    var queryDate = DateTime.Now;
+
+    if (Context.Request.Query.ContainsKey("d"))
+    {
+        DateTime valueDate;
+        if (DateTime.TryParse(Context.Request.Query["d"].ToString(), out valueDate))
+        {
+            queryDate = valueDate;
+        }
+    }
+    var dateFormat = "yyyy-MM-dd";
+    var isDayOff = false;
+
+    for (var i = 0; i < cafe.WorkingHours.Count; i++)
+    {
+        if (DateTime.Today == queryDate.Date)
+        {
+            isDayOff = cafe.WorkingHours[i].Count == 0;
+            break;
+        }
+    }
+}
+@await Html.PartialAsync("_Navigator")
+    <div class="row">
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 left-sidebar">
+            <div class="fixed-sidebar" data-spy="affix" data-offset-top="380">
+                @await Html.PartialAsync("_LeftSideBar", Model)
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-8 col-sm-8 col-xs-12 main">
+            @if (cafe != null && ((cafe.WeekMenuIsActive && Model.IsCompanyEmployee)
+                || (cafe.DeferredOrder && cafe.CafeType != CafeType.CompanyOnly)
+                || (cafe.WeekMenuIsActive && cafe.DeferredOrder && cafe.CafeType == CafeType.CompanyOnly)))
+            {
+                <div class="btn-group btn-group-justified">
+                    @for (int i = 0; i < 7; i++)
+                    {
+                        {
+                            var date = DateTime.Now.AddDays(i);
+
+                            // Отображать только рабочие дни в карусели. Сегодняшний день - всегда.
+                            if (cafe.WorkingHours[i].Count > 0 || i == 0)
+                            {
+                                <a class="btn btn-default @(date.ToString(dateFormat) == queryDate.ToString(dateFormat) ? "active" : string.Empty)"
+                                   href="@Url.Action("Index", "Cafe", new { d = date.ToString(dateFormat) })">
+                                    <span class="hidden-xs">@date.ToString("ddd")</span>
+                                    @date.ToString("dd.M")
+                                </a>
+                            }
+                        }
+                    }
+                </div>
+            }
+        <div id="list" class="menu" style="width: 100%">
+            @if (!isDayOff)
+            {
+                @await Html.PartialAsync("_Menu", Model.Menu)
+            }
+            else
+            {
+                <div class="card margined-top">
+                    <div class="card-body">
+                        <div class="card-content">
+                            <h4>В выходной день приём заказов приостановлен.</h4>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 side-bar">
+            <div class="fixed-cart" data-spy="affix" data-offset-top="380">
+                @await Html.PartialAsync("_SideBar")
+            </div>
+        </div>
+        @await Html.PartialAsync("MessageModal")
+        @section modals{
+            @await Html.PartialAsync("_OrderExistsModal")
+            @if ((ViewBag.Cafe as CafeModel).IsClosed())
+            {
+                @await Html.PartialAsync("_CafeIsClosedModal")
+            }
+        }
+    </div>

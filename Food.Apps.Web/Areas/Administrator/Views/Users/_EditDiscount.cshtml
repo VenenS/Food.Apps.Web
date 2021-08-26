@@ -1,0 +1,61 @@
+﻿@model ITWebNet.Food.Site.Areas.Administrator.Models.UserDiscountViewModel
+
+@{
+    var index = Guid.NewGuid().ToString();
+    var userDiscountId = Model.DiscountId > 0 ? Model.CafeId.ToString() : index;
+    var itemId = "user-discount-" + userDiscountId;
+
+    AjaxOptions deleteOptions = new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnSuccess = "remove_discount"
+    };
+
+    AjaxOptions saveOptions = new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnSuccess = "save_discount"
+    };
+
+}
+
+@*<form id="@itemId" class="user-discount">*@
+@using (Html.AjaxBeginRouteForm("AdministratorDefault", new { controller = "Users", action = "SaveDiscount" }, saveOptions, new { id = itemId, @class = "user-discount" }))
+{
+    @Html.HiddenFor(m => m.DiscountId)
+    @Html.HiddenFor(m => m.UserId)
+    @Html.HiddenFor(m => m.CafeId, new { @Value = @Model.CafeId })
+    @Html.HiddenFor(m => m.CafeName, new { @Value = @Model.CafeName })
+    <div class="form-group row">
+        <div class="col-xs-7 dropup" data-toggle="dropdown">
+            <span class="dropdown-toggle user-discount-btn" type="button" id="discount-btn-@userDiscountId" data-toggle="dropdown">
+                <span id="CafeName" name="CafeName">@Model.CafeName</span>
+                <i class="fa fa-angle-up"></i>
+            </span>
+            <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="discount-btn-@userDiscountId">
+                <li role="presentation">
+                    @foreach (var item in Model.AvailableCafes)
+                    {
+                        <input type="hidden" value="@item.Id" />
+                        <a href="#" onClick="editDiscount($(this))">@item.FullName</a>
+                    }
+                </li>
+            </ul>
+        </div>
+        <div class="col-xs-3"><input class="form-control" asp-for="DiscountValue" /></div>
+        <div class="col-xs-2">
+            <button type="submit" class="btn btn-link" title="Сохранить">
+                <i class="fa fa-floppy-o text-success"></i>
+            </button>
+            @Html.AjaxIconRouteLink(
+                "fa fa-times",
+                "",
+                "AdministratorDefault",
+                new { controller = "Users", action = "RemoveDiscount", discountId = Model.DiscountId },
+                deleteOptions,
+                new { @class = "btn btn-link text-danger col-xs-1" })
+
+        </div>
+    </div>
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+}

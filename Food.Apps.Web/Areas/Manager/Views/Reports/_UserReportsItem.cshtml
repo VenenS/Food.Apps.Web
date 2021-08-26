@@ -1,0 +1,93 @@
+﻿@model OrderViewModel
+@{
+    string scopeId;
+
+    if (ViewData["collapseScope"] != null)
+    {
+        scopeId = ViewData["collapseScope"].ToString();
+    }
+    else
+    {
+        scopeId = "#user-orders";
+    }
+
+    string userName = Model.Creator.UserFullName ?? Model.Creator.Email;
+    string dataTarget = scopeId + " #order-positions-" + Model.Id;
+    AjaxOptions options = new AjaxOptions
+    {
+        UpdateTargetId = $"order-{Model.Id}",
+        InsertionMode = InsertionMode.ReplaceWith,
+        HttpMethod = "POST",
+        LoadingElementId = $"process-{Model.Id}"
+    };
+}
+<tbody class="selectable filterable" id="order-@Model.Id" data-order-id="@Model.Id">
+    <tr class="selectable-item filterable-item" data-item-id="@Model.Id" data-name="UserOrders">
+        <td>
+            <a href="@Url.RouteUrl("ManagerCafe", new { cafeId = Model.CafeId, controller = "Reports", action = "Details", id = Model.Id, orderType = EnumOrderType.Individual })">
+                @Model.Id
+            </a>
+        </td>
+        <td>@Model.Create</td>
+        @if (Model.CompanyOrderId == null)
+        {
+            <td>
+                @{
+                    if (Model.DeliverDate?.Date == Model.Create.Date && Model.Create >= Model.DeliverDate)
+                    {
+                        @Model.DeliverDate?.ToShortDateString()
+                        <br /><text>Как можно скорее</text>
+                    }
+                    else
+                    {
+                        @Model.DeliverDate.ToString()
+                    }
+                }
+            </td>
+        }
+        <td class="wrap-word-td">@userName</td>
+        <td>@Html.Phone(Model.PhoneNumber)</td>
+        <td>
+            @Model.TotalSum <span class="text-muted"> ₽</span>
+        </td>
+        <td>
+            @Model.OrderInfo.DeliverySumm <span class="text-muted"> ₽</span>
+        </td>
+        <td class="cancel-select">
+            <form asp-action="ChangeStatus" asp-controller="Reports" asp-route-id="@Model.Id" asp-route-cafeId="@Model.CafeId" method="post"
+                  id="form0"
+                  data-ajax="true"
+                  data-ajax-loading="#process-@Model.Id"
+                  data-ajax-mode="replace-with"
+                  data-ajax-update="#order-@Model.Id">
+                @{ var avaibleStatus = Model.GetAvailableOrderStatuses(User.Identity); }
+
+                <div class="dropdown">
+                    <button class="btn btn-link btn-block dropdown-toggle" type="button" id="statuses-order-@Model.Id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" @(avaibleStatus.Count > 0 ? string.Empty : "style=pointer-events:none")>
+                        @Model.Status.GetDescription()
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="statuses-order-@Model.Id">
+                        @foreach (OrderStatusEnum status in avaibleStatus)
+                        {
+                            <li>
+                                <button type="submit" class="btn btn-link btn-block" name="status" value="@status">@status.GetDescription()</button>
+                            </li>
+                        }
+                    </ul>
+                    <div class="wip" id="process-@Model.Id">
+                        <i class="fa fa-spinner fa-pulse fa-2x"></i>
+                    </div>
+                </div>
+            </form>
+        </td>
+        <td>
+            <a class="collapsed @(!ViewData.ContainsKey("filter-data") ? "expand-order-items" : string.Empty)" data-load="true" data-item-id="@Model.Id" role="button" data-toggle="collapse" data-target="@dataTarget" aria-expanded="true" aria-controls="order-@Model.Id">
+                <i class="fa fa-expander"></i>
+            </a>
+        </td>
+    </tr>
+    <tr class="collapse" id="order-positions-@Model.Id">
+        @await Html.PartialAsync("_OrderItems", Model)
+    </tr>
+</tbody>

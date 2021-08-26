@@ -1,0 +1,17 @@
+﻿@model long
+
+@{
+    AjaxOptions editCompanyOptions = new AjaxOptions()
+    {
+        HttpMethod = "POST",
+        OnSuccess = "edit_company"
+    };
+}
+<div class="row form-group" id="user-company">
+    @Html.AjaxRouteLink(
+   "Добавить компанию",
+   "AdministratorDefault",
+   new { controller = "Users", action = "AddUserCompany", userId = Model },
+   editCompanyOptions,
+   null)
+</div>

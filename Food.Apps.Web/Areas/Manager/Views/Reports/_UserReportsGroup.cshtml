@@ -1,0 +1,23 @@
+﻿@model List<OrderViewModel>
+
+@{
+    var companyOrderId = ViewBag.CompanyOrderId;
+}
+<td colspan="6">
+    @foreach (var ordersByAdress in Model.GroupBy(c => c.OrderInfo?.OrderAddress))
+    {
+        if (ordersByAdress.Any())
+        {
+            var partialViewData = new ViewDataDictionary(ViewData)
+            {
+                {"collapseScope", "#company-order-" + companyOrderId},
+                {"companyOrdersTotalSum", ordersByAdress.Where(c => c.Status != OrderStatusEnum.Abort).Sum(c => c.TotalSum)},
+                {"companyOrdersAddress", ordersByAdress.Key}
+            };
+            if (!partialViewData.ContainsKey("companyOrderId")) {
+                partialViewData.Add("companyOrderId", companyOrderId);
+            }
+            @await Html.PartialAsync("_UserReports", ordersByAdress.ToList(), partialViewData)
+        }
+    }
+</td>

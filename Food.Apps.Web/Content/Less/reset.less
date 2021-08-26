@@ -1,0 +1,13 @@
+/*
+ * Фикс для уползающего контента input[type="date"] если назначен класс .form-control
+ * в фаерфоксе. https://bugzilla.mozilla.org/show_bug.cgi?id=1503427
+ */
+input[type="date"].form-control, input[type="time"].form-control,
+input[type="datetime-local"].form-control, input[type="month"].form-control {
+    line-height: initial;
+}
+
+/*
+ * Отключение икноки с календарем в вебките и блинке.
+ */
+input::-webkit-calendar-picker-indicator { display: none; }

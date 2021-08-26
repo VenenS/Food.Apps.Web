@@ -1,0 +1,36 @@
+﻿@using OrderViewModel = ITWebNet.Food.Site.Models.OrderViewModel
+@model List<OrderViewModel>
+@{
+    string panelHeading;
+    string panelId;
+    List<OrderViewModel> data;
+
+    panelHeading = "Заказы сотрудника";
+    panelId = string.Empty;
+    data = Model.Where(item => item.CompanyOrderId.HasValue).ToList();
+}
+<td colspan="7">
+    <div @panelId>
+        <div>
+            <b>@panelHeading</b>
+        </div>
+        <table class="table table-striped table-bordered" id="user-orders">
+            <thead>
+                <tr>
+                    <th>№ заказа</th>
+                    <th>Время поступления</th>
+                    <th>Кафе</th>
+                    <th>Телефон</th>
+                    <th>Стоимость заказа</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            
+            @foreach (var item in data)
+            {
+                @await Html.PartialAsync("OrderReportItem", item)
+            }
+
+        </table>
+    </div>
+</td>

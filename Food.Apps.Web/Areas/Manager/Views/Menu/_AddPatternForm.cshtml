@@ -1,0 +1,27 @@
+﻿@model MenuPatternModel
+
+<form asp-route="ManagerCafe" asp-route-action="SaveMenu" asp-route-controller="Menu"
+      id="save-menu-form"
+      data-ajax="true"
+      data-ajax-update="#menu-patterns">
+    <div class="form-group">
+        @Html.LabelFor(model => model.PatternName)
+        <div class="row">
+            <div class="col-xs-10">
+                <input type="text" class="form-control" 
+                       name="PatternName" id="PatternName" maxlength="128" value="@Model.PatternName"/>
+                @Html.ValidationMessageFor(model => model.PatternName, "", new {@class = "text-danger"})
+            </div>
+            <button type="button" id="add-pattern-btn" @(string.IsNullOrEmpty(Model.PatternName) ? "disabled" : string.Empty) onclick="saveMenu()" class="btn btn-link col-xs-2">
+                <i class="fa fa-save text-success"></i>
+            </button>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <input type="checkbox" @(Model.IsBanket ? "checked" : string.Empty) id="IsBanket" value="true" name="IsBanket" @(Model.IsPatternSelected ? string.Empty: "disabled")/>
+                <input name="IsBanket" value="false" type="hidden">
+                @Html.DisplayNameFor(model => model.IsBanket)
+            </div>
+        </div>
+    </div>
+</form>

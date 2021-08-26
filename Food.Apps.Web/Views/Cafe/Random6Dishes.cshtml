@@ -1,0 +1,37 @@
+﻿@model Random6DishesViewModel
+@* Отображение 6 случайных блюд в каждой категории из всех доступных кафе *@
+@{
+    ViewBag.Title = "Ознакомьтесь с меню";
+    var queryDate = DateTime.Now;
+    if (Context.Request.Query.ContainsKey("d"))
+    {
+        DateTime valueDate;
+        if (DateTime.TryParse(Context.Request.Query["d"].ToString(), out valueDate))
+        {
+            queryDate = valueDate;
+        }
+    }
+}
+@await Html.PartialAsync("_Navigator")
+<div class="row">
+    <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 left-sidebar">
+        <div class="fixed-sidebar" data-spy="affix" data-offset-top="380">
+            @await Html.PartialAsync("_LeftSideBar", Model.Menu)
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-8 col-sm-8 col-xs-12 main">
+        <div id="list" class="menu" style="width: 100%">
+            @await Html.PartialAsync("_MenuAllCafe", Model)
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 side-bar">
+        <div class="fixed-cart" data-spy="affix" data-offset-top="380">
+            @await Html.PartialAsync("_SideBar")
+        </div>
+    </div>
+    @await Html.PartialAsync("MessageModal")
+    @section modals{
+        @await Html.PartialAsync("_OrderExistsModal")
+        @await Html.PartialAsync("_CafeIsClosedModal")
+    }
+</div>

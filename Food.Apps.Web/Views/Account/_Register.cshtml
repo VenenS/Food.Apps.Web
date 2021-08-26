@@ -1,0 +1,80 @@
+﻿@model RegisterModel
+
+<form asp-antiforgery="true" asp-action="Register" asp-controller="Account">
+    @Html.HiddenFor(model => model.ReferralLink)
+    @if (ViewBag.ResultMessage != null)
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <p>@ViewBag.ResultMessage</p>
+            <a asp-action="Index" asp-controller="Cafe" class="btn btn-link">Вернуться на главную</a>
+        </div>
+    }
+    else
+    {
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @if (ViewBag.Refer != null)
+        {
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <p>
+                    Вы были приглашены пользователем @if (!string.IsNullOrEmpty(@ViewBag.Refer.FullName))
+                    {
+                        @ViewBag.Refer.FullName
+                    }
+                    else
+                    {
+                        @ViewBag.Refer.EmailAdress
+                    }
+                </p>
+                <p>Если вы будете делать заказы на сайте, то вы и пригласивший вас будете получать бонусные баллы, которыми впоследствии можно оплачивать заказы</p>
+            </div>
+        }
+
+        <div class="form-group">
+            <label asp-for="PhoneNumber" class="sr-only"></label>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-phone"></i>
+                </span>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="Номер телефона" />
+            </div>
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email" class="sr-only"></label>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-envelope"></i>
+                </span>
+                <input asp-for="Email" class="form-control" placeholder="Электронная почта" />
+            </div>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password" class="sr-only"></label>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-lock"></i>
+                </span>
+                <input asp-for="Password" class="form-control" placeholder="Пароль"/>
+            </div>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ConfirmPassword" class="sr-only"></label>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-lock"></i>
+                </span>
+                <input asp-for="ConfirmPassword" class="form-control" placeholder="Подтвердите пароль" />
+            </div>
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Зарегистрироваться" class="btn btn-default" />
+        </div>
+    }
+</form>

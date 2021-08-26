@@ -1,0 +1,29 @@
+﻿.paginate_button {
+  background: #fff !important;
+  border: none !important;
+}
+.paginate_button:hover,
+.paginate_button:active,
+.paginate_button:focus {
+  background: #fff !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.paginate_button.active a {
+  background-color: #80b00c;
+  border-color: #d9d9d9;
+}
+.paginate_button.active a:active,
+.paginate_button.active a:focus,
+.paginate_button.active a:hover,
+.paginate_button.active a:link {
+  background-color: #80b00c;
+  border-color: #d9d9d9;
+}
+table.dataTable tbody > tr.selected,
+table.dataTable.display tbody > tr.selected > .sorting_1 {
+  background-color: #80b00c !important;
+}
+.dt-buttons a {
+  margin-right: 10px;
+}
